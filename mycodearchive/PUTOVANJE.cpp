@@ -3,7 +3,7 @@
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
-// #define int long long
+#define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -25,8 +25,10 @@ inline int Div(int x, int y, int mod = MOD) { int tmp = x; mul(tmp, Inv(y, mod),
 template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 struct point{int x, y;};
-struct edge{int u, v, c;};
-const ll INF = 1e18, base = 1e5 + 5, multitest = 0;
+struct edge{int u, v, c1, c2;};
+//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
+// bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u;}
+const ll INF = 1e18, base = 2e5 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
@@ -36,44 +38,71 @@ const ll INF = 1e18, base = 1e5 + 5, multitest = 0;
 void init(){
     
 }
-int n, q, a[base], lab[base];
-vector <map <int,int>> s;
-int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-bool join(int u, int v){
-	u = find(u); v = find(v);
-	if (u == v) return 0;
-	if(lab[u] > lab[v]) swap(u,v);
-	lab[u] += lab[v];
-	lab[v] = u;
-	for(ii x : s[v]) s[u][x.fi] += x.se;
-	s[v].clear();
-	return 1;
-}
-void inp(){
-	cin >> n >> q;
-	fod(i,1,n) cin >> a[i];
-	s.resize(n + 1);
-	fod(i,1,n){
-		lab[i] = - 1;
-		s[i][a[i]] = 1;
+struct DL{
+	int v, c1, c2;
+};
+int n, h[base], par[base][21];
+vector <DL> adj[base];
+vector <edge> e;
+void dfs(int u){
+	for(auto [v,c1,c2] : adj[u]){
+		if(v == par[u][0]) continue;
+		h[v] = h[u] + 1;
+		par[v][0] = u;
+		fod(j,1,18){
+			par[v][j] = par[par[v][j-1]][j-1];
+		}
+		dfs(v);
 	}
 }
+int lca(int u, int v){
+    if (h[u] != h[v]) {
+    	if (h[u] < h[v]) swap(u,v);
+		int k = h[u] - h[v];
+		for (int tmp = k; tmp > 0; tmp ^= tmp & -tmp) {
+			int j = __builtin_ctz(tmp & -tmp);
+			u = par[u][j];
+		}
+    }
+    if (u == v) return u;
+    int d = __lg(h[u]);
+    fok(j,d,0) if (par[u][j] != par[v][j]){
+        u = par[u][j]; v = par[v][j];
+    }
+    return par[u][0];
+}
+void inp(){
+	cin >> n;
+	fod(i,1,n-1){
+		int u, v, c1, c2;
+		cin >> u >> v >> c1 >> c2;
+		e.pb({u,v,c1,c2});
+		adj[u].pb({v,c1,c2});
+		adj[v].pb({u,c1,c2});
+	}
+}
+
 namespace sub_task1{
-    void solve(){
-    	while(q--){
-    		int type;
-    		cin >> type;
-    		if(type == 1){
-    			int u, v; cin >> u >> v;
-    			join(u,v);
-    		}		
-    		else{
-    			int u, c; cin >> u >> c;
-    			u = find(u);
-    			if(s[u].find(c) == s[u].end()) cout << 0 << el;
-    			else cout << s[u][c] << el;
-    		}
+    int pass[base], res = 0;
+    void DFS(int u){
+    	for(auto [v,c1,c2] : adj[u]){
+    		if(v == par[u][0]) continue;
+    		DFS(v);
+    		pass[u] += pass[v];
+    		res += min(pass[v] * c1, c2);
     	}
+    }
+    void solve(){
+    	dfs(1);
+    	fod(u,1,n-1){
+    		int v = u + 1;
+    		int x = lca(u,v);
+    		pass[u]++;
+    		pass[v]++;
+    		pass[x]-=2;
+    	}
+    	DFS(1);
+    	cout << res;
     }	
     
 }
