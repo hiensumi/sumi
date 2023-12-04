@@ -28,7 +28,7 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 /*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
 bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
-const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e7 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
@@ -38,15 +38,46 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+const int M = 1e7;
+int n, a[base], f[base + 5], g[base + 5];
+void calcg(int n){
+    fod(i,2,n){
+        while(n % i == 0){
+            n /= i;
+            g[i]++;
+        }
+    }
+}
+void calcf(int n){
+    fod(i,2,n){
+        int cnt = 0;
+        while(n % i == 0){
+            n /= i;
+            cnt++;
+        }
+        maxi(f[i], cnt);
+    }
+}
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+    cin >> n;
+    fod(i,1,n){
+        cin >> a[i];
+        if(a[i] == 0){cout << "impossible"; kill();}
+    }
 }
 
 namespace sub_task1{
     void solve(){
-    
+        fod(i,1,n) calcf(a[i]);
+        fod(i,1,n) calcg(a[i]);
+        fod(i,2,M){
+            g[i] -= f[i];
+        }
+        int res = 1;
+        fod(i,2,M){
+            if(g[i] > 0) res *= bp(i,g[i]);
+        }
+        cout << res;
     }	
     
 }

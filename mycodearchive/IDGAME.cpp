@@ -38,19 +38,43 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int n, a[base], q;
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> n >> q;
+	fod(i,1,n) cin >> a[i];
 }
-
 namespace sub_task1{
     void solve(){
-    
+		while(q--){
+			int d; cin >> d;
+			int cnt = 0;
+			multiset <int> ms; fod(i,1,n) ms.insert(a[i]);
+			while(1){
+				int ma = *ms.rbegin();
+				int mi = *ms.begin();
+				if(ma - mi <= d) break;
+				ms.erase(ms.find(ma));
+				ms.erase(ms.find(mi));
+				ms.insert(ma - 1);
+				ms.insert(mi + 1);
+				cnt++;
+			}    	
+			cout << "Case: " << d << el;
+			// cout << cnt << el;
+	    	for(int x : ms) cout << x << " ";
+	    	cout << el;
+		}
     }	
     
 }
-
+namespace sub_task2{
+	int dp[base];
+	void solve(){
+		fod(i,0,1e6){
+			
+		}
+	}
+}
 signed main(){
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
     if(fopen(name".inp", "r")){

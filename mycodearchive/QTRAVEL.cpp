@@ -38,15 +38,55 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int n, m, dd[base], low[base], tplt[base], num[base], sz[base], stt=0,res=0;
+vector <int> adj[base];
+stack <int> st;
+void dfs(int u){
+	low[u] = num[u] = ++stt;
+	st.push(u);
+	for(int v : adj[u]){
+		if(dd[v]) continue;
+		if(num[v]) low[u] = min(low[u], num[v]);
+		else{
+			dfs(v);
+			low[u] = min(low[u], low[v]);
+		}
+	}
+	if(low[u] == num[u]){
+		int x = 0;
+		res++;
+		do{
+			x = st.top();
+			st.pop();
+			dd[x] = 1;
+			sz[res]++;
+			tplt[x] = res;
+		}while(x != u);
+	}
+}
+int loop[base];
 void inp(){
 	cin >> n >> m;
-	cout << n << " " << m;
+	fod(i,1,m){
+		int u, v; cin >> u >> v;
+		adj[u].pb(v);
+		if(u == v) loop[u] = 1;
+	}
 }
-
 namespace sub_task1{
     void solve(){
-    
+		fod(i,1,n) if(dd[i] == 0){
+			dfs(i);
+		}   
+		fod(i,1,n){
+			int x = tplt[i];
+			if(sz[x] > 2) cout << 1 << " ";
+			else{
+				if(loop[i]) cout << 1 << " ";
+				else cout << 0 << " ";
+			}
+		}
+		 
     }	
     
 }

@@ -38,15 +38,34 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int n, St, En, a[base];	
+struct ticket{
+	int L, C;
+}t[4];
+
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	fod(i,1,3) cin >> t[i].L;
+	fod(i,1,3) cin >> t[i].C;
+	cin >> n >> St >> En;
+	fod(i,2,n) cin >> a[i];
 }
 
 namespace sub_task1{
+	int dp[base], inuse[4];
     void solve(){
-    
+    	if(St > En) swap(St,En);
+    	fod(i,1,3) inuse[i] = St;	
+    	memset(dp, 0x3f, sizeof dp);
+    	dp[St] = 0;
+    	fod(i,St+1,En){
+    		fok(j,3,1){
+    			while( (a[i] - a[inuse[j]]) > t[j].L and inuse[j] < En) inuse[j]++;
+    			mini(dp[i], dp[inuse[j]] + t[j].C);
+    			inuse[j-1] = inuse[j]; 
+    		}
+    	}
+    	
+    	cout << dp[En];
     }	
     
 }

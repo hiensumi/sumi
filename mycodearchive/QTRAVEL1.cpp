@@ -38,15 +38,82 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
-void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+int n, m, res = 0, stt = 0, S , dd[base], trace[base], low[base], num[base], tplt[base], val[base];
+vector <ii> adj[base];
+stack <int> st;
+void dfs(int u){
+	low[u] = num[u] = ++stt;
+	st.push(u);
+	for(auto [v,w] : adj[u]){
+		if(dd[v]) continue;
+		if(num[v]) low[u] = min(low[u], num[v]);
+		else{
+			dfs(v);
+			low[u] = min(low[u], low[v]);
+		}
+	}
+	if(low[u] == num[u]){
+		int x = 0;
+		res++;
+		do{
+			x = st.top();
+			st.pop();
+			dd[x] = 1;
+			tplt[x] = res;
+		}while(x != u);
+	}
 }
-
+int f[base], p[base];
+int calc(int w){
+	int j = upper_bound(p + 1, p + (int) 1e5 + 1, w ) - p - 1;
+	return (j + 1) * w - f[j];
+}
+void inp(){
+	fod(i,1,1e5) p[i] = i * (i + 1)/2;
+	fod(i,1,1e5) f[i] = f[i-1] + i * (i + 1) / 2;
+	cin >> n >> m >> S;
+	fod(i,1,m){
+		int u, v, w ; cin >> u >> v >> w;
+		// w = calc(w);
+		adj[u].pb(ii(v,w));
+	}
+	dfs(S);
+}
+int dp[base];
+stack <int> topo;
+vector <ii> g[base];
+int ans = 0;
+void dfs2(int u){
+	dd[u] = 1;
+	for(auto [v,w] : g[u]){
+		if(dd[v] == 0) dfs2(v);
+	}
+	topo.push(u);
+}
 namespace sub_task1{
     void solve(){
-    
+ 		fod(u,1,n){
+ 			for(auto [v,w] : adj[u]){
+ 				int paru = tplt[u], parv = tplt[v];
+ 				if(paru == parv){
+					val[paru] += calc(w);				
+ 				}
+ 				else{
+ 					g[paru].pb(ii(parv, w));
+ 				}
+ 			}
+ 		}
+ 		memset(dd, 0, sizeof dd);
+ 		fod(i,1,res) dp[i] = val[i];
+ 		fod(i,1,res) if(dd[i] == 0) dfs2(i);
+    	while(topo.size()){
+    		int u = topo.top(); topo.pop();
+    		maxi(ans, dp[u]);
+    		for(auto [v,w] : g[u]){
+    			maxi(dp[v], dp[u] + w + val[v]);
+    		}
+    	}
+    	cout << ans;
     }	
     
 }

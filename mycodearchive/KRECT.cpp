@@ -38,15 +38,71 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int n, m, k, a[105][105], f[26][105][105];
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> n >> m >> k; 
+	fod(i,1,n) fod(j,1,m){
+		char c; cin >> c;
+		a[i][j] = c - 'A';
+		fod(x,0,25){
+			f[x][i][j] = f[x][i-1][j];
+			if(a[i][j] == x) f[x][i][j]++;
+		}
+	}
 }
 
 namespace sub_task1{
+    int cnt[27];
     void solve(){
-    
+    	
+    	int ans = 0;
+    	fod(i,1,n) fod(j,i,n){
+    		int l =  1;
+    		int ans1 = 0, d = 0;
+    		memset(cnt, 0, sizeof cnt);
+    		fod(r,1,m){
+    			fod(x,0,25){
+					int val = f[x][j][r] - f[x][i-1][r];
+					if(cnt[x] == 0 && val > 0) d++;
+					cnt[x] += val;
+				}
+    			while(l <= r and d > k){
+    				fod(x,0,25){
+    					int val = f[x][j][l] - f[x][i-1][l];
+    					if(cnt[x] - val <= 0 and cnt[x] > 0) d--;
+    					cnt[x] -= val;
+    				}
+    				l++;
+    			}
+    			if(d <= k) ans1 += (r - l + 1);
+    		}
+    		
+    		l = 1;
+    		d = 0;
+    		int ans2 = 0;
+    		memset(cnt, 0, sizeof cnt);
+    		fod(r,1,m){
+    			fod(x,0,25){
+					int val = f[x][j][r] - f[x][i-1][r];
+					if(cnt[x] == 0 and val > 0) d++;
+					cnt[x] += val;
+				}
+    			while(l <= r and d >= k){
+    				fod(x,0,25){
+    					int val = f[x][j][l] - f[x][i-1][l];
+    					
+    					if(cnt[x] - val <= 0 and cnt[x] > 0) d--;
+    					cnt[x] -= val;
+    				}
+    				l++;
+    			}
+    			if(d < k) ans2 += (r - l + 1);
+    		}
+    		// cout << ans1 << " " << ans2 << el;
+    		ans += ans1 - ans2;
+    	}
+    	
+    	cout << ans;
     }	
     
 }

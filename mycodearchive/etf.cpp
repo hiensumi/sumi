@@ -28,20 +28,31 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 /*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
 bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
-const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e6 + 5, multitest = 1;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
+int f[base + 1];
 void init(){
-    
+    fod(i,1,base){
+      if(odd(i)) f[i] = i;
+      else f[i] = i/2;
+    }
+    fod(i,3,base){
+        if(f[i] == i){
+            for(int j = i; j <= base; j += i){
+                f[j] = f[j]/i * (i-1);
+            }
+        }
+    }
 }
-int n, m;
+
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+    int n; cin >> n;
+    cout << f[n] << el;
 }
 
 namespace sub_task1{

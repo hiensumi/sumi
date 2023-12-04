@@ -28,7 +28,7 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 /*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
 bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
-const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e7, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
@@ -38,15 +38,22 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int a, b, f[base + 5];
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> a >> b;
 }
 
 namespace sub_task1{
     void solve(){
-    
+    	fod(i,0,b) f[i] = i;
+    	fod(i,1,b){
+    		for(int j = i; j <= base; j += i) f[j] -= i;
+    	}
+    	// fod(i,a,b){
+    		// cout << i << " " << abs(f[i] + i) << el;
+    	// } 
+    	fod(i,1,b) f[i] = f[i-1] + abs(f[i] + i);
+    	cout << f[b] - f[a-1];
     }	
     
 }

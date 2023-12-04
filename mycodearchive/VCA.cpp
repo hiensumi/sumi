@@ -38,15 +38,32 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int k, n;
+string s;
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> k >> s;
+	n = s.size();
+	s = "#" + s;
 }
 
 namespace sub_task1{
+    int cnt[256];
+    int ch(char x){
+    	return abs(x - 'a');
+    }
+    int V = 'V', C = 'C', A = 'A';
     void solve(){
-    
+    	int l = 1, ans = INF;
+    	fod(r,1,n){
+    		cnt[s[r]]++;
+    		while(cnt[A] >= k and cnt[V] >= k and cnt[C] >= k and l <= r){
+    			mini(ans, cnt[A] + cnt[V] + cnt[C] - 3 * k);
+    			cnt[s[l]]--;
+    			l++;
+    		}
+    	}
+    	if(ans != INF) cout << ans << el;
+    	else cout << -1;
     }	
     
 }

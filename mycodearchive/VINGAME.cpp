@@ -38,15 +38,74 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int n, m, a[base], dd[base], low[base], tplt[base], num[base], stt=0,res=0, val[base];
+vector <int> adj[base], divs[base];
+stack <int> st;
+void dfs(int u){
+	low[u] = num[u] = ++stt;
+	st.push(u);
+	for(int v : adj[u]){
+		if(dd[v]) continue;
+		if(num[v]) low[u] = min(low[u], num[v]);
+		else{
+			dfs(v);
+			low[u] = min(low[u], low[v]);
+		}
+	}
+	if(low[u] == num[u]){
+		int x = 0;
+		res++;
+		do{
+			x = st.top();
+			st.pop();
+			val[res] = __gcd(val[res], a[x]);
+			dd[x] = 1;
+			tplt[x] = res;
+		}while(x != u);
+	}
+}
 void inp(){
 	cin >> n >> m;
-	cout << n << " " << m;
+	fod(i,1,n) cin >> a[i];
+	fod(i,1,m){
+		int u, v; cin >> u >> v;
+		adj[u].pb(v);
+	}
 }
-
+stack <int> topo;
+vector <int> g[base];
+void DFS(int u){
+    dd[u] = 1;
+	for(int v : g[u]) if(dd[v] == 0){
+		DFS(v);
+	}
+	topo.push(u);
+}
+int dp[base];
 namespace sub_task1{
     void solve(){
-    
+    	fod(i,1,n) if(dd[i] == 0) dfs(i);
+    	fod(u,1,n){
+    		for(int v : adj[u]){
+    			int paru = tplt[u], parv = tplt[v];
+    			if(paru == parv) continue;
+    			g[paru].pb(parv); 
+    		}
+    	}
+    	memset(dd, 0, sizeof dd);
+    	fod(i,1,res){
+    		if(dd[i] == 0) DFS(i);
+    		dp[i] = val[i];
+    	}
+    	int ans = INF;
+    	while(topo.size()){
+    		int u = topo.top(); topo.pop();
+    		mini(ans, dp[u]);
+    		for(int v : g[u]){
+    			mini(dp[v], __gcd(dp[u], val[v]));
+    		}
+    	}
+    	cout << ans;
     }	
     
 }

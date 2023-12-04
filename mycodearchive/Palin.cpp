@@ -38,15 +38,54 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+// dp i j  la tg it nhat de xoa doan i j
+int memo[305][305];
+int M = 0;
+string s;
+bool ispalin(int l, int r){
+    fod(i,l,r){
+        int len = i - l;
+        int j = r - len;
+        if(i > j) break;
+        // cout << i << " " << j << el;
+        if(s[i] != s[j]) return 0;
+    }
+    return 1;
+}
+// int dp(int l, int r){
+    // if(l > r) return memo[l][r] = 1;
+    // if(memo[l][r] != -1) return memo[l][r];
+    // if(l == r) return memo[l][r] = 2;
+    // int best = 0; 
+    // if(s[l] == s[r]) (best = best - dp(l+1,r) + dp(l,r-1) + M) %= M;
+	// else{
+		// (best += dp(l+1,r-1)) %= M;
+	// }
+    // return memo[l][r] = best;
+// }
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> M; 
 }
 
 namespace sub_task1{
+	int f[205][205];
     void solve(){
-    
+ 		while(cin >> s){
+ 			int n = s.size();
+	        s = "#" + s;
+	        memset(f, 0, sizeof f);
+	        
+	        fod(len,0,n) fod(i,1,n){
+	        	int j = i + len - 1;
+	        	if(i == j) f[i][j] = 2 % M;
+	        	else if(i > j) f[i][j] = 1 % M;
+	        	else{
+	        		(f[i][j] += f[i][j-1] + f[i+1][j]) % M;
+	        		if(s[i] != s[j]) f[i][j] = (f[i][j] - f[i+1][j-1] + M) % M;
+	        	}
+	        }
+	        cout << f[1][n] << el;
+ 		}       
     }	
     
 }

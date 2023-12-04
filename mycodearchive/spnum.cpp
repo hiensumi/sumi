@@ -1,9 +1,10 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
+#pragma GCC optimize("O3")
 #include "bits/stdc++.h"
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
-#define int long long
+// #define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -38,7 +39,7 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int dp[20][2][2][300];
+ll dp[20][2][2][300];
 int nprime[base], scp[10000002];
 int sz;
 string a, b;
@@ -52,7 +53,7 @@ int solve(int i, int ok, int tight, int sum){
     int limit1 = ok ? 0 : a[i] - '0';
     int cnt = 0;
     fod(j,limit1,limit){
-    	cnt += solve(i+1,ok or j > limit1, tight or j < limit, sum + j);
+    	cnt += 1ll * solve(i+1,ok or j > limit1, tight or j < limit, sum + j);
     }
     return dp[i][ok][tight][sum] = cnt;
 }
@@ -61,15 +62,15 @@ void inp(){
 }
 
 namespace sub_task1{
-    int dsum(int n){
+    int dsum(ll n){
     	int sum = 0;
     	while(n > 0){
-    		sum += n % 10;
+    		sum += 1ll* n % 10;
     		n /= 10;
     	}
     	return sum;
     }
-    int get(int a1, int b1){
+    ll get(ll a1, ll b1){
     	string b2 = to_string(b1);
     	string a2 = to_string(a1); 
     	while(a2.size() < b2.size()) a2 = "0" + a2;
@@ -77,29 +78,27 @@ namespace sub_task1{
     	sz = cnt;
     	a = a2;
     	b = b2;
-    	memset(dp, -1, sizeof dp);
-    	// fod(i,0,cnt + 1) fod(ok,0,1) fod(t,0,1) fod(j,0,9*cnt + 1) dp[i][ok][t][j] = -1;
+    	fod(i,0,cnt + 1) fod(ok,0,1) fod(t,0,1) fod(j,0,9*cnt + 1) dp[i][ok][t][j] = -1;
 	    return solve(0, 0, 0, 0);
 	}
     void solve(){
-    	int t; cin >> t;
+    	int t; scanf("%d", &t);
     	int mx = 9 * 14 + 1;
-    	fod(i,2,mx) if(nprime[i] == 0)for(int j = i * i; j <= mx; j += i){
+    	fod(i,2,mx) if(nprime[i] == 0) for(int j = i * i; j <= mx; j += i){
     		nprime[j] = 1;
     	}
     	nprime[1] = 1;
     	fod(i,1,10000000){
-    		int val = i * i;
+    		ll val = i * i;
     		int ds = dsum(val);
     		scp[i] = scp[i-1] + (nprime[ds] == 0);
     	}
     	while(t--){
-    		int a, b; cin >> a >> b;
+    		ll a, b; scanf("%lld %lld", &a, &b);
     		// int res = get(b) - get(a-1);
-    		int res = get(a,b);
+    		ll res = get(a,b);
     		int sqa = sqrt(a), sqb = sqrt(b);
     		if(sqa * sqa != a) sqa++;
-    		// cout << res << el;
     		cout << res - (scp[sqb] - scp[sqa-1]) << el;
     	}
     	
@@ -108,7 +107,7 @@ namespace sub_task1{
 }
 
 signed main(){
-    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+    // ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
     if(fopen(name".inp", "r")){
       freopen(name".inp", "r", stdin);
       freopen(name".out", "w", stdout);

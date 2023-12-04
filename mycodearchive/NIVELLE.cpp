@@ -38,17 +38,37 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+string s; int n;
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> n >> s;
+	s = "#" + s;
 }
-
+int hisl, hisr;
+ii calc(int len){
+	int l = 1, ans = 0;
+	map <char, int> mp;
+	fod(r,1,n){
+		mp[s[r]]++;
+		while(l <= r and mp.size() > len){
+			mp[s[l]]--;
+			if(mp[s[l]] == 0) mp.erase(s[l]);
+			l++;
+		}
+		if(mp.size() == len) if(maxi(ans, r - l + 1)) hisl = l, hisr = r;
+	}
+	return {len, ans == 0 ? len : ans};
+}
 namespace sub_task1{
     void solve(){
-    
+ 		ii ans = {1, 1}, pos = {1,1};
+ 		fod(k,1,26){
+ 			ii ret = calc(k);
+ 			if(ans.fi * ret.se > ret.fi * ans.se) ans = ret, pos = {hisl, hisr};
+ 		}	   
+ 		// cout << ans.fi << " " << ans.se;
+ 		if(ans.fi < ans.se) cout << pos.fi << " " << pos.se;
+    	else cout << 1 << " " << 1;
     }	
-    
 }
 
 signed main(){

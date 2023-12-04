@@ -38,29 +38,20 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, k, cnt[base], dd[101][101][101];
+int n, k, cnt = 0, d=  0;
 void inp(){
     cin >> n >> k;
-    fod(i,1,n) cnt[i % k]++;
-    int ans = 0, x = k;
-    fod(i,1,n) fod(j,1,n) fod(k,1,n) if(dd[i][j][k] == 0) {
-        if((i + j) % x == 0 and (j + k) % x == 0 and (i + k) % x == 0){
-            ans++, dd[i][j][k] = 1;
-            // cout << i << " " << j << " " << k << el;
-        }
+    fod(i,1,n){
+    	if(i % k == 0) cnt++;
+    	else if((i * 2) % k == 0){
+    		d++;
+    	}
     }
-    cout << ans << el;
 }
 namespace sub_task1{
     int mark[base];
     void solve(){
-        int res = cnt[0];
-        fod(i,1,min(k-1,n))if(mark[i] == 0) {
-            if(cnt[i] > 1) res += cnt[i] * cnt[i] * cnt[k - i];
-            mark[i] = 1;
-            mark[k - i] = 1;
-        }        
-        cout << res;
+    	cout << cnt * cnt * cnt + d * d * d;
     }	
 }
 

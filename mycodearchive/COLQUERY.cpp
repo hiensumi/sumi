@@ -26,8 +26,6 @@ template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 struct point{int x, y;};
 struct edge{int u, v, c;};
-/*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
-bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
 const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
@@ -38,15 +36,38 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
+int n, q, a[base], lab[base];
+multiset <int> s[base];
+int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
+bool join(int u, int v){
+	u = find(u); v = find(v);
+	if (u == v) return 0;
+	if(lab[u] > lab[v]){
+		lab[v] += lab[u];
+		lab[u] = v;
+		for(int x : s[v]) s[u].insert(x);
+	}
+	else{
+		lab[u] += lab[v];
+		lab[v] = u;
+		for(int x : s[u]) s[v].insert(x);
+	}
+	return 1;
+}
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> n >> q;
+	fod(i,1,n) cin >> a[i];
+	fod(i,1,n){
+		lab[i] = - 1;
+		s[i].insert(a[i]);
+	}
 }
 
 namespace sub_task1{
     void solve(){
-    
+    	while(q--){
+    		
+    	}
     }	
     
 }

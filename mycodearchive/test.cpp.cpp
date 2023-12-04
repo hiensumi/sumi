@@ -37,11 +37,9 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 // she is your motivation!!!
 void init(){
     
-}
-int n, m;
+}	
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+
 }
 
 namespace sub_task1{

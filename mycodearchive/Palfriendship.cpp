@@ -41,12 +41,54 @@ void init(){
 int n, m;
 void inp(){
 	cin >> n >> m;
-	cout << n << " " << m;
+}
+int od[base], a[base], ev[base];
+void Calc_odd(){
+    int L = 1;
+    int R = 0;
+    for(int i = 1 ; i <= n ; i++) {
+        if(i > R) od[i] = 0;
+        else od[i] = min(R - i, od[L + (R - i)]);
+        while(i - od[i] - 1 > 0 and i + od[i] + 1 <= n and a[i - od[i] - 1] == a[i + od[i] + 1]) {
+            od[i]++;
+        }
+        
+        if(i + od[i] > R) {
+            R = i + od[i];
+            L = i - od[i];
+        }
+    }
 }
 
+void Calc_even() {
+    int L = 1;
+    int R = 0;
+    for(int i = 1 ; i < n ; i++) {
+        int j = i + 1;
+        if(j > R) ev[i] = 0;
+        else ev[i] = min(R - j + 1, ev[L + (R - j)]);
+        while(i - ev[i] > 0 and j + ev[i] <= n and a[i - ev[i]] == a[j + ev[i]]) {
+            ev[i]++;
+        }
+        if(i + ev[i] > R) {
+            R = i + ev[i];
+            L = j - ev[i];
+        }
+    }
+}
 namespace sub_task1{
+	int dd[base];
+	vector <int> adj[base];
     void solve(){
-    
+    	int d = 0;
+ 		fod(i,1,m){
+ 			int x, y; cin >> x >> y;
+ 			adj[x].pb(y);
+ 			adj[y].pb(x);
+ 		}   
+ 		fod(i,1,n) if(dd[i] == 0){
+ 			
+ 		}
     }	
     
 }

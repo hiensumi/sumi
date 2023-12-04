@@ -28,20 +28,52 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 /*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
 bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
-const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
+const ll INF = 1e18, base = 5e6 + 5, multitest = 1;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
 #define ld long double
+#define ull unsigned long long
 // remember to reset value for multitestcase
 // she is your motivation!!!
+int np[base + 1], k ,prime[base], sz = 0;
+ull n;
 void init(){
-    
+    np[1] = 1;
+    fod(i,2,base) if(np[i] == 0){
+    	for(int j = i * i; j <= base; j += i){
+    		np[j] = 1;
+    	}
+    }
+    fod(i,2,base) if(np[i] == 0) prime[++sz] = i;
 }
-int n, m;
+bool check(int r){
+	int l = r - k + 1;
+	ull m = 1;
+	fod(i,l,r){
+		if(m > n/prime[i]) return 0;
+		else m *= prime[i];
+	}
+	return m <= n;
+}
 void inp(){
-	cin >> n >> m;
-	cout << n << " " << m;
+	cin >> n >> k;
+	int l = k, r = sz, ans = -1;	
+	while(l <= r){
+		int mid = l + r >> 1;
+		if(check(mid)) l = mid + 1, ans = mid;
+		else r = mid - 1;
+	}
+	if(ans == -1) cout << -1 << el;
+	else{
+	 	r = ans;
+		l = r - k + 1;
+		ull m = 1;
+		fod(i,l,r){
+			m *= prime[i];
+		}
+		cout << m << el;
+	}
 }
 
 namespace sub_task1{
