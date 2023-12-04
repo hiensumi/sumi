@@ -1,0 +1,154 @@
+// hiensumi: Maybe, success will come tomorrow. Thus, just keep trying!
+#include "bits/stdc++.h"
+#define fod(i,a,b) for(int i = a;i <= b; i++)
+#define fok(i,a,b) for(int i = a;i >= b; i--)
+#define ll long long
+#define int long long
+#define fi first
+#define se second
+#define mask(i) (1LL<<(i))
+#define BITpos(a,i) ((a >> i) & 1LL)
+#define pb push_back
+#define el '\n'
+#define all(v) v.begin(), v.end()
+#define odd(i) (i & 1LL)
+using namespace std;
+typedef pair<int, int> ii;
+const int MOD = 1e9 + 7;
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
+inline void add(int &x, int y, int mod = MOD) { x += y; while (x >= mod) x -= mod; while (x < 0) x += mod;}
+inline void mul(int &x, int y, int mod = MOD) { x = (x * 1LL * y) % mod;}
+inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) mul(ans, x, mod); mul(x, x, mod); y >>= 1;} return ans;}
+inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
+inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
+inline int Div(int x, int y, int mod = MOD) { int tmp = x; mul(tmp, Inv(y, mod), mod); return tmp;}
+template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
+struct point{int x, y;};
+struct edge{int u, v, c;};
+/*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
+bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
+const ll INF = 1e18, base = 1e5 + 5, multitest = 0;
+//"Life is a daring adventure or it is nothing at all." -Helen Keller...
+//"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
+#define name ""
+#define ld long double
+// remember to reset value for multitestcase
+// she is your motivation!!!
+void init(){
+	
+}
+int n, k, mark[base], par[base][21], h[base], f[base]; 
+vector <int> mustgo;
+vector <ii> adj[base], g[base];
+void inp(){
+	cin >> n >> k;
+	fod(i,1,n-1){
+		int u, v, w; cin >> u >> v >> w;
+		adj[u].pb(ii(v,w));
+		adj[v].pb(ii(u,w));
+	}
+	fod(i,1,k){
+		int x; cin >> x;
+		mustgo.pb(x);
+		mark[x] = 1;
+	}
+}
+int m = 0, st[base], en[base], dd[base];
+void dfs(int u, int p){
+	st[u] = ++m;
+	if(mark[u]) dd[u] = 1;
+	for(auto [v,w] : adj[u]){
+		if(v != p){
+			h[v] = h[u] + 1;
+			f[v] = f[u] + w;
+			par[v][0] = u;
+			fod(j,1,log2(n)){
+				par[v][j] = par[par[v][j-1]][j-1];
+			}
+			dfs(v, u);
+			dd[u] |= dd[v];
+			if(dd[u] and dd[v]){
+				g[u].pb(ii(v,w));
+				g[v].pb(ii(u,w));
+			}
+		}
+	}
+	en[u] = m;
+}
+int lca(int u, int v){
+	if(h[u] < h[v]) swap(u,v);
+	int k = h[u] - h[v];
+	fod(j,0,log2(n)) if(k & mask(j)) u = par[u][j];
+	if(u == v) return u;
+	int d = log2(h[u]);
+	fok(j,d,0) if(par[u][j] != par[v][j]){
+		u = par[u][j];
+		v = par[v][j];
+	}
+	return par[u][0];
+}
+int dist(int u, int v){ return f[u] + f[v] - 2 * f[lca(u,v)];}
+ii dis[base];
+void bfs(){
+	queue <int> q;
+	fod(i,1,n) if(mark[i]) q.push(i), dis[i] = ii(0ll,i);
+	while(q.size()){
+		int u = q.front();
+		q.pop();
+		for(auto [v,w] : adj[u]){
+			if(mini(dis[v].fi, dis[u].fi + w)){
+				dis[v].se = dis[u].se;
+				q.push(v);
+			}
+		}
+	}
+}
+namespace sub_task1{
+	bool cmp(int u, int v){return st[u] < st[v];}
+	bool cmps(ii u, ii v){
+		return u.se < v.se;
+	}
+	int calc(int u, int site, int total){
+		int x = lca(u,site);
+		int res = total;
+		// res -= 
+	}
+	void solve(){
+		// fod(i,1,n) sort(all(adj[i]), cmps);
+		dfs(1,0);
+		// int res = dist(mustg o[0], mustgo.back());
+		// fod(i,1,mustgo.size()-1){
+			// int len = dist(mustgo[i], mustgo[i-1]);
+			// res += len;
+		// }
+		for(int x : mustgo) cout << x << el;
+		// cout << mustgo.back();
+		// cout << res << el;
+		// res /= 2;
+		// bfs();
+		// int left = mustgo[0], right = mustgo.back();
+		// fod(i,1,n){
+// 			
+		// }
+		
+		
+	
+	}	
+	
+}
+
+signed main(){
+	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	if(fopen(name".inp", "r")){
+	  freopen(name".inp", "r", stdin);
+	  freopen(name".out", "w", stdout);
+	}
+	int Test = 1; if(multitest) cin >> Test;
+	init();
+	while(Test--){
+		inp();
+		sub_task1 :: solve();
+	}
+	kill();
+}

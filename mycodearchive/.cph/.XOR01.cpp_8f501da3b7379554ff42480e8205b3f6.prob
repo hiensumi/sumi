@@ -1,0 +1,1 @@
+{"name":"Local: XOR01","url":"e:\\sumi_codearchive\\mycodearchive\\XOR01.cpp","tests":[{"id":93354119,"input":"3\n2 2 2","output":"3"},{"id":92821965.7,"input":"3\n2 3 1","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"e:\\sumi_codearchive\\mycodearchive\\XOR01.cpp","group":"local","local":true}

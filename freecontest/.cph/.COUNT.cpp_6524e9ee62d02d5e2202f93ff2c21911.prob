@@ -1,0 +1,1 @@
+{"name":"Local: COUNT","url":"e:\\sumi_codearchive\\freecontest\\COUNT.cpp","tests":[{"id":83175605,"input":"20 4 5 3","output":"3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"e:\\sumi_codearchive\\freecontest\\COUNT.cpp","group":"local","local":true}

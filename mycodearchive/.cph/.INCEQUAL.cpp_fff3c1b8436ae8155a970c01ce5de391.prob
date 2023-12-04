@@ -1,0 +1,1 @@
+{"name":"Local: INCEQUAL","url":"e:\\sumi_codearchive\\mycodearchive\\INCEQUAL.cpp","tests":[{"id":261822389,"input":"5 2\n5 1 3 3 5","output":"4"},{"id":6672.599999964237,"input":"2 100\n1 10","output":"-1"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"e:\\sumi_codearchive\\mycodearchive\\INCEQUAL.cpp","group":"local","local":true}
