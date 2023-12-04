@@ -3,7 +3,7 @@
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
-// #define int long long
+#define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -26,7 +26,7 @@ template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 struct point{int x, y;};
 struct edge{int u, v, c;};
-const ll INF = 1e18, base = 1e5 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
@@ -36,48 +36,68 @@ const ll INF = 1e18, base = 1e5 + 5, multitest = 0;
 void init(){
     
 }
-int n, q, a[base], lab[base];
-vector <map <int,int>> s;
+int n, t[base], lab[base], ma[base];
 int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
 bool join(int u, int v){
-	u = find(u); v = find(v);
-	if (u == v) return 0;
+	u = find(u);
+	v = find(v);
+	if(u == v) return 0;
 	if(lab[u] > lab[v]) swap(u,v);
 	lab[u] += lab[v];
 	lab[v] = u;
-	for(ii x : s[v]) s[u][x.fi] += x.se;
-	s[v].clear();
+	maxi(ma[u], ma[v]);
 	return 1;
 }
+bool canjoin(int u, int v){
+	u = find(u); v = find(v);
+	if(u == v) return 0;
+	else return 1;
+}
+set <ii> e;
+int summa = 0;
 void inp(){
-	cin >> n >> q;
-	fod(i,1,n) cin >> a[i];
-	s.resize(n + 1);
-	fod(i,1,n){
-		lab[i] = - 1;
-		s[i][a[i]] = 1;
+	cin >> n;
+	fod(i,1,n) cin >> t[i];
+	fod(i,1,n-1){
+		int u, v ; cin >> u >> v;
+		e.insert(ii(u,v));
+		summa += max(t[u], t[v]);
 	}
 }
 namespace sub_task1{
     void solve(){
-    	while(q--){
-    		int type;
-    		cin >> type;
-    		if(type == 1){
-    			int u, v; cin >> u >> v;
-    			join(u,v);
-    		}		
-    		else{
-    			int u, c; cin >> u >> c;
-    			u = find(u);
-    			if(s[u].find(c) == s[u].end()) cout << 0 << el;
-    			else cout << s[u][c] << el;
-    		}
-    	}
+		fod(i,1,n){
+			lab[i] = -1;
+			ma[i] = t[i];
+		}
+		int ans = 0;
+		while(!e.empty()){
+			ii res;
+			int cur = INF;
+			for(ii x : e){
+				int u = x.fi, v = x.se;
+				u = find(u); v = find(v);
+				if(cur > ma[u] + ma[v]) cur = ma[u] + ma[v], res = x;
+			}
+			ans += cur;
+			e.erase(res);
+			join(res.fi, res.se);
+		}
+		
+		cout << ans << el;
     }	
     
 }
-
+namespace sub_task2{
+	void solve(){
+		int sum = 0, ma = -INF;
+		fod(i,1,n){
+			sum += t[i];
+			maxi(ma, t[i]);
+		}
+		cout << sum - ma + summa;
+	}
+};
 signed main(){
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
     if(fopen(name".inp", "r")){
@@ -88,7 +108,8 @@ signed main(){
     init();
     while(Test--){
         inp();
-        sub_task1 :: solve();
+        // sub_task1 :: solve();
+        sub_task2 :: solve();
     }
     kill();
 }
