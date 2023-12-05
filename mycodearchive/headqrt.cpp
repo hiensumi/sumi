@@ -49,20 +49,27 @@ vector <point> comp[2];
 vector <point> hull(vector <point> p){
 	int m = 2;
 	vector <point> h(p.size() + 2), res;
+	
 	sort(all(p), [&](point a, point b){
 		if(a.y == b.y) return a.x < b.x;
 		return a.y < b.y;
 	});
+	
 	point p1 = p[0];
+	
 	sort(p.begin() + 1, p.end(), [&](point a, point b){
 		if(ccw(p1,a,b) == 0) return kc(p1, a) < kc(p1,b);
 		return ccw(p1,a,b) > 0;
 	});
+	
 	int sz = p.size();
 	p.pb(p[0]);
+	// for(point a : p) cout << a.x << " " << a.y << el;
 	h[1] = p[0]; h[2] = p[1];
+	
 	fod(i,2,sz){
-		while(m >= 2 and ccw(h[m-1],h[m],p[i]) <= 0) m--;
+		// cout << p[i].x << " " << p[i].y << el;
+		while(m > 2 and ccw(h[m-1],h[m],p[i]) <= 0) m--;
 		h[++m] = p[i];
 	}
 	m--;
@@ -70,8 +77,8 @@ vector <point> hull(vector <point> p){
 	return res;
 }
 void inp(){
+	comp[0].clear();
 	comp[1].clear();
-	comp[2].clear();
 	cin >> n;
 	fod(i,1,n){
 		int x,y,t; cin >> x >> y >> t;
@@ -85,7 +92,7 @@ namespace sub_task1{
     	for(point x : a) for(point y : b){
     		maxi(res, (int)(kc(x,y)));
     	}	
-    	// res = sqrt(res);
+    	res = sqrt(res);
     	return res;
     }
     void solve(){
