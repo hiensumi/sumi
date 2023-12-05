@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AppWindow</class>
+ <widget class="QMainWindow" name="AppWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CP Editor: An editor specially designed for competitive programming</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="tabShape">
+       <enum>QTabWidget::Triangular</enum>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNewTab"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionOpenContest"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionCloseCurrent"/>
+    <addaction name="actionCloseSaved"/>
+    <addaction name="actionCloseAll"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionIndent"/>
+    <addaction name="actionUnindent"/>
+    <addaction name="separator"/>
+    <addaction name="actionSwapLineUp"/>
+    <addaction name="actionSwapLineDown"/>
+    <addaction name="actionDuplicateLine"/>
+    <addaction name="actionDeleteLine"/>
+    <addaction name="separator"/>
+    <addaction name="actionToggleComment"/>
+    <addaction name="actionToggleBlockComment"/>
+    <addaction name="separator"/>
+    <addaction name="actionFindReplace"/>
+   </widget>
+   <widget class="QMenu" name="menuActions">
+    <property name="title">
+     <string>&amp;Actions</string>
+    </property>
+    <addaction name="actionCompile"/>
+    <addaction name="actionCompileRun"/>
+    <addaction name="actionRun"/>
+    <addaction name="actionRunDetached"/>
+    <addaction name="actionKillProcesses"/>
+    <addaction name="separator"/>
+    <addaction name="actionFormatCode"/>
+    <addaction name="actionUseSnippets"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionEditorMode"/>
+    <addaction name="actionIOMode"/>
+    <addaction name="actionSplitMode"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
+   </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>&amp;Options</string>
+    </property>
+    <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionResetSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportSettings"/>
+    <addaction name="actionImportSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportSession"/>
+    <addaction name="actionLoadSession"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowLogs"/>
+    <addaction name="actionClearLogs"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionManual"/>
+    <addaction name="actionReportIssues"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
+    <addaction name="actionBuildInfo"/>
+    <addaction name="actionCheckForUpdates"/>
+    <addaction name="actionSupportUs"/>
+   </widget>
+   <widget class="QMenu" name="menuhiensumi_s_editor">
+    <property name="title">
+     <string>hiensumi's editor</string>
+    </property>
+    <addaction name="actionVk50SXI3VEYxNTZ6aHEZMVFkrAUjAyNRHUH4a0N4yZ2GpnQU1dWYVnZEUaDNFnekVYaz06Ovj6uFPnuSMLxVmvusmlzLM"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuActions"/>
+   <addaction name="menuView"/>
+   <addaction name="menuOptions"/>
+   <addaction name="menuHelp"/>
+   <addaction name="menuhiensumi_s_editor"/>
+  </widget>
+  <action name="actionNewTab">
+   <property name="text">
+    <string>New File</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a new tab in the editor</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the file on the disk</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save as new file</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAll">
+   <property name="text">
+    <string>Save All</string>
+   </property>
+   <property name="toolTip">
+    <string>Save all opened files</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Alt+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionCloseCurrent">
+   <property name="text">
+    <string>Close Current</string>
+   </property>
+   <property name="toolTip">
+    <string>Close current tab</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionCloseSaved">
+   <property name="text">
+    <string>Close Saved</string>
+   </property>
+   <property name="toolTip">
+    <string>Close saved tabs</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Alt+W</string>
+   </property>
+  </action>
+  <action name="actionCloseAll">
+   <property name="text">
+    <string>Close All</string>
+   </property>
+   <property name="toolTip">
+    <string>Close All the tabs</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+W</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit the application</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open File...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open files</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionOpenContest">
+   <property name="text">
+    <string>Open Contest...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a Contest</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+O</string>
+   </property>
+  </action>
+  <action name="actionIndent">
+   <property name="text">
+    <string>Indent</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+]</string>
+   </property>
+  </action>
+  <action name="actionUnindent">
+   <property name="text">
+    <string>Unindent</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+[</string>
+   </property>
+  </action>
+  <action name="actionSwapLineUp">
+   <property name="text">
+    <string>Swap Line Up</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+Up</string>
+   </property>
+  </action>
+  <action name="actionSwapLineDown">
+   <property name="text">
+    <string>Swap Line Down</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+Down</string>
+   </property>
+  </action>
+  <action name="actionDuplicateLine">
+   <property name="text">
+    <string>Duplicate Line</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+D</string>
+   </property>
+  </action>
+  <action name="actionDeleteLine">
+   <property name="text">
+    <string>Delete Line</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+K</string>
+   </property>
+  </action>
+  <action name="actionToggleComment">
+   <property name="text">
+    <string>Toggle Comment</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+/</string>
+   </property>
+  </action>
+  <action name="actionToggleBlockComment">
+   <property name="text">
+    <string>Toggle Block Comment</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+/</string>
+   </property>
+  </action>
+  <action name="actionCompile">
+   <property name="text">
+    <string>Compile</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="actionCompileRun">
+   <property name="text">
+    <string>Compile and Run</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+R</string>
+   </property>
+  </action>
+  <action name="actionRun">
+   <property name="text">
+    <string>Run</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionFormatCode">
+   <property name="text">
+    <string>Format code</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+I</string>
+   </property>
+  </action>
+  <action name="actionRunDetached">
+   <property name="text">
+    <string>Run Detached</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Alt+D</string>
+   </property>
+  </action>
+  <action name="actionKillProcesses">
+   <property name="text">
+    <string>Kill Processes</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+K</string>
+   </property>
+  </action>
+  <action name="actionFindReplace">
+   <property name="text">
+    <string>Find and Replace</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionUseSnippets">
+   <property name="text">
+    <string>Use Snippet...</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionResetSettings">
+   <property name="text">
+    <string>Reset Settings</string>
+   </property>
+  </action>
+  <action name="actionExportSettings">
+   <property name="text">
+    <string>Export Settings...</string>
+   </property>
+  </action>
+  <action name="actionImportSettings">
+   <property name="text">
+    <string>Import Settings...</string>
+   </property>
+  </action>
+  <action name="actionExportSession">
+   <property name="text">
+    <string>Export Session...</string>
+   </property>
+  </action>
+  <action name="actionLoadSession">
+   <property name="text">
+    <string>Load Session...</string>
+   </property>
+  </action>
+  <action name="actionManual">
+   <property name="text">
+    <string>Manual</string>
+   </property>
+  </action>
+  <action name="actionReportIssues">
+   <property name="text">
+    <string>Report issues</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionBuildInfo">
+   <property name="text">
+    <string>Build Info</string>
+   </property>
+  </action>
+  <action name="actionCheckForUpdates">
+   <property name="text">
+    <string>Check for updates</string>
+   </property>
+  </action>
+  <action name="actionSupportUs">
+   <property name="text">
+    <string>Support us</string>
+   </property>
+  </action>
+  <action name="actionEditorMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Editor Mode</string>
+   </property>
+  </action>
+  <action name="actionIOMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>IO Mode</string>
+   </property>
+  </action>
+  <action name="actionSplitMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Split Mode</string>
+   </property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Full Screen</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">F11</string>
+   </property>
+  </action>
+  <action name="actionShowLogs">
+   <property name="text">
+    <string>Show Log Files</string>
+   </property>
+  </action>
+  <action name="actionClearLogs">
+   <property name="text">
+    <string>Delete Log Files</string>
+   </property>
+  </action>
+  <action name="actionVk50SXI3VEYxNTZ6aEZMVFkrUjAyRHU4a04yZ2pnQ1dWVnZUaDFnekVYaz06Ovj6uFPnuSMLxVmvusmlzLM">
+   <property name="text">
+    <string>Vk50SXI3VEYxNTZ6aEZMVFkrUjAyRHU4a04yZ2pnQ1dWVnZUaDFnekVYaz06Ovj6uFPnuSMLxVmvusmlzLM=</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
