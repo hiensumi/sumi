@@ -38,29 +38,62 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m, d, a[4000][4000];
+int n;
+point a[base], h[base];
+int ccw(point a, point b, point c){
+	return (b.x - a.x) * (c.y - b.y) - (b.y - a.y) * (c.x - b.x);
+}
+int dttg(point a, point b, point c){
+	return abs((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x));
+}
+int kc(point a, point b){
+	return pow(a.x - b.x, 2) + pow(a.y - b.y, 2);
+}
+int hullarea(int m, point h[]){
+	int res = 0;
+	fod(i,1,m){
+		point p = (i == 1) ? h[m] : h[i-1];
+		point q = h[i];
+		res += (p.x - q.x) * (p.y + q.y);
+	}
+	return abs(res);
+}
 void inp(){
-	cin >> n >> m >> d;
-	fod(i,1,n) fod(j,1,m) cin >> a[i][j];
+	cin >> n;
+	fod(i,1,n) cin >> a[i].x >> a[i].y;
 }
 
 namespace sub_task1{
-    int f[4005][4005];
     void solve(){
-    	fod(i,1,n) fod(j,1,m) f[i][j] = 1;
-    	fod(i,1,n) fod(j,1,m){
-			fod(x,1, n) fod(y,1,m){
-				if(abs(x - i) + abs(y - j) > d or (x == i and y == j)) continue;
-				if(a[i][j] > a[x][y]) maxi(f[i][j], f[x][y] + 1);
-			}
-			// test sai
+ 		sort(a+1,a+n+1,[&](point a, point b){
+ 			if(a.y == b.y) return a.x < b.x;
+ 			return a.y < b.y;
+ 		});
+ 		point p1 = a[1]; a[n+1] = a[1];
+ 		sort(a+2,a+n+1, [&](point a, point b){
+ 			if(ccw(p1,a,b) == 0) return kc(p1,a) < kc(p1,b);
+ 			return ccw(p1,a,b) > 0;
+ 		});
+ 		
+ 		int m = 2; h[1] = a[1]; h[2] = a[2];
+ 		fod(i,3,n+1){
+ 			while(m > 2 and ccw(h[m-1], h[m], a[i]) <= 0) m--;
+ 			h[++m] = a[i];
+ 		}
+ 		m--;
+ 		h[m+1] = h[1];
+ 		int total = hullarea(m,h);
+    	int q; cin >> q;
+    	while(q--){
+    		int x, y; cin >> x >> y;
+    		int res = 0;
+    		fod(i,1,m){
+    			res += dttg({x,y}, h[i], h[i+1]);
+    		}
+    		if(res == total) cout << "YES";
+    		else cout << "NO";
+    		cout << el;	
     	}
-    	int res = 1;
-    	fod(i,1,n) fod(j,1,m){
-    		maxi(res, f[i][j]);
-    	}
-    	
-    	cout << res;
     }	
     
 }

@@ -38,29 +38,20 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m, d, a[4000][4000];
+int n, s , q , e;
+vector <ii> adj[base];
 void inp(){
-	cin >> n >> m >> d;
-	fod(i,1,n) fod(j,1,m) cin >> a[i][j];
+	cin >> n >> s >> q >> e;
+	fod(i,1,n-1){
+		int u, v , c;
+		adj[u].pb(ii(v,c));
+		adj[v].pb(ii(u,c));
+	}
 }
 
 namespace sub_task1{
-    int f[4005][4005];
     void solve(){
-    	fod(i,1,n) fod(j,1,m) f[i][j] = 1;
-    	fod(i,1,n) fod(j,1,m){
-			fod(x,1, n) fod(y,1,m){
-				if(abs(x - i) + abs(y - j) > d or (x == i and y == j)) continue;
-				if(a[i][j] > a[x][y]) maxi(f[i][j], f[x][y] + 1);
-			}
-			// test sai
-    	}
-    	int res = 1;
-    	fod(i,1,n) fod(j,1,m){
-    		maxi(res, f[i][j]);
-    	}
-    	
-    	cout << res;
+    
     }	
     
 }
