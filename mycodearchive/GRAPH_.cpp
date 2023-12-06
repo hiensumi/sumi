@@ -82,7 +82,7 @@ void dfs(int u, int p){
 			dfs(v,u);
 			low[u] = min(low[u], low[v]);
 			if(num[u] < low[v]) sc++;
-			if(num[u] <= low[v]) khop[u] = 1; //u là khớp nhưng phải xét lại ở dưới
+			if(num[u] <= low[v] and nc[u] >= 2) khop[u] = 1;
 		}
 	}
 	if(low[u] == num[u]){
@@ -112,7 +112,6 @@ signed main(){
 	fod(i,1,n){
 		if(num[i] == 0){
 			dfs(i,0);
-			if(nc[i] < 2) khop[i] = 0;
 		}
 	}
 	fod(i,1,n) if(khop[i]) sk++;
