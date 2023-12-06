@@ -38,69 +38,52 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n,m, p;
-struct BP{
-  vector<vector<int>> G;
-  vector<int> L, R, Viz;
-  
-  BP(int n, int m) :
-  	G(n), L(n, -1), R(m, -1), Viz(n) {}
-  
-  void AddEdge(int a, int b) {
-    G[a].push_back(b);
-  }
-  	
-  bool Match(int node) {
-    if (Viz[node])
-      return false;
-    Viz[node] = true;
-    
-    for (auto vec : G[node]) {
-      if (R[vec] == -1) {
-        L[node] = vec;
-        R[vec] = node;
-        return true;
-      }
-    }
-    
-    for (auto vec : G[node]) {
-      if (Match(R[vec])) {
-        L[node] = vec;
-        R[vec] = node;
-        return true;
-      }
-    }
-    
-    return false;
-  }
-  
-  int Solve() {
-    int ok = 1;
-    while (ok--){
-      fill(Viz.begin(), Viz.end(), 0);
-      for (int i = 0; i < (int)L.size(); ++i)
-        if (L[i] == -1)
-          ok |= Match(i);
-    }
-    int ret = 0;
-    for (int i = 0; i < L.size(); ++i)
-      ret += (L[i] != -1);
-    return ret;
-  }
-};
+int n, m;
+char a[1001][1001];
 void inp(){
-	
+	cin >> n >> m;
+	fod(i,1,n) fod(j,1,m){
+		cin >> a[i][j];
+	}
 }
 
 namespace sub_task1{
+    int match[base], deg[base], dd[base], mark[101][101], ans[105][105];
+    int cnt = 0;
+    bool konig(int u){
+    	if(dd[u]) return 0;
+    	dd[u] = 1;
+    	fod(v,1,n+m) if(mark[u][v] == 1){
+    		if(match[v] == 0 or konig(v)){
+    			match[u] = v;
+    			return 1;
+    		}
+    	}
+    	return 0;
+    }
     void solve(){
-   		int n, m, p; cin >> n >> m;
-   		BP Po(n+m,m + m);
-   		fod(i,1,m){
-   			int u, v; cin >> u >> v;
-   			Po.AddEdge(u,v);
-   		}
-   		cout << n - Po.Solve();
+    	fod(i,1,n) fod(j,1,m){
+    		if(a[i][j] == '1') mark[i][j+n] = 1, mark[j+n][i] = 1, deg[i]++, deg[j+n]++;
+    	}
+    	int res = 0;
+    	fod(i,1,n + m) maxi(res, deg[i]); 
+    	cout << res << el;
+    	fok(color,res,1){
+    		memset(match, 0, sizeof match);
+    		fod(i,1,m+n){
+    			memset(dd, 0, sizeof dd);
+    			if(match[i] == 0 and deg[i] == color) konig(i);
+    		}
+    		fod(u,1,n) if(match[u] != 0){
+    				ans[u][match[u]-n] = color;
+    				mark[u][match[u]] = 0;
+    				mark[match[u]][u] = 0;
+    			}
+    	}
+    	fod(i,1,n){
+    		fod(j,1,m) cout << ans[i][j] << " ";
+    		cout << el;
+    	}
     }	
     
 }
