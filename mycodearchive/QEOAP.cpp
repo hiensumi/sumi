@@ -38,50 +38,54 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m, stt = 0, num[base], low[base], dd[base],res = 0;
-int root[base], sl[base];
+int n, m, S,T;
 vector <int> adj[base];
+int res = 0, ans = 0, f[base], stt = 0, dd[base], low[base], num[base], root[base], sl[base];
 stack <int> st;
 void dfs(int u, int p){
-	stt++;
-	int x;
-	num[u] = low[u] = stt;
-	nc[u] = 0;
+	low[u] = num[u] = ++stt;
 	st.push(u);
 	for(int v : adj[u]){
 		if(v == p) continue;
 		if(dd[v]) continue;
-		if(num[v] != 0) low[u] = min(low[u], num[v]);
+		if(num[v]) low[u] = min(low[u], num[v]);
 		else{
 			dfs(v,u);
 			low[u] = min(low[u], low[v]);
+			f[u] |= f[v];
+			if(num[v] <= low[v] and f[v]){
+				ans++;
+			}
+			// if (num[v] == low[v]) cout << v << endl;
 		}
 	}
 	if(low[u] == num[u]){
+		int x = 0;
 		res++;
 		do{
-			x = st.top(); st.pop();
+			x = st.top();
+			st.pop();
 			dd[x] = 1;
+			root[x] = res;
 			sl[res]++;
 		}while(x != u);
 	}
 }
+vector <int> g[base];
 void inp(){
-	cin >> n >> m;
+	cin >> n >> m >> S >> T;
+	f[S] = 1;
+	f[T] = 1;
 	fod(i,1,m){
 		int u, v; cin >> u >> v;
 		adj[u].pb(v);
 		adj[v].pb(u);
 	}
 }
-
 namespace sub_task1{
     void solve(){
-		fod(i,1,n){
-			if(root[i] == 0) dfs(i,0);
-		}
-		int ans = 0;
-		fod(i,1,res) maxi(ans, sl[i]);
+    	dfs(S,0);
+    	// fod(i,1,n) cout << num[i] << " " << low[i] << el;
 		cout << ans;
     }	
     

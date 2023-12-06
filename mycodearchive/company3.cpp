@@ -38,39 +38,69 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
-vector <int> adj[base];
+int n,m, p;
+struct BP{
+  vector<vector<int>> G;
+  vector<int> L, R, Viz;
+  
+  BP(int n, int m) :
+  G(n), L(n, -1), R(m, -1), Viz(n) {}
+  
+  void AddEdge(int a, int b) {
+    G[a].push_back(b);
+  }
+  	
+  bool Match(int node) {
+    if (Viz[node])
+      return false;
+    Viz[node] = true;
+    
+    for (auto vec : G[node]) {
+      if (R[vec] == -1) {
+        L[node] = vec;
+        R[vec] = node;
+        return true;
+      }
+    }
+    
+    for (auto vec : G[node]) {
+      if (Match(R[vec])) {
+        L[node] = vec;
+        R[vec] = node;
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  int Solve() {
+    int ok = 1;
+    while (ok--){
+      fill(Viz.begin(), Viz.end(), 0);
+      for (int i = 0; i < (int)L.size(); ++i)
+        if (L[i] == -1)
+          ok |= Match(i);
+    }
+    int ret = 0;
+    for (int i = 0; i < L.size(); ++i)
+      ret += (L[i] != -1);
+    return ret;
+  }
+};
 void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v; cin >> u >> v;
-		adj[u].pb(n+v);
-	}
+	
 }
 
 namespace sub_task1{
-    int dd[base], in[base],par[base], out[base];
-    bool konig(int u){
-    	if(dd[u]) return 0;
-    	dd[u] = 1;
-    	for(int v : adj[u]){
-    		if(par[v] == 0 or konig(v)){
-    			par[v] = u;
-    			return 1;
-    		}
-    	}
-    	return 0;
-    }
     void solve(){
-    	fod(i,1,n){
-    		fod(j,1,2*n) dd[j] = 0;
-    		konig(i);
-    	}
-    	int res = 0;
-    	fod(i,1,n){
-    		if(par[i+n] == 0) res++;
-    	}
-    	cout << res;
+   		int n, m, p; cin >> n >> m;
+   		BP Po(n+m,m + m);
+   		fod(i,1,m){
+   			int u, v; cin >> u >> v;
+   			Po.AddEdge(u,v);
+   		}
+   		cout << n - Po.Solve();
     }	
     
 }
