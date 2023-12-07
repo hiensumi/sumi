@@ -38,53 +38,23 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
-char a[1001][1001];
+int m, n, k, a[base], f[base];
 void inp(){
-	cin >> n >> m;
-	fod(i,1,n) fod(j,1,m){
-		cin >> a[i][j];
-	}
+	cin >> m >> n >> k;
+	fod(i,1,m) cin >> a[i];
+	sort(a+1,a+m+1);
+	fod(i,1,m) f[i] = f[i-1] + a[i];
 }
-vector <int> g[base];
+
 namespace sub_task1{
-    int match[base], deg[base], dd[base], mark[101][101], ans[105][105];
-    bool konig(int u, int cnt, int color){
-    	if(dd[u] == cnt) return 0;
-    	dd[u] = cnt;
-    	for(int v : g[u]){
-    		if(bool ch = (u > n and g[match[v]].size() < color); match[v] == 0 or ch or konig(match[v],cnt,color)){
-    			if(ch) match[match[v]] = 0;
-    			match[u] = v;
-    			match[v] = u;
-    			return 1;
-    		}
-    	}
-    	return 0;
-    }
     void solve(){
-    	fod(i,1,n) fod(j,1,m){
-    		if(a[i][j] == '1') g[i].pb(j+n), g[j+n].pb(i);
+    	int ans = -2;
+    	fod(i,n,m){
+    		int j = i - n + 1;
+    		if( (a[i] - a[j]) > k) continue;
+    		maxi(ans, f[i] - f[j-1]);
     	}
-    	int res = 0;
-    	fod(i,1,n + m) maxi(res, (int)g[i].size()); 
-    	cout << res << el;
-    	int cnt = 0;
-    	fok(color,res,1){
-    		memset(match, 0, sizeof match);
-    		fod(i,1,m+n){
-    			if(match[i] == 0 and g[i].size() == color) konig(i, ++cnt, color);
-    		}
-    		fod(u,1,n) if(int v = match[u]; match[u]){
-    				ans[u][v-n] = color;
-    				g[u].erase(find(all(g[u]), v));
-    				g[v].erase(find(all(g[v]), u));
-    			}
-    	}
-    	fod(i,1,n){
-    		fod(j,1,m) cout << ans[i][j] << " ";
-    		cout << el;
-    	}
+    	cout << ans;
     }	
     
 }
@@ -103,3 +73,35 @@ signed main(){
     }
     kill();
 }
+/*
+										Trú mưa nơi gốc cây ngày xưa
+										Để nhìn em lần cuối trong mưa
+										Để nắm tay đưa em đi về
+										Chốn mộng mơ...
+										
+										Có hôm mây gió chợt ca vang
+										Nụ cười em như nắng mùa thu sang
+										Làm lòng tôi xao xuyến mà lang thang
+										Nghĩ về em...
+										
+										Mình tôi thao thức
+										mình tôi day dứt
+										Cớ sao em không về với tôi 
+										Mình tôi thao thức
+										mình tôi day dứt
+										Cớ sao em không cười với tôi
+										Gió mang câu ca về nơi đây
+										gió mang câu ca về với đời em
+										Nắng mang câu thơ về nơi đây
+										chính em mang thơ về với tình ta ...
+										
+										Chiếc radio của em
+										Và từng ly trà đá ly kem
+										Cùng hát lên câu ca êm đềm
+										giữa mùa yêu
+										
+										Những bông hoa xanh ngoài hiên
+										Vào buổi chiều tràn nắng an nhiên
+										Ta ngồi bên cạnh nhau 
+										ngắm mùa thu sang...
+*/

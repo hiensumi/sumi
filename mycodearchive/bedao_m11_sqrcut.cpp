@@ -28,7 +28,7 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 //int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
 //bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
-const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e6 + 5, multitest = 1;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 #define name ""
@@ -38,53 +38,20 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
-char a[1001][1001];
+int a, b;
 void inp(){
-	cin >> n >> m;
-	fod(i,1,n) fod(j,1,m){
-		cin >> a[i][j];
-	}
+	cin >> a >> b;
 }
-vector <int> g[base];
+
 namespace sub_task1{
-    int match[base], deg[base], dd[base], mark[101][101], ans[105][105];
-    bool konig(int u, int cnt, int color){
-    	if(dd[u] == cnt) return 0;
-    	dd[u] = cnt;
-    	for(int v : g[u]){
-    		if(bool ch = (u > n and g[match[v]].size() < color); match[v] == 0 or ch or konig(match[v],cnt,color)){
-    			if(ch) match[match[v]] = 0;
-    			match[u] = v;
-    			match[v] = u;
-    			return 1;
-    		}
-    	}
-    	return 0;
-    }
     void solve(){
-    	fod(i,1,n) fod(j,1,m){
-    		if(a[i][j] == '1') g[i].pb(j+n), g[j+n].pb(i);
-    	}
-    	int res = 0;
-    	fod(i,1,n + m) maxi(res, (int)g[i].size()); 
-    	cout << res << el;
     	int cnt = 0;
-    	fok(color,res,1){
-    		memset(match, 0, sizeof match);
-    		fod(i,1,m+n){
-    			if(match[i] == 0 and g[i].size() == color) konig(i, ++cnt, color);
-    		}
-    		fod(u,1,n) if(int v = match[u]; match[u]){
-    				ans[u][v-n] = color;
-    				g[u].erase(find(all(g[u]), v));
-    				g[v].erase(find(all(g[v]), u));
-    			}
+    	while(a != b){
+    		if(a < b) swap(a,b);
+    		a -= b;
+    		cnt++;
     	}
-    	fod(i,1,n){
-    		fod(j,1,m) cout << ans[i][j] << " ";
-    		cout << el;
-    	}
+    	cout << cnt << el;
     }	
     
 }

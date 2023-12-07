@@ -38,13 +38,9 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
-char a[1001][1001];
+int n, m, p;
 void inp(){
-	cin >> n >> m;
-	fod(i,1,n) fod(j,1,m){
-		cin >> a[i][j];
-	}
+	cin >> n >> m >> p;
 }
 vector <int> g[base];
 namespace sub_task1{
@@ -63,8 +59,12 @@ namespace sub_task1{
     	return 0;
     }
     void solve(){
-    	fod(i,1,n) fod(j,1,m){
-    		if(a[i][j] == '1') g[i].pb(j+n), g[j+n].pb(i);
+    	vector <ii> history;
+    	fod(i,1,p){
+    		int a, b; cin >> a >> b;
+    		g[a].pb(b+n);
+    		g[b+n].pb(a);
+    		history.pb({a,b});
     	}
     	int res = 0;
     	fod(i,1,n + m) maxi(res, (int)g[i].size()); 
@@ -81,10 +81,8 @@ namespace sub_task1{
     				g[v].erase(find(all(g[v]), u));
     			}
     	}
-    	fod(i,1,n){
-    		fod(j,1,m) cout << ans[i][j] << " ";
-    		cout << el;
-    	}
+    	
+    	for(ii x : history) cout << ans[x.fi][x.se] << " ";
     }	
     
 }

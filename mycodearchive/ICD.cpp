@@ -38,53 +38,24 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int n, m;
-char a[1001][1001];
+int n, a[base], b[base], c[base];
 void inp(){
-	cin >> n >> m;
-	fod(i,1,n) fod(j,1,m){
-		cin >> a[i][j];
-	}
+	cin >> n;
+	fod(i,1,n) cin >> a[i];
 }
-vector <int> g[base];
 namespace sub_task1{
-    int match[base], deg[base], dd[base], mark[101][101], ans[105][105];
-    bool konig(int u, int cnt, int color){
-    	if(dd[u] == cnt) return 0;
-    	dd[u] = cnt;
-    	for(int v : g[u]){
-    		if(bool ch = (u > n and g[match[v]].size() < color); match[v] == 0 or ch or konig(match[v],cnt,color)){
-    			if(ch) match[match[v]] = 0;
-    			match[u] = v;
-    			match[v] = u;
-    			return 1;
-    		}
-    	}
-    	return 0;
-    }
     void solve(){
-    	fod(i,1,n) fod(j,1,m){
-    		if(a[i][j] == '1') g[i].pb(j+n), g[j+n].pb(i);
-    	}
-    	int res = 0;
-    	fod(i,1,n + m) maxi(res, (int)g[i].size()); 
-    	cout << res << el;
-    	int cnt = 0;
-    	fok(color,res,1){
-    		memset(match, 0, sizeof match);
-    		fod(i,1,m+n){
-    			if(match[i] == 0 and g[i].size() == color) konig(i, ++cnt, color);
-    		}
-    		fod(u,1,n) if(int v = match[u]; match[u]){
-    				ans[u][v-n] = color;
-    				g[u].erase(find(all(g[u]), v));
-    				g[v].erase(find(all(g[v]), u));
-    			}
-    	}
+    	int inc = 0;
     	fod(i,1,n){
-    		fod(j,1,m) cout << ans[i][j] << " ";
-    		cout << el;
+    		//increase i+1...n by (a[i] / (n - i))
+    		//assign i by (a[i] % (n - i))
+    		a[i] += inc;
+    		if(i < n){
+    			inc += (a[i] / (n - i));
+    			a[i] = (a[i] % (n - i));
+    		}
     	}
+    	fod(i,1,n) cout << a[i] << " ";
     }	
     
 }
