@@ -64,7 +64,17 @@ inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
 inline int Div(int x, int y, int mod = MOD) { return prod(x, Inv(y, mod), mod);}
 const int base = 1e6 + 5;
-int n, a[base];
+int n, a[base], L;
+int get(){
+	sort(a+1,a+n+1,greater<int>());
+	int hindex = 0, mi = 1e18;
+	fod(i,1,n){
+		mi = min(mi, a[i]);
+		if(mi >= hindex + 1) hindex++;
+		else break; 
+	}
+	return hindex;
+}
 signed main(){
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	if(fopen(".inp", "r")){
@@ -75,16 +85,10 @@ signed main(){
 	    freopen(name".inp", "r", stdin);
 	    freopen(name".out", "w", stdout);
 	}
-	cin >> n;
+	cin >> n >> L;
 	fod(i,1,n) cin >> a[i];
-	sort(a+1,a+n+1,greater<int>());
-	int hindex = 0, mi = 1e18;
-	fod(i,1,n){
-		mi = min(mi, a[i]);
-		if(mi >= hindex + 1) hindex++;
-		else break; 
-	}
-	cout << hindex;
+	int k = get();
+	cout << k;
 	cerr << "\nTime: " << clock() << "ms\n";
 	cerr << "Code now -> Success comes\n";
 	return 0;
