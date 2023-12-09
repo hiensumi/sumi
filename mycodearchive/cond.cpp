@@ -26,83 +26,39 @@ template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 struct point{int x, y;};
 struct edge{int u, v, c;};
-/*int find(int u) { if (par[u] == u) return u; return par[u] = find(par[u]);}
-bool join(int u, int v) {int paru = find(u), parv = find(v); if (paru == parv) return false; par[parv] = paru; return true; }*/ 
+//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
+//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-#define name "PASSWORD"
+#define name "cond"
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
 void init(){
     
 }
-int n, k, a[base], b[base];
-void rotate(){
-    int tmp = b[1];
-    fod(i,1,n-1) b[i] = b[i+1];
-    b[n] = tmp;
-}
+int n, dp[base], g[base];
 void inp(){
-    cin >> n >> k;
-    fod(i,1,n) cin >> a[i];
-    fod(i,1,n) cin >> b[i];
+	dp[1] = 1; dp[2] = 3;
+	dp[0] = 1;
+	fod(i,3,10){
+		int x = 1;
+		// x = ways to match in range(i,j)
+		fod(j,1,i) x = (x * (i - j + 1)) /j, dp[i] += x * dp[i-j];
+	}
 }
 
 namespace sub_task1{
     void solve(){
-        int res = 0;
-        fod(rot,1,k){
-            fod(i,1,n) (res += (a[i] % MOD * b[i] % MOD) % MOD) %= MOD;
-            rotate();
-        }
-
-        cout << res;
+    	while(cin >> n){
+    		if(n == -1) kill();
+    		cout << dp[n] << el;
+    	}
     }	
+    
 }
-namespace sub_task2{
-    void solve(){
-        int s = 0;
-        fod(i,1,min(k,n)){
-            fod(j,1,n){
-                (s += (a[j] % MOD * b[j] % MOD) % MOD) %= MOD;
-            }
-            rotate();
-        }
-        if(k > n){
-            int left = k % n;
-            int x = k / n;
-            s = (s % MOD * x % MOD) % MOD;
-            fod(rot, 1, left){
-                fod(i,1,n){
-                    s += (a[i] % MOD * b[i] % MOD) % MOD;
-                    s %= MOD;
-                }
-                rotate();
-            }
-        }
-        
-        cout << s;
-    }
-}
-namespace sub_task3{
-    void solve(){
-        int res = 0;
-        int mul1 = 0; fod(i,1,n) (mul1 += a[i]) %= MOD;
-        int mul2 = 0; fod(i,1,n) (mul2 += b[i]) %= MOD;
-        if(k >= n) res = (mul1 % MOD * mul2 % MOD) % MOD;
-        int left = k % n, x = k / n;
-        if(x > 0) res = (res % MOD * max(1ll, x) % MOD) % MOD;
 
-        fod(i,n+1,2*n) b[i] = b[i - n];
-        fod(i,1,2*n) (b[i] += b[i-1]) %= MOD;
-
-        fod(i,1,n) (res += (a[i] % MOD * (b[i + left - 1] - b[i-1]) % MOD) % MOD + MOD) %= MOD;
-
-        cout << res;
-    }
-}
 signed main(){
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
     if(fopen(name".inp", "r")){
@@ -113,9 +69,39 @@ signed main(){
     init();
     while(Test--){
         inp();
-        if(n <= 1e3 and k <= 1e3) sub_task1 :: solve();
-        else if(n <= 1e3 and k > 1e3) sub_task2 :: solve();
-        else sub_task3 :: solve();
+        sub_task1 :: solve();
     }
     kill();
 }
+/*
+										Trú mưa nơi gốc cây ngày xưa
+										Để nhìn em lần cuối trong mưa
+										Để nắm tay đưa em đi về
+										Chốn mộng mơ...
+										
+										Có hôm mây gió chợt ca vang
+										Nụ cười em như nắng mùa thu sang
+										Làm lòng tôi xao xuyến mà lang thang
+										Nghĩ về em...
+										
+										Mình tôi thao thức
+										mình tôi day dứt
+										Cớ sao em không về với tôi 
+										Mình tôi thao thức
+										mình tôi day dứt
+										Cớ sao em không cười với tôi
+										Gió mang câu ca về nơi đây
+										gió mang câu ca về với đời em
+										Nắng mang câu thơ về nơi đây
+										chính em mang thơ về với tình ta ...
+										
+										Chiếc radio của em
+										Và từng ly trà đá ly kem
+										Cùng hát lên câu ca êm đềm
+										giữa mùa yêu
+										
+										Những bông hoa xanh ngoài hiên
+										Vào buổi chiều tràn nắng an nhiên
+										Ta ngồi bên cạnh nhau 
+										ngắm mùa thu sang...
+*/

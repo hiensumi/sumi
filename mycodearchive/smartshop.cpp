@@ -19,7 +19,7 @@ inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ �
 inline void add(int &x, int y, int mod = MOD) { x += y; while (x >= mod) x -= mod; while (x < 0) x += mod;}
 inline void mul(int &x, int y, int mod = MOD) { x = (x * 1LL * y) % mod;}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) mul(ans, x, mod); mul(x, x, mod); y >>= 1;} return ans;}
-inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
+inline long double bp(long double a, int b){long double res = 1.0; while (b > 0) {if (b & 1) res = (long double)res * a; a = (long double) a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
 inline int Div(int x, int y, int mod = MOD) { int tmp = x; mul(tmp, Inv(y, mod), mod); return tmp;}
 template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
@@ -35,42 +35,35 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
+int n, m, a[base], b[base], sz = 0;
+int root2 = bp(2,20), root3 = bp(3,20), root5 = bp(5,14);
 void init(){
-    
+	
 }
-int n, c[base];
-vector<ii> hn;
-vector <int> adj[base];
 void inp(){
-	cin >> n;
-	fod(i,1,n-1){
-		int u, v; cin >> u >> v;
-		hn.pb({u,v});
-		adj[u].pb(v);
-		adj[v].pb(u);
+	cin >> n >> m;
+	fod(i,1,n ) cin >> a[i];
+	fod(i,1,n){
+		int x = a[i];
+		if(x == 0){continue;}
+		if(root2 % x == 0 or root3 % x == 0 or root5 % x == 0){
+			// cout << x << el;
+			b[++sz] = x;
+		}
+		
 	}
-	fod(i,1,n) cin >> c[i];
 }
-
 namespace sub_task1{
-	int total = 0;
+    
     void solve(){
-    	for(auto [u,v] : hn){
-    		if(c[u] != c[v]) total++;
+    	sort(b + 1, b + sz + 1);
+    	while(m--){
+    		int u, v; cin >> u >> v;
+    		int l = lower_bound(b + 1, b + sz + 1, u) - b;
+    		int r = upper_bound(b + 1, b + sz + 1, v) - b - 1;
+    		// cout << l << " " << r << el;
+    		cout << max(0ll, r - l + 1) << el;
     	}
-    	vector <int> res;
-    	fod(i,1,n){
-    		int cnt = 0;
-    		for(int j : adj[i]) if(c[i] != c[j]){
-    			cnt++;
-    		}
-    		if(cnt == total) res.pb(i);
-    	}
-    	if(res.size()){
-    		cout << "YES" << el;
-    		for(int x : res) cout << x << " ";
-    	}
-    	else cout << "NO";
     }	
     
 }

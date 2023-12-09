@@ -14,7 +14,7 @@
 #define odd(i) (i & 1LL)
 using namespace std;
 typedef pair<int, int> ii;
-const int MOD = 1e9 + 7;
+const int MOD = 1e9 + 9;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline void add(int &x, int y, int mod = MOD) { x += y; while (x >= mod) x -= mod; while (x < 0) x += mod;}
 inline void mul(int &x, int y, int mod = MOD) { x = (x * 1LL * y) % mod;}
@@ -35,44 +35,56 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
+int n, m , k, prime[base], sz = 0, np[base], p[base], q[base], mp[base], mq[base];
+int lcm(int a, int b){
+	return a * b / __gcd(a,b);
+}
 void init(){
-    
-}
-int n, c[base];
-vector<ii> hn;
-vector <int> adj[base];
-void inp(){
-	cin >> n;
-	fod(i,1,n-1){
-		int u, v; cin >> u >> v;
-		hn.pb({u,v});
-		adj[u].pb(v);
-		adj[v].pb(u);
+	fod(i,2,1e6) if(np[i] == 0){
+	  np[i] = i;
+		for(int j = i * i; j <= 1e6; j += i) np[j] = i; 
 	}
-	fod(i,1,n) cin >> c[i];
 }
-
+void PtP(int n){
+	while(n > 1){
+    int u = np[n];
+    while(n % u == 0 and n > 1){
+      mp[u]++;
+      n /= u;
+    }
+  }
+}
+void PtQ(int n){
+  while(n > 1){
+    int u = np[n];
+    while(n % u == 0 and n > 1){
+      mq[u]++;
+      n /= u;
+    }
+  }
+}
+void inp(){
+	cin >> n >> m >> k;
+	fod(i,1,n){
+		int x; cin >> x; PtP(x);
+	}
+	fod(i,1,m){
+		int x; cin >> x; PtQ(x);
+	}
+	
+}
 namespace sub_task1{
-	int total = 0;
+	int calc(int x, int y){
+		return (bpow(y-x+1, k) % MOD - bpow(y-x, k) % MOD - bpow(y-x, k) % MOD + bpow(y-x-1,k) % MOD + MOD) % MOD;
+	}
     void solve(){
-    	for(auto [u,v] : hn){
-    		if(c[u] != c[v]) total++;
+    	int res = 1;
+    	fod(i,1,1e6){
+    		if(mp[i] > mq[i]) return void(cout << 0);
+    		else if(mp[i] < mq[i]) res = (res % MOD * calc(mp[i], mq[i]) % MOD + MOD) % MOD;
     	}
-    	vector <int> res;
-    	fod(i,1,n){
-    		int cnt = 0;
-    		for(int j : adj[i]) if(c[i] != c[j]){
-    			cnt++;
-    		}
-    		if(cnt == total) res.pb(i);
-    	}
-    	if(res.size()){
-    		cout << "YES" << el;
-    		for(int x : res) cout << x << " ";
-    	}
-    	else cout << "NO";
+    	cout << res % MOD;
     }	
-    
 }
 
 signed main(){
