@@ -38,13 +38,29 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
+int n, m, p, q, dp[41][41][41][41];
 void inp(){
-
+	cin >> n >> m >> p >> q;
+	fod(i,1,n) fod(j,1,m) fod(k,1,p) fod(t,1,q) cin >> dp[i][j][k][t];
+	fod(x, 1, n) fod(y, 1, m) fod(z, 1, p) fod(t,1,q) 
+			dp[x][y][z][t] += dp[x - 1][y][z][t] + dp[x][y - 1][z][t] + dp[x][y][z - 1][t] - dp[x - 1][y - 1][z][t] - dp[x - 1][y][z - 1][t] - dp[x][y - 1][z - 1][t] + dp[x - 1][y - 1][z - 1][t];
 }
 
 namespace sub_task1{
+    int sum(int x, int y, int z, int u, int v, int t, int t1){
+		return dp[u][v][t][t1] - dp[x - 1][v][t][t1] - dp[u][y - 1][t][t1] - dp[u][v][z - 1][t1] + dp[x - 1][y - 1][t][t1] + dp[x - 1][v][z - 1][t1] + dp[u][y - 1][z - 1][t1] - dp[x - 1][y - 1][z - 1][t1];
+	}
     void solve(){
-    
+    	int t; cin >> t;
+    	while(t--){
+    		int x1,y1,z1,t1,x2,y2,z2,t2;
+    		cin >> x1 >> y1 >> z1 >> t1 >> x2 >> y2 >> z2 >> t2;
+    		int res = 0;
+    		fod(t,t1,t2){
+    			res += sum(x1,y1,z1,x2,y2,z2,t);
+    		}
+    		cout << res << el;
+    	}
     }	
     
 }
@@ -63,3 +79,35 @@ signed main(){
     }
     kill();
 }
+/*
+										Trú mưa nơi gốc cây ngày xưa
+										Để nhìn em lần cuối trong mưa
+										Để nắm tay đưa em đi về
+										Chốn mộng mơ...
+										
+										Có hôm mây gió chợt ca vang
+										Nụ cười em như nắng mùa thu sang
+										Làm lòng tôi xao xuyến mà lang thang
+										Nghĩ về em...
+										
+										Mình tôi thao thức
+										mình tôi day dứt
+										Cớ sao em không về với tôi 
+										Mình tôi thao thức
+										mình tôi day dứt
+										Cớ sao em không cười với tôi
+										Gió mang câu ca về nơi đây
+										gió mang câu ca về với đời em
+										Nắng mang câu thơ về nơi đây
+										chính em mang thơ về với tình ta ...
+										
+										Chiếc radio của em
+										Và từng ly trà đá ly kem
+										Cùng hát lên câu ca êm đềm
+										giữa mùa yêu
+										
+										Những bông hoa xanh ngoài hiên
+										Vào buổi chiều tràn nắng an nhiên
+										Ta ngồi bên cạnh nhau 
+										ngắm mùa thu sang...
+*/

@@ -82,6 +82,7 @@ namespace sub_task1{
  		}
  		m--;
  		h[m+1] = h[1];
+ 		// cout << h[1].x << " " << h[1].y << el;
  		int total = hullarea(m,h);
     	int q; cin >> q;
     	while(q--){
