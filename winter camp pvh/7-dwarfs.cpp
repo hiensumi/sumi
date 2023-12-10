@@ -3,7 +3,6 @@
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
-#define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -31,23 +30,37 @@ struct edge{int u, v, c;};
 const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-#define name ""
+#define name "7-dwarfs"
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
 void init(){
     
 }
+int n;
+vector <int> height;
+vector <string> v[1005];
 void inp(){
-
+  cin >> n;
+  fod(i,1,n){
+    string s; cin >> s;
+    int x; cin >> x;
+    v[x].pb(s);
+    height.pb(x);
+  }
+  for(int x : height){
+    if(v[x].size() == 7){
+      sort(all(v[x]));
+      for(string s : v[x]) cout << s << " ";
+      kill();
+    }
+  }
 }
 namespace sub_task1{
-    
     void solve(){
-		
-		
-		
-    }	
+	
+      
+    }
 }
 
 signed main(){
@@ -64,36 +77,3 @@ signed main(){
     }
     kill();
 }
-/*
-										Trú mưa nơi gốc cây ngày xưa
-										Để nhìn em lần cuối trong mưa
-										Để nắm tay đưa em đi về
-										Chốn mộng mơ...
-										
-										Có hôm mây gió chợt ca vang
-										Nụ cười em như nắng mùa thu sang
-										Làm lòng tôi xao xuyến mà lang thang
-										Nghĩ về em...
-										
-										Mình tôi thao thức
-										mình tôi day dứt
-										Cớ sao em không về với tôi 
-										Mình tôi thao thức
-										mình tôi day dứt
-										Cớ sao em không cười với tôi
-										Gió mang câu ca về nơi đây
-										gió mang câu ca về với đời em
-										Nắng mang câu thơ về nơi đây
-										chính em mang thơ về với tình ta ...
-										
-										Chiếc radio của em
-										Và từng ly trà đá ly kem
-										Cùng hát lên câu ca êm đềm
-										giữa mùa yêu
-										
-										Những bông hoa xanh ngoài hiên
-										Vào buổi chiều tràn nắng an nhiên
-										Ta ngồi bên cạnh nhau 
-										ngắm mùa thu sang...
-#listening to her music while coding is great
-*/
