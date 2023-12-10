@@ -86,7 +86,7 @@ signed main(){
 		fod(j,1,n) if(i != j){
 			// mi = min(mi, gg(a[i], a[j]));
 			if(mi > gg(a[i], a[j])){
-				mi == gg(a[i], a[j]);
+				mi = gg(a[i], a[j]);
 				pos = j;
 			}
 		}

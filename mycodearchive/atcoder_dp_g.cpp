@@ -1,5 +1,4 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
-#pragma GCC optimize("O3")
 #include "bits/stdc++.h"
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
@@ -39,59 +38,30 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-int a, b, m, match[base];
+int n, m, dp[base];
 vector <int> g[base];
-vector <ii> hn;
 void inp(){
-	cin >> a >> b >> m;
+	cin >> n >> m;
 	fod(i,1,m){
 		int u, v; cin >> u >> v;
-		g[u].pb(v + a);
-		g[v+a].pb(u);
-		hn.pb(ii(u,v));
+		g[u].pb(v);
 	}
 }
+
 namespace sub_task1{
-	int cnt = 0;
-	int ans[1005][1005], dd[base];
-    bool konig(int u, int color){
-    	if(dd[u] == cnt) return 0;
-    	dd[u] = cnt;
-    	for(int v : g[u]){
-    		bool ch = u > a and g[match[v]].size() < color; 
-    		if(ch or match[v] == 0 or konig(match[v], color)){
-    			if(ch) match[match[v]] = 0;
-    			match[v] = u;
-    			match[u] = v;
-    			return 1;
-    		} 
-    	}
-    	return 0;
-    }
+	int dfs(int u){
+		if(dp[u]) return dp[u];
+		for(int v : g[u]){
+			dp[v] = dfs(v);
+			maxi(dp[u], dp[v] + 1);
+		}
+		return dp[u];
+	}
     void solve(){
+    	fod(i,1,n) dfs(i);
     	int res = 0;
-    	fod(i,1,a+b) maxi(res, (int)g[i].size()), sort(all(g[i]));
-    	cout << res << el;
-		fok(color, res, 1){
-			fod(i,1,a+b) match[i] = 0;
-			fod(i,1,a+b){
-				if(match[i] == 0 and g[i].size() == color){
-					++cnt;
-					konig(i,color);
-				}
-			}
-			
-			fod(u,1,a) if(match[u] != 0){
-				int v = match[u];
-				ans[u][v-a] = color;
-				g[u].erase(find(all(g[u]), v));
-				g[v].erase(find(all(g[v]), u));
-			}
-		}
-		
-		for(ii x : hn){
-			cout << ans[x.fi][x.se] << " ";
-		}
+    	fod(i,1,n)	maxi(res, dp[i]);
+    	cout << res;
     }	
     
 }
@@ -141,4 +111,5 @@ signed main(){
 										Vào buổi chiều tràn nắng an nhiên
 										Ta ngồi bên cạnh nhau 
 										ngắm mùa thu sang...
+#listening to mai_khanh's music while coding
 */
