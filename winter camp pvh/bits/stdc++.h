@@ -27,26 +27,49 @@
  */
 
 // 17.4.1.2 Headers
+
+#if __cplusplus >= 201103L
+#include <ccomplex>
+#include <cfenv>
+#include <cinttypes>
+#include <cstdalign>
+#include <cstdbool>
+#include <cstdint>
+#include <ctgmath>
+#include <cuchar>
+#endif
+
 // C++
 #include <algorithm>
 #include <bitset>
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <complex>
 #include <deque>
+#include <exception>
+#include <fstream>
 #include <functional>
 #include <iomanip>
 #include <unordered_map>
+#include <ios>
+#include <iosfwd>
 #include <iostream>
+#include <istream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <locale>
 #include <map>
+#include <memory>
 #include <new>
 #include <numeric>
 #include <ostream>
 #include <queue>
 #include <set>
+#include <sstream>
 #include <stack>
-#include <time.h>
+#include <stdexcept>
+#include <streambuf>
 #include <string>
+#include <typeinfo>
 #include <utility>
+#include <valarray>
 #include <vector>

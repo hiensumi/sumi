@@ -93,6 +93,7 @@ namespace sub_task1{
     		}
     		right.pb(i);
     	}
+    	// fod(i,1,n) cout << a[r[i]].x << " " << a[r[i]].y << el;
     	vector <pld> seg;
     	fod(i,2,n-1) if(odd(i)){
     		seg.pb(pld(LeftCut(a[l[i]], a[i]), RightCut(a[i], a[r[i]])));

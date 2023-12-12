@@ -3,6 +3,7 @@
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
+#define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -13,7 +14,7 @@
 #define odd(i) (i & 1LL)
 using namespace std;
 typedef pair<int, int> ii;
-const int MOD = 998244353;
+const int MOD = 1e3 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline void add(int &x, int y, int mod = MOD) { x += y; while (x >= mod) x -= mod; while (x < 0) x += mod;}
 inline void mul(int &x, int y, int mod = MOD) { x = (x * 1LL * y) % mod;}
@@ -27,67 +28,90 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 //int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
 //bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
-const ll INF = 1e18, base = 3e5 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-#define name "men-graph"
+#define name ""
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
-int n, m;
-vector <ii> hn;
-vector <int> g[base];
-int cb3[2*base], cb2[2*base];
 void init(){
     
 }
-unordered_map<int,int> mp[2*base];
-void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v; cin >> u >> v;
-		g[u].pb(v);
-		g[v].pb(u);
-		hn.pb(ii(u,v));
-		mp[u][v] = 1;
-		mp[v][u] = 1;
+struct FenwickTree{
+	int n, b1[base], b2[base];
+	void init(int n){
+		this-> n = n;
 	}
-	fod(i,0,3e5 + 1){
-    	cb2[i] = 1ll * i * (i - 1) / 2 % MOD;
-    	cb3[i] = 1ll * i * (i - 1) * (i - 2) / 6 % MOD;
-    }
+	void add(int idx, int b[], int val){
+		while(idx <= n){
+			b[idx] += val;
+			idx += idx & -idx;
+		}
+	}
+	void range_add(int l, int r, int val){
+		add(l,b1,val);
+		add(r+1,b1,-val);
+		add(l,b2,val * (l - 1));
+		add(r+1,b2,- val * r);
+	}
+	void add(int id, int x){
+		return range_add(id,id,x);
+	}
+	int sum(int b[], int idx){
+		int res = 0;
+		while(idx){
+			res += b[idx];
+			idx -= idx & -idx;
+		}
+		return res;
+	}
+	int getall(int idx){
+		return sum(b1, idx)  * idx - sum(b2, idx);
+	}
+	int get(int l, int r){
+		if(l <= 0 or r <= 0) return 0;
+		if(l > r) return 0;
+		return getall(r) - getall(l-1);
+	}
+}BIT;
+void calc(int n, int& x, int& y){
+	if(n == 0){
+		x = 0;
+		y = 1;
+		return;
+	}
+	if(odd(n)){
+		calc(n-1,y,x);
+		(y += x) %= MOD;
+	}
+	else{
+		int a = 0, b = 0;
+		calc(n/2,a,b);
+		y = (a * a % MOD + b * b % MOD + MOD) % MOD;
+		x = (a * b % MOD + a * (b - a) % MOD + MOD) % MOD;
+	}
+}
+int n, q, a[base];
+void inp(){
+	cin >> n >> q;
 }
 namespace sub_task1{
-	int cntJ(int u, int v){
-		if(g[u].size() > g[v].size()) swap(u,v);
-		if(g[u].size() == g[v].size() and u > v) swap(u,v);
-		int z = 0;
-		for(int i : g[u]) if(mp[v].find(i) != mp[v].end()) z++;
-		return z;
-	}
-	int calc(int u, int v){
-		int d = cntJ(u, v);
-		int szu = g[u].size(), szv = g[v].size();
-	
-		ll ans = 1ll * cb3[szu - 1] * cb2[szv - d - 1];
-		if (d > 0 && szv > 1 + d && szu > 4) ans += 1ll * d * (szv - d - 1) * cb3[szu - 2];
-		if (d > 1 && szu > 5) ans += 1ll * cb3[szu - 3] * cb2[d];
-	
-		swap(szu, szv);
-		ans += 1ll * cb3[szu - 1] * cb2[szv - d - 1];
-		if (d > 0 && szv > 1 + d && szu > 4) ans += 1ll * d * (szv - d - 1) * cb3[szu - 2];
-		if (d > 1 && szu > 5) ans += 1ll * cb3[szu - 3] * cb2[d];
-	
-		return (ans % MOD);
-	}
     void solve(){
-		fod(i,1,n) mp[i].reserve(mask(15)), mp[i].max_load_factor(0.25);
- 		ll res = 0;
- 		for(ii p : hn){
- 			int u = p.fi, v = p.se;
- 			res += 1ll * calc(u,v);
- 		}
- 		cout << res % MOD;
+		BIT.init(n);
+		while(q--){
+			int type, l , r; cin >> type >> l >> r;
+			if(type == 1){
+				int x; cin >> x;
+				int fiz = 0, fiz1 = 1;
+				calc(x,fiz,fiz1);
+				BIT.range_add(l,r,fiz);
+			}
+			else{
+				cout << BIT.get(l,r) << el;
+			}
+		}
+		
     }	
 }
 

@@ -5,7 +5,7 @@
 #define int long long
 #define fi first
 #define se second
-#define name ""
+#define name "quanho"
 #define pb push_back
 using namespace std;
 typedef pair<int,int> ii;

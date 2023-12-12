@@ -3,6 +3,7 @@
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
+#define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -13,7 +14,7 @@
 #define odd(i) (i & 1LL)
 using namespace std;
 typedef pair<int, int> ii;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline void add(int &x, int y, int mod = MOD) { x += y; while (x >= mod) x -= mod; while (x < 0) x += mod;}
 inline void mul(int &x, int y, int mod = MOD) { x = (x * 1LL * y) % mod;}
@@ -27,67 +28,69 @@ struct point{int x, y;};
 struct edge{int u, v, c;};
 //int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
 //bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
-const ll INF = 1e18, base = 3e5 + 5, multitest = 0;
+const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-#define name "men-graph"
+#define name "trie"
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
-int n, m;
-vector <ii> hn;
-vector <int> g[base];
-int cb3[2*base], cb2[2*base];
 void init(){
     
 }
-unordered_map<int,int> mp[2*base];
+#define pis pair<int,string>
+int n;
+vector <pis> adj[base]; 
 void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v; cin >> u >> v;
-		g[u].pb(v);
-		g[v].pb(u);
-		hn.pb(ii(u,v));
-		mp[u][v] = 1;
-		mp[v][u] = 1;
+	cin >> n;
+	fod(i,1,n-1){
+		int u, v;
+		string c; cin >> u >> v >> c;
+		adj[u].pb(pis(v,c));
+		adj[v].pb(pis(u,c));
 	}
-	fod(i,0,3e5 + 1){
-    	cb2[i] = 1ll * i * (i - 1) / 2 % MOD;
-    	cb3[i] = 1ll * i * (i - 1) * (i - 2) / 6 % MOD;
-    }
 }
 namespace sub_task1{
-	int cntJ(int u, int v){
-		if(g[u].size() > g[v].size()) swap(u,v);
-		if(g[u].size() == g[v].size() and u > v) swap(u,v);
-		int z = 0;
-		for(int i : g[u]) if(mp[v].find(i) != mp[v].end()) z++;
-		return z;
+	void solve(){
+		int res = 0;
+		fod(i,1,n){
+			if(adj[i].size() == 1){res++; continue;}
+			string x;
+			bool ch = 0;
+			for(auto [v,w] : adj[i]) if(x == w) ch = 1; else x = w;
+			if(ch == 0) res++;
+		}
+		cout << res;
 	}
-	int calc(int u, int v){
-		int d = cntJ(u, v);
-		int szu = g[u].size(), szv = g[v].size();
-	
-		ll ans = 1ll * cb3[szu - 1] * cb2[szv - d - 1];
-		if (d > 0 && szv > 1 + d && szu > 4) ans += 1ll * d * (szv - d - 1) * cb3[szu - 2];
-		if (d > 1 && szu > 5) ans += 1ll * cb3[szu - 3] * cb2[d];
-	
-		swap(szu, szv);
-		ans += 1ll * cb3[szu - 1] * cb2[szv - d - 1];
-		if (d > 0 && szv > 1 + d && szu > 4) ans += 1ll * d * (szv - d - 1) * cb3[szu - 2];
-		if (d > 1 && szu > 5) ans += 1ll * cb3[szu - 3] * cb2[d];
-	
-		return (ans % MOD);
-	}
+		
+}
+namespace sub_task2{
+    bool bfs(int u){
+    	set <string> mp;
+    	queue <pis> q;
+    	q.push(pis(u, ""));
+    	vector <int> par(n + 1);
+    	par[u] = 0;
+    	while(!q.empty()){
+    		int u = q.front().fi;
+    		string s = q.front().se;
+    		q.pop();
+    		for(auto [v,w] : adj[u]) if(v != par[u]){
+    			string new_s = s + w;
+    			if(mp.find(new_s) != mp.end()) return 0;
+    			mp.insert(new_s);
+    			q.push(pis(v, new_s));
+    			par[v] = u;
+    		}
+    	}
+    	return 1;
+    }
     void solve(){
-		fod(i,1,n) mp[i].reserve(mask(15)), mp[i].max_load_factor(0.25);
- 		ll res = 0;
- 		for(ii p : hn){
- 			int u = p.fi, v = p.se;
- 			res += 1ll * calc(u,v);
- 		}
- 		cout << res % MOD;
+    	int res = 0;
+		fod(i,1,n){
+			if(bfs(i)) res++;
+		}
+		cout << res;
     }	
 }
 
@@ -101,7 +104,12 @@ signed main(){
     init();
     while(Test--){
         inp();
-        sub_task1 :: solve();
+        int root = 0, ma = 0;
+		fod(i,1,n){
+			maxi(ma, (int) adj[i].size());
+		}
+        if(ma > 2) sub_task2 :: solve();
+    	else if(ma <= 2) sub_task1 :: solve();
     }
     kill();
 }
