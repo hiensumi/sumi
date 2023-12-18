@@ -33,20 +33,17 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
-template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
-template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
+template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define name ""
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
@@ -54,14 +51,56 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n , m,  T, dp[5100][5100];
+ve <pii> g[base];
 void inp(){
-
+	cin >> n >> m  >> T;
+	fod(i,1,m){
+		int u, v, c; cin >> u >> v >> c;
+		g[u].pb(mp(v,c));
+	}
 }
 
 namespace sub1{
-   
+	int dd[base];
+   	void dfs(int u){
+   		if(dd[u]) return;
+   		if(u == n){
+   			dp[n][1] = 0;
+   			return;
+   		}
+   		dd[u] = 1;
+   		for(pii x : g[u]){
+   			int v = x.fi, w = x.se;
+   			dfs(v);
+   			fod(j,1,n){
+   				mini(dp[u][j], dp[v][j-1] + w);
+   			}
+   		}
+   	}
+   	vi ans;
+   	void trace(int u, int j){
+   		if(u == n){
+   			ans.pb(n);
+   			return;
+   		}
+   		ans.pb(u);
+   		for(pii x : g[u]){
+   			int v = x.fi, w = x.se;
+   			if(dp[v][j-1] + w == dp[u][j]){
+   				trace(v,j-1);
+   				return;
+   			}
+   		}
+   	}
     void solve(){
-    
+    	fod(i,0,n+1) fod(j,0,n+1) dp[i][j] = INF;
+    	dfs(1);
+    	int res = 0;
+    	fod(i,1,n) if(dp[1][i] <= T) res = i;
+    	cout << res << el;
+    	trace(1,res);
+    	for(int x : ans) cout << x << " ";
     }	
 }
 namespace sub2{
@@ -79,7 +118,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

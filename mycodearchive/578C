@@ -48,20 +48,40 @@ inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
 template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 #define name ""
-#define ld long double
+#define ld double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
-const ld PI = acos(-1) , EPS = 1e-9;
+const ld PI = acos(-1) , EPS = 1e-11;
 void init(){} // remember to reset value for multitestcase
+int n;
+ld a[base];
 void inp(){
-
+	cin >> n;
+	fod(i,1,n) cin >> a[i];
 }
 
 namespace sub1{
-   
+	ld b[base];
+   	ld calc(ld x){
+   		ld cur = 0, mi = 0, ma = 0;
+   		fod(i,1,n){
+   			cur += ((ld)a[i] - x);
+   			mini(mi, cur);
+   			maxi(ma, cur);
+   		}
+   		return ma - mi;
+   	}
     void solve(){
-    
+    	ld l = -10000, r = 10000;
+    	fod(i,1,100){
+    		ld m1 = (l + (r - l)/3);
+    		ld m2 = (r - (r - l)/3) ;
+    		ld x1 = calc(m1), x2 = calc(m2);
+    		if(x1 < x2) r = m2;
+    		else l = m1;
+    	}
+    	cout << setprecision(10) << fixed << calc(l);
     }	
 }
 namespace sub2{
@@ -79,7 +99,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

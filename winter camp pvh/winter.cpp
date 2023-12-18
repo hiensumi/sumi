@@ -1,9 +1,10 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
+#include <cstring>
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
-#define int long long
+// #define int long long
 #define fi first
 #define se second
 #define mask(i) (1LL<<(i))
@@ -31,47 +32,49 @@ struct edge{int u, v, c;};
 const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-#define name ""
+#define name "nazi"
 #define ld long double
 // remember to reset value for multitestcase
 // she is your motivation!!!
 void init(){
     
 }
-string s;
-int nb, ns, nc, pb, ps, pc, B, S, C, R, prep = 0;
+int r, c, n, a[101][101];
 void inp(){
-	cin >> s;
-	for(char c : s){
-		if(c == 'B') B++;
-		if(c == 'S') S++;
-		if(c == 'C') C++;
-	}
-	cin >> nb >> ns >> nc;
-	cin >> pb >> ps >> pc;
-	cin >> R;
-	if(nb >= B and ns >= S and nc >= C) prep = min({nb/max(B,1ll),ns/max(S,1ll),nc/max(C,1ll)}), nb -= prep * B; ns -= prep * S; nc -= prep * C;
-	// cout << nb << " " << ns << " " << nc << el;
+	cin >> r >> c >> n;
 }
+vector <ii> dir = {
+	{-1,0},  {1,0} , {0,1} , {0,-1}
+};
 namespace sub_task1{
-    bool check(int mid){
-    	int cost = 0;
-    	
-    	int numB = max(0ll, mid * B - nb);
-    	int numS = max(0ll, mid * S - ns);
-    	int numC = max(0ll, mid * C - nc);
-    	cost += numB * pb + numC * pc + numS * ps;
-    	return cost <= R;
-    }
+    int dd[101][101];
     void solve(){
-		int l = 0, r = 1e14, ans = -1;
-		while(l <= r){
-			int mid = l + r >> 1;
-			if(check(mid)) l = mid +1 ,ans = mid;
-			else r = mid - 1;
+		queue <ii> q;
+		memset(a, 0x3f, sizeof a);
+		fod(i,1,n){
+			int u, v; cin >> u >> v;
+			q.push(ii(u,v));
+			a[u][v] = 1;
+			dd[u][v] = 1;
 		}
-		cout << ans + prep;
 		
+		while(!q.empty()){
+			int u = q.front().fi, v = q.front().se;
+			q.pop();
+			for(auto [i,j] : dir){
+				int x = u + i, y = v + j;
+				if(!(1 <= x and x <= r and 1 <= y and y <= c)) continue;
+				if(mini(a[x][y], a[u][v] + 1 )){
+					if(dd[x][y] == 0){
+						q.push({x,y});
+						dd[x][y] = 1;
+					}
+				}
+			}
+		}
+		int res = -2e9;
+		fod(i,1,r) fod(j,1,c) maxi(res, a[i][j]);
+		cout << res;
 		
     }	
 }

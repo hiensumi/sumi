@@ -45,8 +45,8 @@ inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ �
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
-template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
-template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
+template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define name ""
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
@@ -54,14 +54,56 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, m, a[1001][1001];
 void inp(){
-
+	cin >> n >> m;
+	fod(i,1,n) fod(j,1,m) cin >> a[i][j];
 }
 
 namespace sub1{
-   
+	int dist(int x, int y, int a, int b){
+		int c = (x > a) ? (4 * x - 4 * a + 2) : (4 * a - 4 * x - 2);
+		int d = (y > b) ? (4 * y - 4 * b + 2) : (4 * b - 4 * y - 2);
+		return pow(c,2) + pow(d,2);	
+	}
+	int calc(int x, int y){
+		int res = 0;
+		fod(i,1,n) fod(j,1,m){
+			res += a[i][j] * dist(x,y,i,j);
+		}
+		return res;
+	}  
     void solve(){
-    
+    	int l = 0, r = n, x = 0, y = 0;
+    	fod(i,1,50){
+    		int m1 = l + (r - l )/ 3; 
+    		int m2 = r - (r - l)/ 3;
+    		int x1 = calc(m1,m), x2 = calc(m2,m);
+    		if(x1 <= x2) r = m2;
+    		else l = m1;
+    	}
+    	int ans = INF;
+    	fod(i,-20,20){
+    		if(l + i < 0 or l + i > n + 1) continue;
+    		if(mini(ans, calc(l + i, m))) x = l + i;
+    	}
+    	
+    	l = 0, r = m;
+    	fod(i,1,50){
+    		if(l > r) break;
+    		int m1 = l + (r - l)/3;
+    		int m2 = r - (r - l)/3;
+    		int x1 = calc(n,m1), x2 = calc(n,m2);
+    		if(x1 <= x2) r = m2;
+    		else l = m1;
+    	}
+    	ans = INF;
+    	fod(i,-20,20){
+    		if(l + i < 0 or l + i > m + 1) continue;
+    		if(mini(ans, calc(n, l + i))) y = l + i;
+    	}
+    	cout << calc(x,y) << el;
+    	cout << x << " " << y << el;
     }	
 }
 namespace sub2{
@@ -79,7 +121,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

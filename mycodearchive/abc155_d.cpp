@@ -54,14 +54,74 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, k , a[base];
 void inp(){
-
+	cin >> n >> k;
+	fod(i,1,n) cin >> a[i];
 }
-
+int pos[base], neg[base], zero[base], szpos, szneg, szzero;
+int x, y , z;
 namespace sub1{
-   
+	bool check1(int mid){
+		reverse(pos + 1, pos + szpos + 1);
+		int j = szneg, cnt = 0;
+		fod(i,1,szpos){
+			while(j >= 1 and pos[i] * neg[j] >= mid) j--;
+			if(j < 1) break;
+			cnt += j;
+		}
+		reverse(pos + 1, pos + szpos + 1);
+		return cnt < k;
+	}
+	bool check2(int mid){
+		int cnt = y, j = szpos;
+		fod(i,1,szpos){
+			while(j >= 1 and pos[i] * pos[j] >= mid) j--;
+			if(j <= i) break;
+			cnt += j - i;
+		}
+		j = szneg;
+		reverse(neg + 1, neg + szneg + 1);
+		fod(i,1,szneg){
+			while(j >= 1 and neg[i] * neg[j] >= mid) j--;
+			if(j <= i) break;
+			cnt += j - i;
+		}
+		reverse(neg + 1, neg + szneg + 1);
+		return cnt < k;
+	}
     void solve(){
-    
+   		fod(i,1,n){
+   			if(a[i] > 0) pos[++szpos] = a[i];
+   			if(a[i] < 0) neg[++szneg] = a[i];
+   			if(a[i] == 0) zero[++szzero] = a[i];
+   		}
+   		sort(pos + 1, pos + szpos + 1);
+   		sort(neg + 1, neg + szneg + 1);
+   		x = szneg * szpos, y = szzero * (szpos + szneg) + szzero * (szzero - 1) / 2, z = szneg * (szneg - 1)/2 + szpos * (szpos - 1)/2;
+   		y += x;
+   		z += y;
+   		if(k > x and k <= y){ cout << 0; kill();}
+    	if(k <= x){
+    		int l = -INF, r = -1, ans = 0;
+    		while(l <= r){
+    			int mid = l + r >> 1;
+    			if(check1(mid)) l = mid + 1, ans = mid;
+    			else r = mid - 1;
+    		}
+    		cout << ans << el;
+    	}
+    	
+    	else if(k > y and k <= z){
+    		// cout << check2(6);
+    		int l = 1, r = INF, ans = 0;
+    		while(l <= r){
+    			int mid = l + r >> 1;
+    			if(check2(mid)) l = mid + 1, ans = mid;
+    			else r = mid - 1;
+    		}	
+    		cout << ans << el;
+    	}
     }	
 }
 namespace sub2{
@@ -79,7 +139,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

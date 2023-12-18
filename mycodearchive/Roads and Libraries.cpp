@@ -33,13 +33,10 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
@@ -79,7 +76,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

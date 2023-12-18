@@ -54,9 +54,50 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
-
+int n, a[base], child[base], tot[base];
+vector <int> adj[base];
+void dfs(int u, int p){
+	child[u] += a[u];
+	for(int v : adj[u]){
+		if(v == p) continue;
+		dfs(v,u);
+		child[u] += child[v];
+		tot[u] += child[v] + tot[v];
+	}
 }
+int ans = -INF;
+void DFS(int u, int p){
+	//rr
+	maxi(ans, tot[u]);
+	for(int v : adj[u]){
+		if(v == p) continue;
+		int pc = child[u], pt = tot[u];
+		
+		tot[u] -= child[v] + tot[v];
+		child[u] -= child[v];
+		tot[v] += tot[u] + child[u];
+		child[v] = pc;
+		
+		DFS(v,u);
+		
+		tot[u] = pt;
+		child[u] = pc;
+	}
+}
+void inp(){
+	cin >> n ;
+	fod(i,1,n) cin >> a[i];
+	fod(u,1,n){
+		int v; cin >> v;
+		adj[u].pb(v);
+		adj[v].pb(u);
+	}
+	
+	dfs(1,0);
+	DFS(1,0);
+	
+	cout << ans;
+}	
 
 namespace sub1{
    
@@ -79,7 +120,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

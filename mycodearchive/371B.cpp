@@ -33,8 +33,8 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
@@ -54,14 +54,59 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int a,b ;  
 void inp(){
-
+	cin >> a >> b;
+	if(a == b){
+		cout << 0;
+		kill();
+	}
 }
 
 namespace sub1{
-   
+	int cnt[100];
+   int check(int mid){
+   	 	int am  = a  / mid, bm = b / mid;
+		cnt[2] = cnt[3] = cnt[5] = 0;
+		int ans = 0 ;
+		while(am % 2 == 0) cnt[2]++, am /= 2;
+		while(am % 3 == 0) cnt[3]++, am /= 3;
+		while(am % 5 == 0) cnt[5]++, am /= 5;
+		ans = cnt[2] + cnt[3] + cnt[5];
+		if(am > 1) return INF;
+		cnt[2] = cnt[3] = cnt[5] = 0;
+		
+		while(bm % 2 == 0) cnt[2]++, bm /= 2;
+		while(bm % 3 ==0) cnt[3]++, bm /= 3;
+		while(bm % 5 == 0) cnt[5]++, bm /= 5;
+		if(bm > 1) return INF;
+		
+		ans += cnt[2]  + cnt[3] + cnt[5];
+		
+		return ans;
+   }
     void solve(){
-    
+    	vector <int> divs;
+    	for(int i = 1; i * i <= a; i ++ ){
+    		if(a % i == 0){
+    			if(i * i == a and b % i == 0){
+    				 divs.pb(i);
+    				 continue;
+    			}
+    			
+    			if(b % i == 0) divs.pb(i);
+    			if(b % (a / i) == 0) divs.pb(a/i); 
+    		}
+    	}
+    	sort(all(divs));
+    	
+    	int ans = INF;
+    	for(int x : divs){
+    		mini(ans, check(x));
+    	}
+    	if(ans != INF) cout << ans << el;
+    	else cout << -1;
+    	
     }	
 }
 namespace sub2{
@@ -79,7 +124,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

@@ -33,13 +33,10 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
@@ -54,14 +51,82 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, q, a[base];
+int b1[base], b2[10][base];
+void add1(int idx, int val){
+	while(idx <= n){
+		b1[idx] += val;
+		idx += idx & -idx;
+	} 
+}
+int get1(int idx){
+	int res = 0;
+	while(idx){
+		res += b1[idx];
+		idx -= idx & -idx;
+	}
+	return res;
+}
+void add2(int idx, int k, int val){
+	while(idx <= n){
+		b2[k][idx] += val;
+		idx += idx & -idx;
+	} 
+}
+int get2(int idx, int k){
+	int res = 0;
+	while(idx){
+		res += b2[k][idx];
+		idx -= idx & -idx;
+	}
+	return res;
+}
+bool check(int a, int k){
+	if(k == 0) return 0;
+	if(k == 1) return 1;
+	int res = 0;
+	string n = to_string(a);
+	for(char c : n){
+		int val = c - '0';
+		if(val == k) return 1;
+		res = ( (res * 10) % k + val) % k;
+	}
+	return res == 0;
+}
 void inp(){
+	cin >> n >> q;
+	fod(i,1,n) cin >> a[i];
+	fod(i,1,n) add1(i,a[i]);
 
+	fod(i,1,n) fod(k,1,9){
+		if(check(i,k)) add2(i,k,a[i]);
+	}
+	
 }
 
 namespace sub1{
    
     void solve(){
-    
+    	while(q--){
+    		int type;  cin >> type;
+    		if(type == 1){
+    			int id, c; cin >> id >> c;
+    			fod(k,1,9) if(check(id,k)){
+    				int x = get2(id, k);
+    				if(id > 1) x -= get2(id-1,k);
+    				add2(id, k, c - x);
+    			}
+    			int x = get1(id); if(x > 1) x -= get1(id-1);
+    			add1(id, c - x);
+    		}
+    		else{
+    			int l, r, k; cin >> l >> r >> k;
+    			int res = get1(r); if(l > 1) res -= get1(l-1);
+    			int add = get2(r,k); if(l > 1) add -= get2(l-1,k);
+    			
+    			cout << res + add << el;
+    		}
+    	}
     }	
 }
 namespace sub2{
@@ -79,7 +144,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

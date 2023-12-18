@@ -74,6 +74,8 @@ void dfs(int u, int cha){
         mi[v][0] = ma[v][0] = w;
         fod(j,1,log2(n)){
             p[v][j] = p[p[v][j-1]][j-1];
+            mi[v][j] = min(mi[v][j-1], mi[p[v][j-1]][j-1]);
+            ma[v][j] = max(ma[v][j-1], ma[p[v][j-1]][j-1]);
         } 
         dfs(v,u);
     }

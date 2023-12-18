@@ -33,13 +33,10 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
@@ -54,14 +51,43 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
+int n, lab[base];
+ve<edge> HN;
+int find(int u){
+	return (lab[u] < 0)  ?  u : lab[u] = find(lab[u]);
+}
+bool join(int u, int v){
+	if(lab[u] > lab[v]) swap(u,v);
+	lab[u] += lab[v];
+	lab[v] = u;
+	return 1;
+}
 
+void inp(){
+	cin >> n;
+	fod(i,1,n-1){
+		int u, v, c; cin >> u >> v >> c;
+		edge x = {u,v,c};
+		HN.pb(x);
+	}
 }
 
 namespace sub1{
-   
+   int weight[base];
     void solve(){
-    
+    	memset(lab, -1, sizeof lab);
+    	sort(all(HN), [&] (edge x, edge y){
+    		return x.c < y.c;
+    	});
+    	int res= 0 ;
+    	
+    	for(edge x : HN){
+    		int u = find(x.u), v = find(x.v);
+    		res += x.c * lab[u] * lab[v];
+    		if(u != v) join(u,v);
+    	}
+    	
+    	cout << res ;	
     }	
 }
 namespace sub2{
@@ -79,7 +105,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

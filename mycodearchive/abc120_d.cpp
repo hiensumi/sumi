@@ -33,8 +33,8 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
@@ -54,14 +54,47 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
+int n, m, lab[base], ans[base];
+ve<pii> HN;
+int find(int u){
+	return (lab[u] < 0) ? u : lab[u] = find(lab[u]);
+}
+bool join(int u, int v){
+	u = find(u); v = find(v);
+	if(u == v) return 0;
+	if(lab[u] > lab[v]) swap(u,v);
+	lab[u] += lab[v];
+	lab[v] = u;
+	return 1;
+}
 
+void inp(){
+	cin >> n >> m;
+	fod(i,1,m){
+		int u, v; cin >> u >> v;
+		HN.pb(mp(u,v));
+	}
 }
 
 namespace sub1{
-   
+   	
     void solve(){
-    
+    	memset(lab, -1, sizeof lab);
+    	
+    	int res = n * (n - 1) / 2;
+    	fok(i,m-1,0){
+    		pii x = HN[i];
+    		
+    		ans[i+1] = res;
+    		
+    		int u = find(x.fi), v = find(x.se);
+    		if(u != v) res -= lab[u] * lab[v];
+    		
+    		join(u,v);
+    		
+    	}
+    	
+    	fod(i,1,m) cout << ans[i] << el;
     }	
 }
 namespace sub2{
@@ -79,7 +112,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

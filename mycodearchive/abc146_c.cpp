@@ -54,14 +54,27 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int a, b, x; 
 void inp(){
-
+	cin >> a >> b >> x;
 }
 
 namespace sub1{
-   
+	int len(int x){
+		return (int) (log10(x) + 1);
+	}
+	bool check(int mid){
+		int price = a * mid + b * len(mid);
+		return price <= x; 
+	}
     void solve(){
-    
+    	int l = 1, r = 1e9, ans = 0;
+    	while(l <= r){
+    		int mid = l + r >> 1;
+    		if(check(mid)) l = mid + 1, ans = mid;
+    		else r=  mid - 1;
+    	}
+    	cout << ans << el;
     }	
 }
 namespace sub2{
@@ -79,7 +92,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

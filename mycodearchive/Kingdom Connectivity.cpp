@@ -33,14 +33,11 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
-const int MOD = 1e9 + 7;
+const int MOD = 1e9;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
@@ -54,14 +51,45 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
+int n, m, touch[base], dd[base];
+vi g[base], f[base];
+void check(int u){
+	touch[u] = 1;
+	for(int v : f[u]){
+		if(touch[v]) continue;
+		check(v);
+	}
 
 }
-
+void inp(){
+	cin >> n >> m;
+	fod(i,1,m){
+		int u, v; cin >> u >> v;
+		g[v].pb(u);
+		f[u].pb(v);
+	}
+	check(1);
+}
 namespace sub1{
-   
+   	int dp[base]; //dp[u] is different paths from 1 to u
+    void dfs(int u){
+    	if(dd[u]) return;
+    	dd[u] = 1;
+    	for(int v : g[u]){
+    		if(dd[v] == 1 and touch[v]){
+    			cout << "INFINITE PATHS" << el;
+    			kill();
+    		}
+    		if(dd[v] == 0) dfs(v);
+    		(dp[u] += dp[v]) %= MOD;
+    	}
+    	dd[u] = 2;
+    }
     void solve(){
-    
+    	memset(dd,0,sizeof dd);
+    	dp[1] = 1;
+    	dfs(n);
+    	cout << dp[n] % MOD;
     }	
 }
 namespace sub2{
@@ -79,7 +107,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

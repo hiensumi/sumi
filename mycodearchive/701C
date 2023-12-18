@@ -38,41 +38,31 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
+int n;
 string s;
-int nb, ns, nc, pb, ps, pc, B, S, C, R, prep = 0;
 void inp(){
-	cin >> s;
-	for(char c : s){
-		if(c == 'B') B++;
-		if(c == 'S') S++;
-		if(c == 'C') C++;
-	}
-	cin >> nb >> ns >> nc;
-	cin >> pb >> ps >> pc;
-	cin >> R;
-	if(nb >= B and ns >= S and nc >= C) prep = min({nb/max(B,1ll),ns/max(S,1ll),nc/max(C,1ll)}), nb -= prep * B; ns -= prep * S; nc -= prep * C;
-	// cout << nb << " " << ns << " " << nc << el;
+	cin >> n >> s;
 }
 namespace sub_task1{
-    bool check(int mid){
-    	int cost = 0;
-    	
-    	int numB = max(0ll, mid * B - nb);
-    	int numS = max(0ll, mid * S - ns);
-    	int numC = max(0ll, mid * C - nc);
-    	cost += numB * pb + numC * pc + numS * ps;
-    	return cost <= R;
-    }
+    unordered_map < char, int> mp;
     void solve(){
-		int l = 0, r = 1e14, ans = -1;
-		while(l <= r){
-			int mid = l + r >> 1;
-			if(check(mid)) l = mid +1 ,ans = mid;
-			else r = mid - 1;
+		string t = s;
+		sort(all(t));
+		t.resize(unique(all(t)) - t.begin());
+		int k = t.size();
+		s = "#" + s;
+		int l = 1, ans = INF;
+		fod(r,1,n){
+			mp[s[r]]++;
+			while(l <= r and mp.size() >= k){
+				mini(ans, r - l + 1);
+				mp[s[l]]--;
+				if(mp[s[l]] == 0) mp.erase(s[l]);
+				l++;
+			}
 		}
-		cout << ans + prep;
 		
-		
+		cout << ans << el;
     }	
 }
 

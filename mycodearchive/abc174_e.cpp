@@ -54,14 +54,41 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, k, a[base];
 void inp(){
-
+	cin >> n >> k;
+	fod(i,1,n) cin >> a[i];
 }
 
 namespace sub1{
-   
+   bool check(int mid){
+		// to check if can be cut in K cuts ?
+		// we need to ? -> ok we need to cut optimal?
+		// while pq.top() > mid -> cut the top to the length of at least mid
+		int cnt = 0;
+		priority_queue <int, vi > pq;
+		fod(i,1,n) pq.push(a[i]);
+		while(!pq.empty()){
+			int t = pq.top();
+			pq.pop();
+			if(cnt > k) return 0;
+			if(t == mid) continue;
+			if(t < mid) continue;
+			int cost = t / mid;
+			cnt += cost;
+		}
+		if(pq.size() and pq.top() < mid and cnt <= k) return 1;
+		if(pq.empty() and cnt <= k) return 1;
+		return 0;
+   }
     void solve(){
-    
+    	int l = 1, r = 2e9, ans = 0;
+    	while(l <= r){
+    		int mid = l + r >> 1;
+    		if(check(mid)) r = mid - 1, ans = mid;
+    		else l = mid + 1;
+    	}
+    	cout << ans;
     }	
 }
 namespace sub2{
@@ -79,7 +106,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

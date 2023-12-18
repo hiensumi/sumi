@@ -38,8 +38,6 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
@@ -54,14 +52,38 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, q, lab[base];
+int find(int u){
+	return (lab[u] < 0) ? u : lab[u] = find(lab[u]);
+}
+bool join(int u, int v){
+	u = find(u);
+	v = find(v);
+	if(u == v) return 0;
+	if(lab[u] > lab[v]) swap(u,v);
+	lab[u] += lab[v];
+	lab[v] = u;
+	return 1;
+}
 void inp(){
-
+	cin >> 	n >> q;
+	memset(lab, -1, sizeof lab);
 }
 
 namespace sub1{
    
     void solve(){
-    
+    	while(q--){
+    		char type; cin >> type;
+    		if(type == 'M'){
+    			int u, v; cin >> u >> v;
+    			join(u,v);
+    		}
+    		else{
+    			int x ; cin >> x;
+    			cout << -lab[find(x)] << el;
+    		}
+    	}
     }	
 }
 namespace sub2{
@@ -79,7 +101,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

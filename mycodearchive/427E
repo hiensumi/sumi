@@ -1,7 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
+#pragma GCC optimize("O3")
 #include "bits/stdc++.h"
 using namespace std; 
-#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -54,14 +54,38 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n , m, a[base], cntl = 0, cntr = 0;
 void inp(){
-
+	scanf("%d %d", &n, &m);
+	fod(i,1,n) scanf("%d", &a[i]);
 }
 
 namespace sub1{
-   
+	ll calc(int mid){
+		ll ans = 0;
+		int pos = LB(a + 1, a + n + 1,mid) - a;
+		for(int i = 1; i < pos; i += m){
+		    ans += 2ll * abs(mid - a[i]);
+		}
+		for(int i = n; i >= pos ; i -= m){
+		    ans += 2ll * abs(mid - a[i]); 
+		}
+		return ans;
+	}
     void solve(){
-    
+    	int l = -1e9, r = 1e9;
+    	ll ans = INF;
+    	fod(i,1,100){
+    		if(l > r ) break;
+    		int m1 = (l + (r - l) / 3);
+    		int m2 = (r - (r - l) / 3);
+    		if(calc(m1) < calc(m2)) r = m2;
+    		else l = m1;
+    	}
+    	fod(i,-10,10){
+    		mini(ans, calc(l + i));
+    	}
+    	printf("%lld", ans);
     }	
 }
 namespace sub2{
@@ -79,7 +103,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

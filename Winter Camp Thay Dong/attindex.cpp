@@ -33,13 +33,10 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
@@ -54,23 +51,67 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+string s;
+int p;
 void inp(){
-
+	cin >> p >> s;
+	s = "#" + s;
 }
 
 namespace sub1{
-   
+   bool check(int l, int r, int k = p){
+		if(k == 0) return 0;
+		if(k == 1) return 1;
+		int res = 0;
+		string n;
+		fod(i,l,r) n += s[i]; 
+		for(char c : n){
+			int val = c - '0';
+			res = ( (res * 10) % k + val) % k;
+		}
+		return res == 0;
+	}
     void solve(){
-    
+    	int q; cin >> q;
+    	while(q--){
+    		int l, r;  cin >> l >> r;
+    		int res = 0;
+    		fod(i,l,r) fod(j,i,r){
+    			if(check(i,j)) res++;
+    		}
+    		
+    		cout << res << el;
+    	}
     }	
 }
 namespace sub2{
-	
+	int cnt[base], dem[base];
 	void solve(){
-	
+		int n = s.size() - 1;
+		fod(i,1,n){
+			cnt[i] = cnt[i-1];
+			dem[i] = dem[i-1];
+			int c = s[i] - '0';
+			if(c % 2 == 0) cnt[i] = cnt[i-1] + i + 1, dem[i]++;
+		}
+		int q; cin >> q;
+		while(q--){
+			int l, r; cin >> l >> r;
+			int res = 0;
+			// fod(i,l,r){
+				// if((s[i] - '0') % 2 == 0) res += (i - l + 1);
+			// }
+			cout << cnt[r] - cnt[l-1] - l * (dem[r] - dem[l-1]) << el;
+		}
+		
 	}
 }
-
+namespace sub3{
+	
+	void solve(){
+		
+	}
+}
 signed main(){
     ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); srand(time(0)); 
     if(fopen(name".inp", "r")){
@@ -79,10 +120,10 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
-        sub1 :: solve();
-        sub2 :: solve();
+        if(p != 2) sub1 :: solve();
+        else sub2 :: solve();
     }
     kill();
 }

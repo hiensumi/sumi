@@ -38,41 +38,35 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
-string s;
-int nb, ns, nc, pb, ps, pc, B, S, C, R, prep = 0;
+int n, m, k;
 void inp(){
-	cin >> s;
-	for(char c : s){
-		if(c == 'B') B++;
-		if(c == 'S') S++;
-		if(c == 'C') C++;
-	}
-	cin >> nb >> ns >> nc;
-	cin >> pb >> ps >> pc;
-	cin >> R;
-	if(nb >= B and ns >= S and nc >= C) prep = min({nb/max(B,1ll),ns/max(S,1ll),nc/max(C,1ll)}), nb -= prep * B; ns -= prep * S; nc -= prep * C;
-	// cout << nb << " " << ns << " " << nc << el;
+	cin >> n >> m >> k;
 }
 namespace sub_task1{
     bool check(int mid){
-    	int cost = 0;
+    	int x = 0;
+    	// fod(i,1,n) fod(j,1,m){
+    		// if(i * j <= mid){
+    			// x++;
+    		// }
+    		// if(x >= k) return 1;
+    	// }
     	
-    	int numB = max(0ll, mid * B - nb);
-    	int numS = max(0ll, mid * S - ns);
-    	int numC = max(0ll, mid * C - nc);
-    	cost += numB * pb + numC * pc + numS * ps;
-    	return cost <= R;
+    	fod(i,1,n){
+    		x += min(m,mid / i);
+    		// cout << i << " " << mid / i << el;
+    		if(x >= k) return 1;
+    	}
+    	return 0;
     }
     void solve(){
-		int l = 0, r = 1e14, ans = -1;
+		int l = 1, r = n * m, ans = -1;
 		while(l <= r){
 			int mid = l + r >> 1;
-			if(check(mid)) l = mid +1 ,ans = mid;
-			else r = mid - 1;
+			if(check(mid)) r = mid - 1, ans = mid;
+			else l = mid + 1;
 		}
-		cout << ans + prep;
-		
-		
+   		cout << ans;
     }	
 }
 

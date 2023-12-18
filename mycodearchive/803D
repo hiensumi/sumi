@@ -1,5 +1,81 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
-#include "bits/stdc++.h"
+#include <cassert>
+#include <cctype>
+#include <cerrno>
+#include <cfloat>
+#include <ciso646>
+#include <climits>
+#include <clocale>
+#include <cmath>
+#include <csetjmp>
+#include <csignal>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+
+#include <ccomplex>
+#include <cfenv>
+#include <cinttypes>
+#include <cstdalign>
+#include <cstdbool>
+#include <cstdint>
+#include <ctgmath>
+#include <cwchar>
+#include <cwctype>
+#include <algorithm>
+#include <bitset>
+#include <complex>
+#include <deque>
+#include <exception>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <ios>
+#include <iosfwd>
+#include <iostream>
+#include <istream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <locale>
+#include <map>
+#include <memory>
+#include <new>
+#include <numeric>
+#include <ostream>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <streambuf>
+#include <string>
+#include <typeinfo>
+#include <utility>
+#include <valarray>
+#include <vector>
+#include <array>
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <forward_list>
+#include <future>
+#include <initializer_list>
+#include <mutex>
+#include <random>
+#include <ratio>
+#include <regex>
+#include <scoped_allocator>
+#include <system_error>
+#include <thread>
+#include <tuple>
+#include <typeindex>
+#include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
 #define fod(i,a,b) for(int i = a;i <= b; i++)
 #define fok(i,a,b) for(int i = a;i >= b; i--)
 #define ll long long
@@ -38,41 +114,57 @@ const ll INF = 1e18, base = 1e6 + 5, multitest = 0;
 void init(){
     
 }
+int k,n, nxt[base];
 string s;
-int nb, ns, nc, pb, ps, pc, B, S, C, R, prep = 0;
+void calc(vector <int> x){
+	
+}
 void inp(){
-	cin >> s;
-	for(char c : s){
-		if(c == 'B') B++;
-		if(c == 'S') S++;
-		if(c == 'C') C++;
+	cin >> k;
+	string tmp;
+	getline(cin, tmp);
+	getline(cin, s);
+	// cout << s << el;
+	n  = s.size();
+	s = "#" + s;
+	int pos = n;
+	fok(i,n,1){
+		if(islower(s[i]) or isupper(s[i])) continue;
+		nxt[i+1] =  pos;
+		pos = i;
 	}
-	cin >> nb >> ns >> nc;
-	cin >> pb >> ps >> pc;
-	cin >> R;
-	if(nb >= B and ns >= S and nc >= C) prep = min({nb/max(B,1ll),ns/max(S,1ll),nc/max(C,1ll)}), nb -= prep * B; ns -= prep * S; nc -= prep * C;
-	// cout << nb << " " << ns << " " << nc << el;
+	nxt[1] = pos;
+	// fod(i,1,n) cout << nxt[i] << el;
 }
 namespace sub_task1{
-    bool check(int mid){
-    	int cost = 0;
+    bool check(int mid){	
     	
-    	int numB = max(0ll, mid * B - nb);
-    	int numS = max(0ll, mid * S - ns);
-    	int numC = max(0ll, mid * C - nc);
-    	cost += numB * pb + numC * pc + numS * ps;
-    	return cost <= R;
+    	int i = 1, now = 0, cnt = 0;
+    	while(i <= n){
+    		int j = nxt[i];
+    		if(j - i + 1  > mid) return 0;
+    		if(now + j - i + 1 <= mid){
+    			now += j - i + 1;
+    			i = j + 1;
+    		}
+    		else{
+    			now = 0;
+    			cnt++;
+    		}
+    	}
+    	
+    	if(now > 0) cnt++;
+    	return cnt <= k;
     }
     void solve(){
-		int l = 0, r = 1e14, ans = -1;
+		int l = 0, r = n, ans = 0;
 		while(l <= r){
 			int mid = l + r >> 1;
-			if(check(mid)) l = mid +1 ,ans = mid;
-			else r = mid - 1;
+			if(check(mid)) r= mid -1, ans = mid;
+			else l = mid + 1;
 		}
-		cout << ans + prep;
 		
-		
+		cout << ans;
     }	
 }
 

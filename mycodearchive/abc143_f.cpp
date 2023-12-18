@@ -54,14 +54,28 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, a[base], cnt[base]; 
 void inp(){
-
+	cin >> n ;
+	fod(i,1,n) cin >> a[i], cnt[a[i]]++;
 }
 
 namespace sub1{
-   
+	int sum[base];
     void solve(){
-    
+    	fod(i,1,n){
+    		sum[1]++;
+    		sum[cnt[i] + 1]--;
+    	}
+    	fod(i,1,n) sum[i] += sum[i-1];
+    	fod(i,1,n) sum[i] += sum[i-1];
+    	int cur = n;
+    	fod(i,1,n){
+    		while(sum[cur] < i * cur){
+    			cur--;
+    		}
+    		cout << cur << el;
+    	}
     }	
 }
 namespace sub2{
@@ -79,7 +93,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

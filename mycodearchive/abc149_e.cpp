@@ -34,7 +34,7 @@ ll gcd(ll a,ll b){return __gcd(a,b);}
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
@@ -54,14 +54,38 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n,  a[base], m , pre[base];
 void inp(){
-
+	cin >> n >> m;
+	fod(i,1,n) cin >> a[i];
+	sort(a+1,a+n+1);
+	fod(i,1,n) pre[i] = pre[i-1] + a[i];
 }
 
 namespace sub1{
-   
+   	bool check(int mid){
+   		int cnt = 0;
+   		fod(i,1,n){
+   			int j = LB(a + 1, a + n + 1, mid - a[i]) - a;
+   			cnt += (n - j + 1);
+   		}
+   		return cnt >= m;
+   	}
     void solve(){
-    
+    	int l = 0 , r = 2e9,  ans = 0;
+    	while(l <= r){
+    		int mid = l + r >> 1;
+    		if(check(mid)) l = mid + 1, ans = mid;
+    		else r = mid - 1;
+    	}	
+    	int res = 0, cnt = 0;
+    	fod(i,1,n){
+    		int j = LB(a+1,a+n+1,ans - a[i]) - a;
+    		res += pre[n] - (pre[j-1]) + (n - j + 1) * a[i];
+    		cnt += (n - j + 1);
+    	}
+    	res -= (cnt - m) * ans;
+ 	   	cout << res;
     }	
 }
 namespace sub2{
@@ -79,7 +103,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

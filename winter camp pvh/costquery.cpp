@@ -60,7 +60,7 @@ namespace sub_task1{
 			ma[v][0] = u;
 			fod(j,1,lg[n]){
 				par[v][j] = par[par[v][j-1]][j-1];
-				maxi(ma[v][j], ma[ma[v][j-1]][j-1]);
+				// maxi(ma[v][j], ma[ma[v][j-1]][j-1]); code sai ne thang ngu
 			}
 			dfs(v,u);
 			

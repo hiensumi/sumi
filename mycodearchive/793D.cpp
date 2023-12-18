@@ -1,7 +1,6 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -33,13 +32,10 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
-
-//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
-//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
@@ -51,18 +47,56 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 2e9, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
+int n, k, m;
+ve <pii> g[base];
 
+void inp(){
+	cin >> n >> k >> m;
+	fod(i,1,m){
+		int u , v, c; cin >> u >> v >> c;
+		 g[u].pb(mp(v,c));
+	}
 }
 
-namespace sub1{
-   
+namespace sub0{
+   // dp[a][b][u][cnt]: result of state in which cnt presents have been gifted, current at u and than segment is [a,b]
+   int dp[81][81][81][81];
+	int calc(int l, int r, int u, int cnt){
+		if(dp[l][r][u][cnt] != -1) return dp[l][r][u][cnt];
+		if(cnt == k) return dp[l][r][u][cnt] = 0; // addition after cnt > k - 1 is all 0
+		if(cnt == 0) dp[l][r][u][cnt] = 0;
+		int best = INF;
+		for(pii x : g[u]){
+			int v = x.fi, w = x.se;
+			if(v < l or v > r) continue;
+			int res = 0; 
+			if(v < u) res = calc(l, u - 1, v ,cnt + 1);
+			else res = calc(u + 1, r,v,cnt + 1);
+			
+			if(res == - 1) continue;
+			mini(best, res + w);
+		}
+		
+		return dp[l][r][u][cnt] = best;
+	}
     void solve(){
-    
+		memset(dp, -1, sizeof dp);
+    	fod(i,1,n){
+    		g[0].pb(mp(i,0));
+    	}	
+    	int res = calc(0,n,0,0);
+    	if(res == INF) cout << -1;
+    	else cout << res;
     }	
+}
+namespace sub1{
+	
+	void solve(){
+		
+	}
 }
 namespace sub2{
 	
@@ -79,8 +113,9 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
+        sub0 :: solve();
         sub1 :: solve();
         sub2 :: solve();
     }

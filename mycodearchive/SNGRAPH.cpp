@@ -33,8 +33,8 @@ ll sq(ll a){return a*a;}
 ll gcd(ll a,ll b){return __gcd(a,b);} 
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
-#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<" ";cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<" "; cout<<el; 
+#define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
@@ -51,17 +51,62 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
-
+int n, m, lab[base];
+ve<pii> HN;
+int find(int u){
+	 return (lab[u] < 0) ? u : lab[u] = find(lab[u]);
 }
-
+bool join(int u, int v){
+	u = find(u);
+	v = find(v);
+	if(u == v) return 0;
+	if(lab[u] > lab[v]) swap(u,v);
+	lab[u] += lab[v];
+	lab[v] = u;
+	return 1;
+}
+int deg[base];
+void inp(){
+	cin >> n >> m;
+	fod(i,1,m){
+		int u, v; cin >> u >> v;
+		deg[u]++;
+		deg[v]++;
+		HN.pb(mp(u,v));
+	}
+	memset(lab, -1, sizeof lab);
+}
 namespace sub1{
-   
+	int ans[base];
     void solve(){
-    
+    	sort(all(HN), [&] (pii x, pii y){
+    		int dx = min(deg[x.fi], deg[x.se]);
+    		int dy = min(deg[y.fi], deg[y.se]);
+    		return dx < dy;
+    	});
+    	int tplt = n;
+    	fok(i,n-1,0){
+    		while(!HN.empty()){
+    			pii x = HN.back();
+    			int d = min(deg[x.fi], deg[x.se]);
+    			if(d > i){
+    				if(join(x.fi, x.se)) tplt--;
+    				HN.pop_back();
+    			}
+    			else{
+    				break;
+    			}
+    		}
+    		ans[i] = tplt - 1;
+    	}
+    	
+    	fod(i,0,n-1) cout << ans[i] << " ";
+    	fod(i,1,n) deg[i] = 0;
+    	HN.clear();
+    	
     }	
 }
 namespace sub2{
@@ -79,7 +124,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();

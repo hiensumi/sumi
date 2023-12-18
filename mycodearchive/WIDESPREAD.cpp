@@ -54,14 +54,45 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, A, B, a[base];
 void inp(){
-
+	cin >> n >> A >> B;
+	fod(i,1,n) cin >> a[i];
 }
-
 namespace sub1{
-   
+	bool check(int mid){
+		vi b(n + 1);
+		fod(i,1,n) b[i] = a[i];
+		// while(mid--){
+			// int ma = -INF, pos = 0;
+			// fod(i,1,n) if(maxi(ma, b[i])) pos = i;
+			// if(ma <= 0) return 1;
+			// fod(i,1,pos-1) b[i] -= B;
+			// fod(i,pos+1,n) b[i] -= B;
+			// b[pos] -= A; 
+		// }
+		// int ma = -INF, pos = 0;
+		// fod(i,1,n) if(maxi(ma, b[i])) pos = i;
+		// if(ma <= 0) return 1;
+		// return 0;
+		
+		int cnt = 0;
+		fod(i,1,n) b[i] -= B * mid;
+		fod(i,1,n) if(b[i] > 0){
+			cnt += max(0ll, (b[i] + A - B - 1) / (A - B));
+		}		
+		return cnt <= mid;
+	}   
     void solve(){
-    
+    	int l = 0, r = INF, ans = 0;
+    	while(l <= r){
+    		int mid = l + r >> 1;
+    		if(check(mid)) r = mid - 1, ans = mid;
+    		else l = mid + 1;
+    	}
+    	
+    	cout << ans;  
+    	// cout << check(2);
     }	
 }
 namespace sub2{
@@ -79,7 +110,7 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();
