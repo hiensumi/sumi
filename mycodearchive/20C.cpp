@@ -51,8 +51,21 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
+int n, m;
+ve <vi> g;
+void spfa(int u){
+	
+}
 
+void inp(){
+	cin >> n >> m;
+	g.resize(n + 1);
+	fod(i,1,m){
+		int u, v, c; cin >> u >> v >>  c;
+		g[u].pb(mp(v,c));
+		g[v].pb(mp(u,c));
+m
+	}
 }
 
 namespace sub1{

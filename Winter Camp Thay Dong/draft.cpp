@@ -1,7 +1,8 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
+#include <cassert>
 using namespace std; 
-// #define int long long
+#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -51,12 +52,10 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-ll n;
-int q, a[base], k, cnt1 = 0;
+int n, q, a[base], k, cnt1 = 0;
 int b1[base], b2[10][base];
 struct DL{
-	int type;
-	ll id, c, l, r;
+	int type, id, c, l, r;
 }qr[base];
 void add1(int idx, int val){
 	while(idx <= n){
@@ -98,10 +97,16 @@ bool check(int a, int k){
 	}
 	return res == 0;
 }
-vll pos; int m;
+vi pos; int m;
 
 void inp(){
 	cin >> n >> k >> q;
+	if(n <= 1e6){
+		fod(i,1,n) a[i] = i, add1(i,a[i]);
+		fod(i,1,n){
+			if(check(i,k)) add2(i,k,a[i]);
+		}
+	}
 	fod(i,1,q){
 		int type; cin >> type;
 		if(type == 1){
@@ -190,86 +195,77 @@ namespace sub2{
 
 namespace sub3{
 	struct DL{
-		int sl;
-		ll sum;
-	}dp[19][2][2][11][2];
-	ll bit[base], val[base], pw[19];
-	void add(int idx, ll x){
-		ll rem = 1ll * (x - val[idx]);
-		val[idx] = 1ll * x;
+		int sl, sum;
+	}dp[19][2][11][2];
+	int bit[base], val[base], pw[19];
+	void add(int idx, int x){
+		int rem = x - val[idx];
+		val[idx] = x;
 		while(idx <= m){
-			bit[idx] = 1ll * bit[idx] + rem;
+			bit[idx] += rem;
 			idx += idx & - idx;
 		}
 	}
-	ll get(int idx){
-		ll res = 0;
+	int get(int idx){
+		int res = 0;
 		while(idx){
-			res = 1ll * res + bit[idx];
+			res += bit[idx];
 			idx -= idx & -idx;
 		}
 		return res;
 	}
 	
-	string A, B;
+	string s;
 	int sz = 0;
 	
-	DL calc(int i, int ok1, int ok2, int rem, int used){
-	    if(i >= sz){
+	DL calc(int i, int ok, int rem, int used){
+	    if(i > sz){
 	    	if(rem == 0 or used == 1){
-	    		return {1,0ll};
+	    		return {1,0};
 	    	}
 	    	else{
-	    		return {0,0ll};
+	    		return {0,0};
 	    	}
 	    }
-	    if(dp[i][ok1][ok2][rem][used].sl != -1) return dp[i][ok1][ok2][rem][used];
-	    int high = ok2 ? 9 : B[i] - '0';
-	    int low = ok1 ? 0 : A[i] - '0';
-	    int cnt = 0;
-	    ll tong = 0;
-	    fod(j,low,high){
-	    	DL ret = calc(i+1,ok1 or j > low, ok2 or j < high, (1ll * rem * 10 % k + j) % k, used or (j == k));
+	    if(dp[i][ok][rem][used].sl != -1) return dp[i][ok][rem][used];
+	    int lim = ok ? 9 : s[i] - '0';
+	    int cnt = 0, tong = 0;
+	    fod(j,0,lim){
+	    	DL ret = calc(i+1,ok or j < lim, (rem * 10 % k + j) % k, used or (j == k));
 	    	cnt += ret.sl;
-	    	tong += 1ll * (ret.sum + 1ll * j * ret.sl * pw[sz-i-1]); 
+	    	tong += ret.sum + j * ret.sl * bp(10,sz-i); 
 	    }
-	    return dp[i][ok1][ok2][rem][used] = {cnt, tong};
+	    return dp[i][ok][rem][used] = {cnt, tong};
 	}
 	
-	ll call(int l, int r){
-		fod(i,0,11) fod(j,0,1) fod(k,0,10) fod(h,0,1) fod(g,0,1) dp[i][j][g][k][h] = {-1,0};
-		
-		A = to_string(l);
-		B = to_string(r);
-		while(SZ(A) < SZ(B)) A = "0" + A;
-		
-		sz = SZ(B);
-		return 1ll * calc(0,0,0,0,0).sum;
+	int call(int id){
+		fod(i,0,18) fod(j,0,1) fod(k,0,10) fod(h,0,1) dp[i][j][k][h] = {-1,0};
+		s = "#" + to_string(id);
+		sz = SZ(s) - 1 ;
+		//+ get(vt )
+		return calc(1,0,0,0).sum;
 	}
 	void solve(){
-		pw[0] = 1ll;
-		fod(i,1,11) pw[i] = 1ll * pw[i-1] * 10;
+		pw[0] = 1;
+		fod(i,1,18) pw[i] = pw[i-1] * 10;
 		fod(i,1,q){
 			int type = qr[i].type;
 			if(type == 1){
 				int id = qr[i].id, c = qr[i].c;
-				ll rem = 1ll * (c - id);
-				int vt = UB(all(pos), id) - pos.begin();
-				if(check(id,k)) rem *= 2ll;
-				add(vt , 1ll * -rem);
+				int rem = c - id, vt = UB(all(pos), id) - pos.begin();
+				if(check(id,k)) rem *= 2;
+				add(vt , -rem);
 			}
 			else{
-				ll l = qr[i].l, r = qr[i].r;
-				
+				int l = qr[i].l, r = qr[i].r;
+				l--;
+				//+ r * (r + 1) / 2 - l * (l + 1) / 2 
 				int vt1 = UB(all(pos), r) - pos.begin();
-				int vt2 = UB(all(pos), l-1) - pos.begin();
-				
-				ll part1 = 1ll * call(l,r) - get(vt1) + get(vt2);
-				ll part2 = 1ll * r * (r + 1) / 2 - (l-1) * l / 2;
-				cout << part1 + part2 << el;
+				int vt2 = UB(all(pos), l) - pos.begin();
+				cout << call(r) - call(l) + r * (r + 1) / 2 - l * (l + 1) / 2  << el;
 			}
 		}	
-	} 
+	}
 }
 
 signed main(){

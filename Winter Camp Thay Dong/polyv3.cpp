@@ -1,7 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-// #define            int  long long
+#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -49,145 +49,75 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
-const int BLOCK = 850;
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-string s;
-int p;
+int m;
+point a[base][2];
 void inp(){
-	cin >> p >> s;
-	s = "#" + s;
+	cin >> m;
+	fod(i,1,m){
+		int n; cin >> n;
+		int x1,y1,x2,y2,x3,y3,x4,y4; cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
+		
+		a[i][0] = {min({x1,x2,x3,x4}) + 105, min({y1,y2,y3,y4}) + 105};
+		a[i][1] = {max({x1,x2,x3,x4}) + 105, max({y1,y2,y3,y4}) + 105};
+		// cout << a[i][1].x << " " << a[i][1].y << el;
+	}
 }
 
 namespace sub1{
-   bool check(int l, int r, int k = p){
-		if(k == 0) return 0;
-		if(k == 1) return 1;
-		int res = 0;
-		string n;
-		fod(i,l,r) n += s[i]; 
-		for(char c : n){
-			int val = c - '0';
-			res = ( (res * 10) % k + val) % k;
-		}
-		return res == 0;
-	}
+   	struct Line{
+   		int type, x, y1, y2;
+   	};
+   	const int N = base;
+   	ve <Line> Zx;
+   	
+   	pii st[4*base];
+   	
+   	void upd(int i, int l, int r, int u, int v, int val){
+   		if(r < u or v < l) return;
+   		if(u <= l and r <= v){
+   			st[i].se += val;
+   			if(st[i].se) st[i].fi = r - l + 1;
+   			else if(l == r) st[i].fi = 0;
+   			else st[i].fi = st[2*i].fi + st[2*i+1].fi;
+   			return;
+   		}
+   		int mid = l + r >> 1;
+   		upd(2*i,l, mid, u, v, val);
+   		upd(2*i+1,mid+1,r,u,v,val);
+   		if(st[i].se) st[i].fi = r - l + 1;
+		else st[i].fi = st[2*i] .fi + st[2*i+1].fi;
+   	}
+   	
     void solve(){
-    	int q; cin >> q;
-    	while(q--){
-    		int l, r;  cin >> l >> r;
-    		ll res = 0;
-    		fod(i,l,r) fod(j,i,r){
-    			if(check(i,j)) res++;
-    		}
-    		
-    		cout << res << el;
-    	}
-    }	
-}
-namespace sub21{
-	ll cnt[base], dem[base];
-	void solve(){
-		int n = s.size() - 1;
-		fod(i,1,n){
-			cnt[i] = cnt[i-1];
-			dem[i] = dem[i-1];
-			int c = s[i] - '0';
-			if(c % 2 == 0) cnt[i] = cnt[i-1] + i + 1, dem[i]++;
-		}
-		int q; cin >> q;
-		while(q--){
-			int l, r; cin >> l >> r;
-			cout << cnt[r] - cnt[l-1] - l * (dem[r] - dem[l-1]) << el;
-		}
+		fod(i,1,m){
+			Zx.pb({1,a[i][0].x,a[i][0].y, a[i][1].y});
+			Zx.pb({-1,a[i][1].x,a[i][0].y, a[i][1].y});
+		}    
 		
-	}
-}
-namespace sub22{
-	ll cnt[base], dem[base];
-	void solve(){
-		int n = s.size() - 1;
-		fod(i,1,n){
-			cnt[i] = cnt[i-1];
-			dem[i] = dem[i-1];
-			int c = s[i] - '0';
-			if(c % 5 == 0) cnt[i] = cnt[i-1] + i + 1, dem[i]++;
-		}
-		int q; cin >> q;
-		while(q--){
-			int l, r; cin >> l >> r;
-			cout << cnt[r] - cnt[l-1] - l * (dem[r] - dem[l-1]) << el;
-		}
-		
-	}
-}
-namespace sub3{
-	int rem[base];
-	ll ans[base];
-	struct DL{
-		int l, r, id;
-	};
-	map <int, int> compress;
-	int pos[base];
-	int MP[base];
-	void solve(){
-		int n = s.size() - 1;	
-		int pw = 1;
-		fok(i,n,1) rem[i] = (rem[i+1] + (s[i] - '0') * pw % p) % p, (pw *= 10) %= p;
-		
-		ve <DL> qr;
-		int q; cin >> q;
-		fod(i,1,q){
-			int l, r; cin >> l >> r;
-			qr.pb({l,r,i});
-		}
-		sort(all(qr), [&] (DL x, DL y){
-			if(x.l/BLOCK != y.l/BLOCK) return x.l < y.l;
-			return (x.l / BLOCK & 1) ? (x.r < y.r) : (x.r > y.r);
+		sort(all(Zx), [&] (Line a, Line b){
+			return a.x < b.x;
 		});
 		
-		int d = 0;
+		int res = 0;
+		fod(i,0,SZ(Zx)-1){
+			int low = Zx[i].y1, high = Zx[i].y2;
+			upd(1,0,N,low,high-1,Zx[i].type);
 		
-		fod(i,1,n + 1) compress[rem[i]] = 0;
-		for(pii x : compress) compress[x.fi] = d++;
-		
-		fod(i,1,n + 1) rem[i] = compress[rem[i]];
-		
-		int L = 1 , R = 1;
-		MP[rem[1]]++;
-		ll tot = 0;
-		
-		for(DL k : qr){
-			int l = k.l, r = k.r, id = k.id;
-			while(L > l){
-				L--;
-				tot += MP[rem[L]];
-				MP[rem[L]]++;
-			}
-			while(L < l){
-				MP[rem[L]]--;
-				tot -= MP[rem[L]];
-				L++;
-			}
-			while(R > r + 1){
-				MP[rem[R]]--;
-				tot -= MP[rem[R]];
-				R--;
-			}
-			while(R <= r){
-				R++;
-				tot += MP[rem[R]];
-				MP[rem[R]]++;
-			}
-			
-			ans[id] = tot;
+			res += (Zx[i+1].x - Zx[i].x) * st[1].fi;
 		}
 		
-		fod(i,1,q){
-			cout << ans[i] << el;
-		}
+		cout << res;
+    }	
+}
+namespace sub2{
+	
+	void solve(){
+	
 	}
 }
+
 signed main(){
     ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); srand(time(0)); 
     if(fopen(name".inp", "r")){
@@ -197,13 +127,9 @@ signed main(){
     int Test = 1; if(multitest) cin >> Test;
     init();
     while(Test-- or endless){
-        inp(); 
-    	if(p % 2 == 0) sub21::solve(), kill();
-    	else if(p % 5 == 0) sub22::solve(), kill();
-    	else{
-    		sub3::solve();
-    		kill();
-    	}
+        inp();
+        sub1 :: solve();
+        sub2 :: solve();
     }
     kill();
 }

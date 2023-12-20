@@ -1,7 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-// #define            int  long long
+#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -48,146 +48,100 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
-const int BLOCK = 850;
+const ll base = 1e5 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-string s;
-int p;
+int n, m, q, lab[base], f[base], h[base];
+ve <ve <pii> > g;
 void inp(){
-	cin >> p >> s;
-	s = "#" + s;
+	cin >> n >> m;
+	g.resize(n + 1);
+	fod(i,1,m){
+		int u, v, c; cin >> u >> v >> c;
+		g[u].pb(mp(v,c));
+		g[v].pb(mp(u,c));
+	}
 }
 
 namespace sub1{
-   bool check(int l, int r, int k = p){
-		if(k == 0) return 0;
-		if(k == 1) return 1;
-		int res = 0;
-		string n;
-		fod(i,l,r) n += s[i]; 
-		for(char c : n){
-			int val = c - '0';
-			res = ( (res * 10) % k + val) % k;
+   	int dd[base], par[base][21];
+   	vi bad;
+   	void dfs(int u, int p){
+   		par[u][0] = p;
+		fod(j,1,20){
+			par[u][j] = par[par[u][j-1]][j-1];
 		}
-		return res == 0;
+   		dd[u] = 1;
+		for(pii x : g[u]){
+			int v = x.fi, w = x.se;
+			if(v == p) continue;
+			if(dd[v]){
+				bad.pb(u);
+				bad.pb(v);
+				continue;	
+			}
+			f[v] = f[u] + w;
+			h[v] = h[u] + 1;
+			dfs(v,u);
+		}
+   	}
+   	int lca(int u, int v){
+		if(h[u] < h[v]) swap(u,v);
+		int k = h[u] - h[v];
+		fod(j,0,20) if(k & mask(j)) u = par[u][j];
+		if(u == v) return u;
+		int d = log2(h[u]);
+		fok(j,d,0) if(par[u][j] != par[v][j]) u = par[u][j], v = par[v][j];
+		return par[u][0];
+	}
+	int dis[51][base], used[base];
+	void dji(int s, int *dis){
+		priority_queue <pii> pq;
+		fod(i,1,n) dis[i] = INF, used[i] = 0;
+		dis[s] = 0;
+		pq.push(mp(0, s));
+		while(!pq.empty()){
+			int u = pq.top().se;
+			pq.pop();
+			if(used[u]) continue;
+			used[u] = 1;
+			for(auto e : g[u]){
+				int v = e.fi;
+				int w = e.se;
+				if(mini(dis[v], dis[u] + w)){
+					pq.push(mp(-dis[v],v));
+				}
+			}
+		}
 	}
     void solve(){
+    	dfs(1,0);
+    	
+    	uni(bad);
+    	int sz = SZ(bad) - 1;
+    	
+    	fod(i,0,sz) dji(bad[i], dis[i]);
+    	
     	int q; cin >> q;
     	while(q--){
-    		int l, r;  cin >> l >> r;
-    		ll res = 0;
-    		fod(i,l,r) fod(j,i,r){
-    			if(check(i,j)) res++;
+    		int u, v; cin >> u >> v;
+    		int ans = f[u] + f[v] - 2 * f[lca(u,v)];
+    		
+    		fod(i,0,sz){
+    			mini(ans, dis[i][u] + dis[i][v]);
     		}
     		
-    		cout << res << el;
+    		cout << ans << el;
     	}
     }	
 }
-namespace sub21{
-	ll cnt[base], dem[base];
+namespace sub2{
+	
 	void solve(){
-		int n = s.size() - 1;
-		fod(i,1,n){
-			cnt[i] = cnt[i-1];
-			dem[i] = dem[i-1];
-			int c = s[i] - '0';
-			if(c % 2 == 0) cnt[i] = cnt[i-1] + i + 1, dem[i]++;
-		}
-		int q; cin >> q;
-		while(q--){
-			int l, r; cin >> l >> r;
-			cout << cnt[r] - cnt[l-1] - l * (dem[r] - dem[l-1]) << el;
-		}
-		
+	
 	}
 }
-namespace sub22{
-	ll cnt[base], dem[base];
-	void solve(){
-		int n = s.size() - 1;
-		fod(i,1,n){
-			cnt[i] = cnt[i-1];
-			dem[i] = dem[i-1];
-			int c = s[i] - '0';
-			if(c % 5 == 0) cnt[i] = cnt[i-1] + i + 1, dem[i]++;
-		}
-		int q; cin >> q;
-		while(q--){
-			int l, r; cin >> l >> r;
-			cout << cnt[r] - cnt[l-1] - l * (dem[r] - dem[l-1]) << el;
-		}
-		
-	}
-}
-namespace sub3{
-	int rem[base];
-	ll ans[base];
-	struct DL{
-		int l, r, id;
-	};
-	map <int, int> compress;
-	int pos[base];
-	int MP[base];
-	void solve(){
-		int n = s.size() - 1;	
-		int pw = 1;
-		fok(i,n,1) rem[i] = (rem[i+1] + (s[i] - '0') * pw % p) % p, (pw *= 10) %= p;
-		
-		ve <DL> qr;
-		int q; cin >> q;
-		fod(i,1,q){
-			int l, r; cin >> l >> r;
-			qr.pb({l,r,i});
-		}
-		sort(all(qr), [&] (DL x, DL y){
-			if(x.l/BLOCK != y.l/BLOCK) return x.l < y.l;
-			return (x.l / BLOCK & 1) ? (x.r < y.r) : (x.r > y.r);
-		});
-		
-		int d = 0;
-		
-		fod(i,1,n + 1) compress[rem[i]] = 0;
-		for(pii x : compress) compress[x.fi] = d++;
-		
-		fod(i,1,n + 1) rem[i] = compress[rem[i]];
-		
-		int L = 1 , R = 1;
-		MP[rem[1]]++;
-		ll tot = 0;
-		
-		for(DL k : qr){
-			int l = k.l, r = k.r, id = k.id;
-			while(L > l){
-				L--;
-				tot += MP[rem[L]];
-				MP[rem[L]]++;
-			}
-			while(L < l){
-				MP[rem[L]]--;
-				tot -= MP[rem[L]];
-				L++;
-			}
-			while(R > r + 1){
-				MP[rem[R]]--;
-				tot -= MP[rem[R]];
-				R--;
-			}
-			while(R <= r){
-				R++;
-				tot += MP[rem[R]];
-				MP[rem[R]]++;
-			}
-			
-			ans[id] = tot;
-		}
-		
-		fod(i,1,q){
-			cout << ans[i] << el;
-		}
-	}
-}
+
 signed main(){
     ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); srand(time(0)); 
     if(fopen(name".inp", "r")){
@@ -197,13 +151,9 @@ signed main(){
     int Test = 1; if(multitest) cin >> Test;
     init();
     while(Test-- or endless){
-        inp(); 
-    	if(p % 2 == 0) sub21::solve(), kill();
-    	else if(p % 5 == 0) sub22::solve(), kill();
-    	else{
-    		sub3::solve();
-    		kill();
-    	}
+        inp();
+        sub1 :: solve();
+        sub2 :: solve();
     }
     kill();
 }
