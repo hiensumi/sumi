@@ -45,8 +45,8 @@ inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ �
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
-template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
-template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
+template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 #define name ""
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
@@ -54,47 +54,40 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m;
-ve <pii> g[base];
+int n , x, y, S, a[1001][1001];
 void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
+	cin >> n >> x >> y >> S;
+	fod(i,1,n) fod(j,1,n){
+		char c; cin >> c;
+		if(c == '#') a[i][j] = 1;
 	}
-}	
-
+}
+ve <pii> dir = { mp(0,0), mp(0,1), mp(-1,0), mp(0,-1), mp(1,0) };
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
-   		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
-   	}
+   	struct rb{
+   		int x, y, cur, val = 0;
+   	};
+   	bool nt(int x, int y){
+		return 1 <= x and x <= n and 1 <= y and y <= n;
+	}
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
+    	queue <rb> q;
+    	int cur = 0;
+    	if(y < 1) cur = 4;
+    	else cur = 2; 
+    	q.push({x,y,0, 0});
+    	while(!q.empty()){
+    		rb g = q.front(); q.pop();
+    		if(g.val == S){
+    			cout << g.x << " " << g.y << el;
+    			kill();
+    		}
+    		if(!nt(g.x,g.y)){
+    			int cur = g.cur;		
+    			pii p = dir[cur];
+    			
+    		}
     	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
     }	
 }
 namespace sub2{

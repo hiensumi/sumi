@@ -51,50 +51,45 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
+const ll base = 1e6 + 5, INF = 1e9, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
-void init(){} // remember to reset value for multitestcase
+int np[base];
+vi prime;
+void init(){
+	np[1] = 0;
+	fod(i,2,1e6) if(np[i] == 0){
+		prime.pb(i);
+		for(int j = i * i; j <= 1e6; j += i) np[j] = 1;
+	}
+} // remember to reset value for multitestcase
 int n, m;
-ve <pii> g[base];
 void inp(){
 	cin >> n >> m;
-	fod(i,1,m){
-		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
-	}
-}	
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
-   		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
-   	}
+	ve <edge> ret;
+ 	int p = 0;
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
+    	p = lower_bound(all(prime), n ) - prime.begin();
+    	p = prime[p];
+    	ret.pb({1,2,p - n + 2});
+    	fod(i,2,n-1){
+    		ret.pb({i,i+1,1});
+    	}	
+    	int rem = m - (n - 1);
+    	
+    	for(int i = 1; i <= n and rem;  i++){
+    		for(int j = i + 2; j <= n and rem; j++){
+   				ret.pb({i,j,INF});
+   				rem--;
+    		}
     	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+    	
+    	cout << p << " " << p << el;
+    	for(edge a : ret){
+    		cout << a.u << " " << a.v << " " << a.c << el;
+    	}
     }	
 }
 namespace sub2{

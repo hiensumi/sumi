@@ -54,47 +54,75 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m;
-ve <pii> g[base];
+multiset <int> Large;
+int lab[base], n, m, q;
+int find(int u){return (lab[u] < 0) ? u : lab[u] = find(lab[u]);}
+bool join(int u, int v){
+	u = find(u); v = find(v);
+	if(u == v) return 0;
+	if(lab[u] > lab[v]) swap(u,v);
+	Large.erase(Large.find(-lab[u]));
+	lab[u] += lab[v];
+	Large.insert(-lab[u]);
+	Large.erase(Large.find(-lab[v]));
+	lab[v] = u;
+	return 1;
+}
+pii HN[base];
+int del[base], pre[base], now[base];
 void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
-	}
-}	
+	cin >> n >> m >> q;
+	fod(i,1,n) cin >> now[i];
+	fod(i,1,m) cin >> HN[i].fi >> HN[i].se;
+	
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
-   		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
+   	int get(){
+   		if(Large.size()){
+   			auto it = Large.end();
+	   		--it;
+	   		return *it;
+   		}
+   		else{
+   			return 0;
+   		}
    	}
+   	int ans[base], popl[base];
+   	struct DL{
+   		char type; int x, val;
+   	}qr[base];
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
+    	fod(i,1,q){
+    		cin >> qr[i].type;
+    		if(qr[i].type == 'D'){ cin >> qr[i].x; del[qr[i].x] = 1;}
+    		else{
+    			cin >> qr[i].x >> qr[i].val;
+    			pre[i] = now[qr[i].x];
+    			now[qr[i].x] = qr[i].val;
+    		}
     	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+    	fod(i,1,n) lab[i] = -now[i], Large.insert(now[i]);
+    	fod(i,1,m) if(del[i] == 0) join(HN[i].fi, HN[i].se);
+    	
+    	fok(i,q,1){
+    		ans[i] = get();
+    		auto [type, id, val] = qr[i];
+    		// cout << type << " " << id << " " << val << el;
+    		if(type == 'D'){
+    			join(HN[id].fi, HN[id].se);
+    		}
+    		else{
+    			int par = find(id);
+    			Large.erase(Large.find(-lab[par]));
+    			lab[par] += now[id];
+    			now[id] = pre[i];
+    			lab[par] -= now[id];
+    			Large.insert(-lab[par]);
+    		}
+    	}
+    	
+    	fod(i,1,q) cout << ans[i] << el;
     }	
 }
 namespace sub2{

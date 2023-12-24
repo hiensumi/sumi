@@ -54,6 +54,7 @@ void init(){} // remember to reset value for multitestcase
 int n, m, k;
 int a[base];
 int res = 0;
+pii  hn[base]; int sz = 0;
 void inp(){
 	cin >> k >> n;
 	fod(i,1,n){
@@ -65,6 +66,8 @@ void inp(){
 			res++;
 			a[++m] = min(x,y);
 			a[++m] = max(x,y);
+			hn[++sz].fi = min(x,y);
+			hn[sz].se = max(x,y);
 		}
 	}
 }
@@ -83,9 +86,57 @@ namespace sub1{
     }	
 }
 namespace sub2{
-	
+	bool cmp(pii a, pii b){
+		return a.fi + a.se < b.fi + b.se;
+	}
+	int l[base], r[base];
 	void solve(){
+		sort(hn + 1, hn + sz + 1, cmp);
+		priority_queue <int> p1;
+		priority_queue <int , vi , greater<int>> p2;
+		int cau1 = 0, cau2 = 0;
 	
+		fod(i,1,sz){
+			p1.push(hn[i].fi); 
+			p2.push(hn[i].se);
+			cau1 += hn[i].fi;
+			cau2 += hn[i].se;
+			while(p1.top() > p2.top()){
+				int x = p1.top(), y = p2.top();
+				p1.pop(); p2.pop();
+				p1.push(y); p2.push(x);
+				cau1 += y - x;
+				cau2 += x - y;
+			}
+			
+			l[i] = cau2 - cau1;
+		}
+		p1 = priority_queue <int>();
+		p2 = priority_queue <int , vi , greater<int>>();
+		cau1 = cau2 = 0;
+		
+		fok(i,sz,1){
+			p1.push(hn[i].fi); 
+			p2.push(hn[i].se);
+			cau1 += hn[i].fi;
+			cau2 += hn[i].se;
+			while(p1.top() > p2.top()){
+				int x = p1.top(), y = p2.top();
+				p1.pop(); p2.pop();
+				p1.push(y); p2.push(x);
+				cau1 += y - x;
+				cau2 += x - y;
+			}
+			
+			r[i] = cau2 - cau1;
+		}
+		int ans = INF;
+		fod(i,1,sz){
+			mini(ans, l[i] + r[i + 1]);
+		}
+		
+		if(sz) cout << res + ans;
+		else cout << res;
 	}
 }
 
@@ -99,8 +150,8 @@ signed main(){
     init();
     while(Test-- or endless){
         inp();
-        sub1 :: solve();
-        sub2 :: solve();
+        if(k == 1) sub1 :: solve();
+        else sub2 :: solve();
     }
     kill();
 }

@@ -54,47 +54,91 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m;
-ve <pii> g[base];
+int n, m, k;
+pii S, T;
+ve <pii> dir = { mp(0,0), mp(-1,0), mp(1,0), mp(0,-1), mp(0,1)};
+ve < ve< ve<ld > > > dp;
+ve < ve< ve<bool> > > dd;
+ve < vi > a;
 void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
+	cin >> n >> m >> k;
+	dp.resize(n + 1, ve <ve<ld>>(m + 1, ve<ld>(6,INF)));
+	dd.resize(n + 1, ve <ve<bool>>(m + 1, ve<bool>(6)));
+	a.resize(n + 1, vi (m + 1));
+	cin >> S.fi >> S.se >> T.fi >> T.se;
+	fod(i,1,n) fod(j,1,m){
+		char c; cin >> c;
+		a[i][j] = (c == '@');
 	}
-}	
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
+	struct DL{
+		int x, y, cd;
+		DL(int x, int y, int cd){
+			this->x = x;
+			this->y = y;
+			this->cd = cd;	
+		}
+	};
+	#define pdl pair<ld,DL>
+	struct cmp{
+		bool operator() (pdl a, pdl b){
+			return a.fi > b.fi;
+		}
+	};
+	bool nt(int x, int y){
+		return 1 <= x and x <= n and 1 <= y and y <= m;
+	}
+	int rot(int dir){
+		if(dir == 4) return 1;
+		if(dir == 1) return 3;
+		if(dir == 3) return 2;
+		if(dir == 2) return 4;
+	}
+   	void dji(int u, int v){
+   		priority_queue <pdl, ve <pdl>, cmp> pq;
+   		fod(i,1,4){
+   			pq.push(mp(0.0, DL(u,v,i)));
+   			dp[u][v][i] = 0.0;
+   		}
+   		
    		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
+   			pdl X = pq.top(); pq.pop();
+   			ld cost = X.fi; DL Y = X.se;
+   			int u = Y.x, v = Y.y, cd = Y.cd;
+   			// cout << u << " " << v << el;
+   			if(dp[u][v][cd] != cost or dd[u][v][cd]) continue;
+   			dd[u][v][cd] = 1;
+ 			int sd = cd;
+ 			int x = u + dir[sd].fi, y = v + dir[sd].se;
+ 			if(nt(x,y) and a[x][y] == 0){
+ 				if(mini(dp[x][y][sd], dp[u][v][cd] + (ld) 1 / k)){
+ 					pq.push(mp(dp[x][y][sd], DL(x,y,sd)));
+ 				}
+ 			}
+ 			
+ 			fod(nd,1,4) if(nd != sd){
+ 				int x = u + dir[nd].fi, y = v + dir[nd].se;
+ 				// cout << x << " " << y << el;
+	 			if(nt(x,y) and a[x][y] == 0){
+	 				if(mini(dp[x][y][nd], ceil(dp[u][v][cd]) + (ld) 1 / k)){
+	 					pq.push(mp(dp[x][y][nd], DL(x,y,nd)));
+	 				}
+	 			}
+ 			}
+ 			  			
+   		}
    	}
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
+    	dji(S.fi, S.se);
+    	int res = INF;
+    	fod(i,1,4){
+    		mini(res, (int) ceil(dp[T.fi][T.se][i]));
+    		// cout << setprecision(6) << fixed << dp[T.fi][T.se][i] << el;
     	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+    	if(res != INF) cout << res;
+    	else cout << -1;
     }	
 }
 namespace sub2{

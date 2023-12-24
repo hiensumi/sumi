@@ -54,47 +54,26 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m;
-ve <pii> g[base];
+int n, q, a[base], b[base];
 void inp(){
-	cin >> n >> m;
-	fod(i,1,m){
-		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
-	}
-}	
+	cin >> n >> q;
+	fod(i,1,n) cin >> a[i];
+	fod(i,1,n) cin >> b[i];
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
-   		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
-   	}
+   	
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
-    	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+ 		while(q--){
+ 			int d, x; cin >> d >> x;
+ 			vector <int> c(n + 1);
+ 			fod(i,1,n) c[i] = a[i];
+ 			fod(i,1,d){
+ 				fod(j,1,n) c[i] = c[b[i]]; 
+ 			}
+ 			
+ 			cout << a[x];
+ 		}   
     }	
 }
 namespace sub2{

@@ -51,50 +51,55 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 1; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m;
-ve <pii> g[base];
+int n,m, S, T, V, dis[4][base], vst[base];
+struct DL{
+	int v,w,id;
+};
+ve <DL> g[base];
+void spfa(int u, int type){
+	fod(i,1,n) dis[type][i] = INF, vst[i] = 0;
+	queue <int> q;
+	q.push(u);
+	dis[type][u] = 0;
+	vst[u] = 1;
+	while(!q.empty()){
+		int u = q.front();
+		q.pop();
+		vst[u] = 0;
+		for(auto [v,w,id] : g[u]){
+			if(mini(dis[type][v], dis[type][u] + w)){
+				if(vst[v] == 0){
+					q.push(v);
+					vst[v] = 1;
+				}
+			}
+		}
+	}
+}
 void inp(){
 	cin >> n >> m;
+	cin >> S >> T >> V;
 	fod(i,1,m){
 		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
+		g[u].pb({v,c,i});
+		g[v].pb({u,c,i});
 	}
-}	
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
-   		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
-   	}
+   
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
-    	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+    	spfa(S,1);
+    	spfa(T,2);
+    	spfa(V,3);
+    	int res = INF;
+    	fod(i,1,n) mini(res, dis[1][i] + dis[2][i] + dis[3][i]);
+    	cout << res << el;
+    	fod(i,1,n) g[i].clear();
+    	fod(i,1,n) fod(j,1,3) dis[j][i] = 0;
     }	
 }
 namespace sub2{

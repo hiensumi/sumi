@@ -63,38 +63,33 @@ void inp(){
 		g[u].pb(mp(v,c));
 		g[v].pb(mp(u,c));
 	}
-}	
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
+   	int dis[base], vst[base];
+   	void dji(){
+   		priority_queue <pii> pq;
+   		fod(i,1,n) dis[i] = INF, vst[i] = 0;
+   		dis[1] = 0;
+   		pq.push(mp(dis[1], 1));
    		while(!pq.empty()){
-   			int u = pq.top().se;
+   			int u = pq.top().se, val = pq.top().fi;
    			pq.pop();
+   			if(dis[u] != -val) continue;
    			if(vst[u]) continue;
    			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
+   			for(auto [v,w] : g[u]){
+   				if(mini(dis[v], max(dis[u], w))){
+   					pq.push(mp(-dis[v], v));
    				}
    			}
-   		}	
+   		}
    	}
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
-    	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+    	dji();
+    	// fod(i,1,n) cout << dis[i] << el;
+    	if(dis[n] == INF) cout << "NO PATH EXISTS";
+    	else cout << dis[n];
     }	
 }
 namespace sub2{

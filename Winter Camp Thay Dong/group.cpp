@@ -73,31 +73,33 @@ void inp(){
  	
  	fod(i,1,n) b[i] = i;
 }
-
+string check(){
+	sort(b + 1, b + n + 1, [&] (int x, int y){
+		return deg[x] > deg[y];
+	});
+	
+	vi pre(n + 2);
+	fod(i,1,n) pre[i] = pre[i-1] + deg[b[i]];
+	
+	bool ch = 0;
+	// fod(i,1,n) cout << pre[i] << " ";
+	// cout << el;
+	fod(i,1,n-1){
+		int C = pre[i], I = pre[n] - C;
+		
+		if((C - I) == i * (i - 1)){
+			ch = 1;
+		}
+	}
+	return (ch) ? "YES" : "NO";
+}
 namespace sub1{
    	int q;
-   	map<pii, int> mp;
     void solve(){
     	
     	cin >> q;
 		
-		sort(b + 1, b + n + 1, [&] (int x, int y){
-    			return deg[x] > deg[y];
-    	});	
-		
-		vi pre(n + 2);
-		fod(i,1,n) pre[i] = pre[i-1] + deg[b[i]];
-		
-		bool ch = 0;
-		fod(i,1,n-1){
-			int C = pre[i], I = pre[n] - C;
-			// cout<<C<<endl;
-			if((C - I) == i * (i-1)) ch = 1;
-		}
-    	
-		if(ch == 1) cout << "YES" << el;
-		else cout << "NO" << el;
-		
+		cout << check() << el;
     	fod(x,1,q){
     		int u, v; cin >> u >> v;
     		a[u][v] ^= 1;
@@ -105,26 +107,7 @@ namespace sub1{
     		if(a[u][v] == 1) deg[u]++, deg[v]++;
     		else deg[u]--, deg[v]--;
     		
-    		sort(b + 1, b + n + 1, [&] (int x, int y){
-    			return deg[x] > deg[y];
-    		});
-    		
-    		vi pre(n + 2);
-    		fod(i,1,n) pre[i] = pre[i-1] + deg[b[i]];
-    		
-    		bool ch = 0;
-    		// fod(i,1,n) cout << pre[i] << " ";
-    		// cout << el;
-    		fod(i,1,n-1){
-    			int C = pre[i], I = pre[n] - C;
-    			
-    			if((C - I) == i * (i - 1)){
-    				ch = 1;
-    			}
-    		}
-    		
-    		if(ch) cout << "YES" << el;
-    		else cout << "NO" << el;
+    		cout << check() << el;
     	}
     }	
 }

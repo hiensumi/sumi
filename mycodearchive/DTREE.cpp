@@ -1,7 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-#define            int  long long
+// #define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -51,7 +51,7 @@ template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, q, dd[base];
+int n, q,  LG[base];
 ve <vi> g;
 void inp(){
 	cin >> n >> q;
@@ -60,41 +60,98 @@ void inp(){
 		int u, v; cin >> u >> v;
 		g[u].pb(v);
 		g[v].pb(u);
-		dd[u] = 1;
-		dd[v] = 1;
 	}
+	fod(i,2,2 * n) LG[i] = LG[i/2] + 1;
 }
 
 namespace sub1{
-	int h[base];
-	void dfs(int u, int p){
-		for(int v : g[u]){
-			if(v != p){
-				h[v] = h[u] + 1;
-				dfs(v,u);
-			}
-		}
+    int qr[base], a[base], b[base], h[base], in[base], out[base], tour[base], timeDFS = 0;
+    pii mi[base][21]; 
+	void dfs(int u, int p) {
+	    tour[++timeDFS] = u;
+	    in[u] = timeDFS;
+	    out[u] = timeDFS;
+	    for(int v : g[u]) if(v != p){
+	    	h[v] = h[u] + 1;
+	    	dfs(v,u);
+	    }
+	    if(u != 1){
+	    	tour[++timeDFS] = p;
+	    	out[p] = timeDFS;
+	    }
 	}
-	int getdia(int type){
-		int x = 0;
-		fod(i,1,n) if(dd[i] == type){x= i; break;}
-		h[x] = 0;
-		dfs(x,0);
-		int r = 0, k = 0;
-		fod(i,1,n) if(dd[i] == type) if(maxi(r, h[i])) k = i;
-		h[k] = 0;
-		dfs(k,0);
-		r = 0;
-		fod(i,1,n) if(dd[i] == type) maxi(r, h[i]);
-		
-		return r;
-	}
+    vi old; int dd[base];
+    pii get(int l, int r){
+    	int k = LG[r - l + 1];
+    	return min(mi[l][k], mi[r - mask(k) + 1][k]);
+    }
+    int lca(int u, int v){
+    	if(in[u] > in[v]) swap(u,v);
+    	// cout << in[u] << " " << in[v] << el;
+    	return tour[get(in[u], in[v]).se];
+    }
+    int dist(int u, int v){
+    	return h[u] + h[v] - 2 * h[lca(u,v)];
+    }
     void solve(){
-    	while(q--){
-    		int x; cin >> x;
-    		dd[x] = 0;
-    		cout << getdia(1) << " " << getdia(0) << el;
+    	dfs(1,0);
+    	fod(i,1,q) cin >> qr[i], dd[qr[i]] = 1; fod(i,1,n) if(dd[i] == 0) old.pb(i);
+    	// fod(i,1,timeDFS){
+    		// cout << tour[i] << " ";
+    	// }
+    	// cout << el;
+    	fod(i,1,timeDFS){
+    		// cout << h[tour[i]] << " ";
+    		mi[i][0] = {h[tour[i]], i};
     	}
+    	fod(j,1,LG[timeDFS]) fod(i,1,timeDFS - mask(j) + 1){
+    		mi[i][j] = min(mi[i][j-1], mi[i + mask(j - 1)][j-1]);
+    	}
+    	// cout << el;
+    	// cout << lca(3,5) << el;
+    	// kill();
+    	
+    	if(q == 1) return void(cout << 0 << " " << 0 << el);
+    	int x = qr[1], y = qr[2];
+    	int cur = dist(x,y); b[1] = 0; b[2] = cur;	
+    	fod(i,3,q){
+    		int u = qr[i];
+    		int n1 = dist(x,u), n2 = dist(y,u);
+    		int ma = max({n1,n2,cur});
+    		if(ma == n1){
+    			y = u;
+    			cur = n1;
+    		}
+    		else if(ma == n2){
+    			x = u;
+    			cur = n2;
+    		}
+    		
+    		b[i] = ma;
+    	}
+    	cur = 0;
+    	x = old.back(), y = 0;
+    	for(int z : old) if(maxi(cur, dist(x,z))) y = z;
+    	cur = 0;
+    	for(int z : old) if(maxi(cur, dist(y,z))) x = z;
+    	
+    	a[q] = cur;
+    	fok(i,q-1,1){
+    		int u = qr[i+1];
+    		int n1= dist(x,u), n2 = dist(y,u);
+    		int ma = max({n1,n2,cur});
+    		if(ma == n1){
+    			y = u;
+    			cur = n1;
+    		}
+    		else if(ma == n2){
+    			x = u;
+    			cur = n2;
+    		}
+    		
+    		a[i] = ma;
+    	}
+    	fod(i,1,q) cout << a[i] << " " << b[i] << el;
     }	
 }
 namespace sub2{

@@ -54,47 +54,61 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m;
-ve <pii> g[base];
+int n, m, k;
+pii dis[base];
+struct DL{
+	int node, val, id;
+};
+ve <DL> g[base];
+struct cmp{
+	bool operator() (DL a, DL b){
+		if(a.val == b.val) return a.id > b.id;
+		return a.val > b.val;
+	}
+};
+int vst[base];
+void dji(){
+	fod(i,1,n) dis[i] = mp(INF, 0);
+	priority_queue <DL, ve <DL>, cmp> pq;
+	pq.push({1,0,0});
+	dis[1] = mp(0,0);
+	while(!pq.empty()){
+		int u = pq.top().node;
+		pq.pop();
+		if(vst[u]) continue;
+		vst[u] = 1;
+		for(auto [v,w,type] : g[u]){
+			if(mini(dis[v].fi, dis[u].fi + w)){
+				dis[v].se = type;
+				pq.push({v,dis[v].fi, dis[v].se});
+			}
+			else if(dis[v].fi == dis[u].fi + w){
+				mini(dis[v].se, type);
+			}
+		}
+	}
+}
 void inp(){
-	cin >> n >> m;
+	cin >> n >> m >> k;	
 	fod(i,1,m){
 		int u, v, c; cin >> u >> v >> c;
-		g[u].pb(mp(v,c));
-		g[v].pb(mp(u,c));
+		g[u].pb({v,c,0});
+		g[v].pb({u,c,0});
 	}
-}	
+}
 
 namespace sub1{
-   	int dis[base], vst[base], trace[base];
-   	void spfa(int u){
-   		fod(i,1,n) dis[i] = INF;
-   		dis[u] = 0;
-   		priority_queue <pii, ve <pii>, greater<pii>> pq;
-   		pq.push(mp(0,u));
-   		while(!pq.empty()){
-   			int u = pq.top().se;
-   			pq.pop();
-   			if(vst[u]) continue;
-   			vst[u] = 1;
-   			for(pii x : g[u]){
-   				int v = x.fi, w = x.se;
-   				if(mini(dis[v], dis[u] + w)){
-   					trace[v] = u;
-					pq.push(mp(dis[v],v));
-   				}
-   			}
-   		}	
-   	}
+	pii hn[base];
     void solve(){
-    	spfa(1);
-    	if(dis[n] == INF) return void(cout << -1 << el);
-    	vi res;
-    	for(int x = n; x ; x = trace[x]){
-    		res.pb(x);
+    	fod(i,1,k){
+    		int u, c; cin >> u >> c;
+	    	hn[i] = mp(u,c);
+	    	g[1].pb({u,c,i});
     	}
-    	reverse(all(res));
-    	for(int x : res) cout << x << " ";
+    	dji();
+    	int res = k;
+    	fod(i,1,n) if(dis[i].se) res--;
+    	cout << res << el;
     }	
 }
 namespace sub2{
