@@ -44,7 +44,7 @@ inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
 template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
-#define name ""
+#define name "RECS"
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
