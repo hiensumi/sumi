@@ -38,28 +38,72 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
+//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
+//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
-inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "Don't sleep'"; exit(0);}
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
-template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
-template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
+template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define name ""
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, m, S, T;
+struct DL{
+	int node, t, k;
+	DL (int x, int y, int z){
+		node = x;
+		t = y;
+		k = z;
+	}
+};
+ve < ve <DL> > g;
 void inp(){
-
+	cin >> n >> m >> S >> T;
+	g.resize(n + 1);
+	fod(i,1,m){
+		int u, v, t, k;
+		cin >> u >> v >> t >> k;
+		g[u].pb(DL(v,t,k));
+		g[v].pb(DL(u,t,k));
+	}
 }
 
 namespace sub1{
-   
+    int dis[base], vst[base];
+    void dji(int u){
+    	priority_queue <pii, ve <pii> ,greater<pii>> pq;
+    	fod(i,1,n) dis[i] = INF, vst[i] = 0;
+    	dis[u] = 0;
+    	pq.push(mp(0,u));
+    	while(!pq.empty()){
+    		int u = pq.top().se, val = pq.top().fi;
+    		pq.pop();
+    		
+    		if(dis[u] != val or vst[u]) continue;
+    		vst[u] = 1;
+    		
+    		for(DL x : g[u]){
+    			int v = x.node, t = x.t, k = x.k;
+    			
+    			int cur = ceil( (ld)val/k) * k;
+    			// cout << k << " " << val << el;
+    			if(mini(dis[v], cur + t)){
+    				pq.push(mp(dis[v], v));
+    			}
+    		}
+    	}	
+    }
     void solve(){
-    
+    	dji(S);
+    	if(dis[T] != INF) cout << dis[T];
+    	else cout << -1;
     }	
 }
 namespace sub2{
@@ -77,10 +121,11 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();
+        if(endless) endless--;
     }
     kill();
 }

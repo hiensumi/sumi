@@ -38,33 +38,89 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
+//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
+//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
-inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "Don't sleep'"; exit(0);}
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
-template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
-template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
-#define name ""
+template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
+#define name "PRE_DOLL"
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
+int n, a[base];
 void inp(){
-
+	cin >> n;
+	fod(i,1,n) cin >> a[i];
 }
 
 namespace sub1{
-   
+ 	int dp[base];  
     void solve(){
-    
+    	int res = 0;
+    	fod(i,1,n){
+    		vi b;
+    		fod(j,1,i) b.pb(a[j]);
+    		uni(b);
+    		
+    		int sz = SZ(b);
+    		dp[0] = 1;
+    		fod(i,1,sz - 1){
+    			dp[i] = 1;
+    			if(b[i-1] != b[i] - 1) dp[i] = dp[i-1] + 1;
+    			else dp[i] = dp[i-2] + 1;
+    		}
+    		
+    		maxi(res, dp[sz - 1]);
+    		cout << res << " ";
+    	}
+    	
     }	
 }
 namespace sub2{
-	
+	int lab[base], dd[base];
+	int find(int u){
+		return (lab[u] < 0) ? u : lab[u] = find(lab[u]);
+	}
 	void solve(){
+		
+		int res = 0;
+		fod(i,1,n){
+			if(dd[a[i]] == 0){
+				lab[a[i]] = -1;
+				dd[a[i]] = 1;
+				if(dd[a[i] - 1]){
+					int u = find(a[i] - 1);
+					res -= (-lab[u] + 1) / 2; 
+					
+					int cur = a[i]; cur = find(cur);
+					if(lab[u] > lab[cur]) swap(u, cur);
+					lab[u] += lab[cur];
+					lab[cur] = u;	
+				}
+				
+				if(dd[a[i] + 1]){
+					int u = find(a[i] + 1);
+					res -= (-lab[u] + 1) / 2;
+					
+					int cur = a[i]; cur = find(cur);
+					if(lab[u] > lab[cur]) swap(u, cur);
+					lab[u] += lab[cur];
+					lab[cur] = u;
+				}
+				
+				int cur = find(a[i]);
+				res += 	(-lab[cur] + 1)/2;
+				
+			}
+			cout << res << " ";
+		}
 	
 	}
 }
@@ -77,10 +133,11 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
-        sub1 :: solve();
+        // sub1 :: solve();
         sub2 :: solve();
+        if(endless) endless--;
     }
     kill();
 }

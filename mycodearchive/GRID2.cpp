@@ -38,28 +38,61 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 struct point{int x, y;};
 struct edge{int u, v, c;};
 
+//int find(int u){if (lab[u] < 0) return u; return lab[u] = find(lab[u]);}
+//bool join(int u, int v){u = find(u);v = find(v);if(u == v) return 0;if(lab[u] > lab[v]) swap(u,v);lab[u] += lab[v];lab[v] = u; return 1;}
 const int MOD = 1e9 + 7;
-inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "Don't sleep'"; exit(0);}
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
-template<class T> bool mini(T& a,T b){return (a>=b)?a=b,1:0;}
-template<class T> bool maxi(T& a,T b){return (a<=b)?a=b,1:0;}
+template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
+template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define name ""
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-void inp(){
 
+int h, w, n, p[base], rp[base];
+pii a[base];
+int comb(int n, int k){
+	return ((p[n] * rp[k] % MOD) * rp[n - k] % MOD + MOD) % MOD;
+}
+void inp(){
+	cin >> h >> w >> n;
+	fod(i,1,n) cin >> a[i].fi >> a[i].se;
+	
+	p[0] = 1;
+	fod(i,1,1e6) p[i] = p[i-1] * i % MOD;
+	rp[1000000] = Inv(p[1000000]);
+	fok(i,1e6-1,0) rp[i] = rp[i+1] * (i + 1) % MOD;
 }
 
 namespace sub1{
-   
+   	int dp[base];
     void solve(){
-    
+ 		n++;
+    	a[n] = pii(h,w);
+ 		sort(a + 1, a + n + 1, [&] (pii a, pii b){
+ 			if(a.fi == b.fi) return a.se < b.se;
+ 			return a.fi < b.fi;
+ 		});
+    	
+    	fod(i,1,n){
+    		int x = a[i].fi, y = a[i].se;
+    		
+    		dp[i] = comb(x + y - 2, x - 1);
+    		
+    		fod(j,1,i-1){
+    			int u = a[j].fi, v = a[j].se;
+    			dp[i] = (dp[i] - dp[j] * comb(x + y - u - v, x - u) % MOD + MOD * MOD) % MOD;
+    		}
+    	}
+    	
+    	cout << dp[n];
+    	
     }	
 }
 namespace sub2{
@@ -77,10 +110,11 @@ signed main(){
     }
     int Test = 1; if(multitest) cin >> Test;
     init();
-    while(Test-- and endless){
+    while(Test-- or endless){
         inp();
         sub1 :: solve();
         sub2 :: solve();
+        if(endless) endless--;
     }
     kill();
 }
