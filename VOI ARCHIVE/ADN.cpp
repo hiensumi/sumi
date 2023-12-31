@@ -1,7 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-#define            int  long long
+// #define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -136,9 +136,29 @@ namespace sub1{
     }	
 }
 namespace sub2{
-	
+	int dp[5001][5001][4];
+	ve <char> v = { 'A', 'T', 'G', 'X'};
 	void solve(){
-	
+		fod(i,0,n) fod(j,1,i + 1){
+			fod(p,0,3){
+				char x = v[p];
+				if(i and (s[i] == x or s[i] == '?')) dp[i][j][p] = dp[i-1][j-1][p] + j;
+				
+				fod(q,0,3){
+					char y = v[q];
+					if(x != y and s[i] == x){
+						dp[i][1][p] = dp[i-1][j][q] + 1;
+					}	
+					else if(x != y and s[i] != x){
+						dp[i][0][p] = dp[i-1][j][q] + 1;
+					}
+				}
+			}
+		}
+		int res = 0 ;
+		fod(j,1,n + 1) fod(c,0,3) maxi(res, dp[n][j][c]);
+		n++;
+		cout << n * (n + 1) / 2 - res << el; 
 	}
 }
 
@@ -152,7 +172,7 @@ signed main(){
     init();
     while(Test-- or endless){
         inp();
-        sub1 :: solve();
+        // sub1 :: solve();
         sub2 :: solve();
         if(endless) endless--;
     }

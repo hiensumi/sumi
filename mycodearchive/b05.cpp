@@ -57,7 +57,7 @@ void init(){} // remember to reset value for multitestcase
 int n, a[base], ma = -INF;
 void inp(){
 	cin >> n;
-	fod(i,1,n) cin >> a[i], maxi(ma, a[i]);
+	// fod(i,1,n) cin >> a[i], maxi(ma, a[i]);
 }
 
 namespace sub1{
@@ -66,7 +66,7 @@ namespace sub1{
     void solve(){
     	fod(i,1,N) for(int j = i; j <= N; j += i) divs[j] += i;
     	fod(i,1,n){
-    		cout << divs[a[i]] << " ";
+    		cout << divs[i] << " ";
     	}
     }	
 }
