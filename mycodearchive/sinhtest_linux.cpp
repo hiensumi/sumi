@@ -21,8 +21,8 @@ vector<int> gen(int N) { // sinh hoan vi
 signed main(){
 	ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	srand(time(0));
-	system( ("g++ -std=gnu++14 " + name + ".cpp " + "-o " + name + ".exe").c_str());
-	system( ("g++ -std=gnu++14 " + name + "_trau.cpp " + "-o " + name + "_trau.exe").c_str());
+	system( ("g++ -std=gnu++14 " + name + ".cpp " + "-o " + name).c_str());
+	system( ("g++ -std=gnu++14 " + name + "_trau.cpp " + "-o " + name).c_str());
 	fod(i,1,NTest){
 		ofstream cout((name + ".inp").c_str());
 		// gen
@@ -35,8 +35,8 @@ signed main(){
 			cout << rd(1,1e2) << " ";
 		}
 		cout.close();
-		system((name + ".exe").c_str());
-		system((name + "_trau.exe").c_str());
+		system((name).c_str());
+		system((name).c_str());
 		
 		if(system(("fc " + name + ".out " + name + ".ans").c_str()) != 0){
 			cerr << "Test " << i << ": WA!\n";
