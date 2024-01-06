@@ -53,44 +53,29 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0; int endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m, k, a[3001][3001];
+int n, m, a[base], b[base];
 void inp(){
-	cin >> n >> m >> k;
-	fod(i,1,k){
-		int x, y, v; cin >> x >> y >> v; 
-		a[x][y] = v;
-	}
+	cin >> n >> m ;
+	fod(i,1,n) cin >> a[i];
+	fod(i,1,m) cin >> b[i];
 }
 
 namespace sub1{
-   	int dp[3001][3001][4];
-    
+   	int dp[1005][1005];
+   	// answer for the state 1 ... i (i <= n) 1 ... j (j <= m)
     void solve(){
-    	// memset(dp, -0x3f, sizeof dp);
-    	// dp[1][1][(a[1][1] > 0)] = a[1][1];
-    	
-    	fod(i,1,n) fod(j,1,m){
-    		maxi(dp[i][j][0], 
-    		max({dp[i-1][j][0], dp[i-1][j][1], dp[i-1][j][2], dp[i-1][j][3]}));
+    	// 0 means erase all
+    	memset(dp, 0x3f, sizeof dp);
+    	fod(i,0,n) fod(j,0,m){
+    		if(i == 0){dp[i][j] = j; continue;}
+    		if(j == 0){dp[i][j] = i; continue;}
     		
-    		maxi(dp[i][j][(a[i][j] > 0)], 
-    		max({dp[i-1][j][0], dp[i-1][j][1], dp[i-1][j][2], dp[i-1][j][3]}) + a[i][j]);
-    		
-    		maxi(dp[i][j][0], dp[i][j-1][0]);
-    		
-    		fod(k,1,3){
-				int ans = 0;
-				
-				if(a[i][j]) ans += dp[i][j-1][k-1];
-				else ans += dp[i][j-1][k];
-				
-				maxi(dp[i][j][k], dp[i][j-1][k]);
-				maxi(dp[i][j][k], ans + a[i][j]);    			
-    		}
+    		mini(dp[i][j], dp[i-1][j] + 1); // rm Ai
+    		mini(dp[i][j], dp[i][j-1] + 1); // rm Bi
+    		mini(dp[i][j], dp[i-1][j-1] + (a[i] != b[j])); // not del Ai and Bi
     	}
     	
-		// pra(dp[1][2], 3);
-    	cout << max({dp[n][m][0], dp[n][m][1], dp[n][m][2], dp[n][m][3]});	
+    	cout << dp[n][m];
     }	
 }
 namespace sub2{
