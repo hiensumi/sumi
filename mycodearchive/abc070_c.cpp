@@ -53,14 +53,19 @@ const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0;
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
 
+int n, t[base];
 void inp(){
-
+	cin >> n;
+	fod(i,1,n) cin >> t[i];
 }
 
 namespace sub1{
 
     void solve(){
-
+		int res = t[1];
+		fod(i,2,n) res = lcm(res, t[i]);
+		
+		cout << res;
     }	
 }
 namespace sub2{
@@ -85,3 +90,4 @@ signed main(){
     }
     kill();
 }
+

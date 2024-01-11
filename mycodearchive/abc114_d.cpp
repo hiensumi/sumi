@@ -39,7 +39,7 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
-inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "Etnallirb Anul\n"; exit(0);}
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
@@ -52,15 +52,53 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-
+int n;
 void inp(){
-
+	cin >> n ;
 }
 
 namespace sub1{
-
+ 	map <int,int> DL;
+    vi v;
+    int calc(int x){
+    	int cnt = 0;
+    	for(int xx : v) if(xx >= x) cnt++;
+    	return cnt ;
+    }
     void solve(){
+		fod(i,1,n){
+			int x = i;
+			for(int j = 2; j * j <= x; j++){
+				while(x % j == 0){
+					DL[j]++;
+					x /= j;
+				}
+			}
+			if(x > 1) DL[x]++;
+		}
+		// for(int i = 1; i * i <= 75; i++){
+			// if(75 % i == 0){
+				// cout << i << " ";
+				// if(i * i != 75) cout << 75/i << el;
+			// }
+		// }
+		
+		for(pii x : DL){
+			v.pb(x.se);
+			// cout << x.se << el;
+		}
+		
+		// prv(v);
+		int res = 0;
+		
+		res += calc(74);
+		res += calc(2) * calc(24) - calc(24); // calc(2) bi du 1 lan calc(24)
+		res += calc(4) * calc(14) - calc(14); // calc(4) bi du 1 lan calc(14)
+		res += calc(4) * (calc(4) - 1)/2 * calc(2)
+		
+		- calc(4) * (calc(4) - 1)/2 * 2; // calc(2) bi du 1 lan cua calc(4), 1 lan cua calc(4) - 1
 
+		cout << res;
     }	
 }
 namespace sub2{

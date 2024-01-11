@@ -39,7 +39,7 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
-inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "Etnallirb Anul\n"; exit(0);}
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "⏁⊑⟒ ⋔⍜⍜⋏ ⍙⏃⌇ ⌇⍜ ⏚⟒⏃⎍⏁⟟⎎⎍⌰ ⏁⊑⏃⏁ ⏁⊑⟒⍀⟒ ⍙⏃⌇ ⏃ ⋔⟟⍀⍀⍜⍀ ⟟⋏ ⏁⊑⟒ ⍜☊⟒⏃⋏.\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
@@ -52,15 +52,35 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-
+int n;
 void inp(){
-
+	cin >> n;
 }
 
 namespace sub1{
-
+	map <int,int> dd;
     void solve(){
-
+		for(int i = 2; i * i <= n; i++){
+			while(n % i == 0){
+				dd[i]++;
+				n /= i;
+			}
+		}
+		if(n > 1) dd[n]++;
+		
+		int res = 0;
+		for(auto [x,y] : dd){
+			int l = 0, r = 1e9, ans = 0;
+			while(l <= r){
+				int mid = l + r >> 1;
+				if(mid * (mid + 1) <= 2 * y) l = mid + 1, ans = mid;
+				else r = mid - 1;
+			}
+			
+			res += ans;
+		}
+		
+		cout << res;
     }	
 }
 namespace sub2{
