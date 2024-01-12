@@ -52,21 +52,16 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, a[base];
-void inp(){
-	cin >> n;
-	n++;
-	fod(i,1,n) cin >> a[i];
-	sort(a + 1, a + n + 1);
 
+void inp(){
+	int a, b; cin >> a >> b;
+	cout << lcm(a,b);
 }
 
 namespace sub1{
 
     void solve(){
-    	int res = a[2] - a[1];
-    	fod(i,3,n) res = gcd(res, a[i] - a[i-1]);
-    	cout << res;
+
     }	
 }
 namespace sub2{
@@ -92,4 +87,3 @@ signed main(){
     kill();
 }
 
-	

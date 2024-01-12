@@ -49,24 +49,51 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 2e5 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, a[base];
+int n, q, par[base][21], h[base];
+vi g[base];
+void dfs(int u, int p){
+	for(int v : g[u]){
+		if(v == p) continue;
+		par[v][0] = u;
+		h[v] = h[u] + 1;
+		
+		fod(j,1,20) par[v][j] = par[par[v][j-1]][j-1];
+		dfs(v,u);
+	}
+}
 void inp(){
-	cin >> n;
-	n++;
-	fod(i,1,n) cin >> a[i];
-	sort(a + 1, a + n + 1);
-
+	cin >> n >> q;
+	fod(i,1,n-1){
+		int u, v; cin >> u >> v;
+		g[u].pb(v);
+		g[v].pb(u);
+	}
 }
 
 namespace sub1{
-
+	int lca(int u, int v){
+		if(h[u] < h[v]) swap(u,v);
+		int k = h[u] - h[v];
+		
+		fok(j,k,0) if(k & mask(j)) u = par[u][j];
+		
+		if(u == v) return u;
+		
+		k = lg(h[u]);
+		
+		fok(j,k,0) if(par[v][j] != par[u][j]) u = par[u][j], v = par[v][j];
+		
+		return par[u][0];
+	}
     void solve(){
-    	int res = a[2] - a[1];
-    	fod(i,3,n) res = gcd(res, a[i] - a[i-1]);
-    	cout << res;
+    	dfs(1,0);
+		while(q--){
+			int u, v; cin >> u >> v;
+			cout << h[u] + h[v] - 2 * h[lca(u,v)] << el;
+		}
     }	
 }
 namespace sub2{
@@ -92,4 +119,3 @@ signed main(){
     kill();
 }
 
-	

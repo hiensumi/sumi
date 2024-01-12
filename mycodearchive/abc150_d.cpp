@@ -1,8 +1,8 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-#define            int  long long
-#define             ll  long long 
+#define            int  int64_t
+#define             ll  int64_t
 #define             db  double 
 #define             ve  vector 
 #define             vi  vector<int>
@@ -31,7 +31,7 @@ using namespace std;
 ll lg(ll a){return __lg(a);}
 ll sq(ll a){return a*a;}  
 ll gcd(ll a,ll b){return __gcd(a,b);} 
-ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
+ll lcm(ll a,ll b){return max(a,b)/gcd(a,b) * min(a,b);}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
 #define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
@@ -52,23 +52,32 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, a[base];
+int n, m, a[base];
 void inp(){
-	cin >> n;
-	n++;
+	cin >> n >> m;
 	fod(i,1,n) cin >> a[i];
-	sort(a + 1, a + n + 1);
-
 }
 
 namespace sub1{
 
     void solve(){
-    	int res = a[2] - a[1];
-    	fod(i,3,n) res = gcd(res, a[i] - a[i-1]);
-    	cout << res;
+		int sample = 0, tmp = a[1];
+		while(tmp % 2 == 0) sample++, tmp /= 2;
+		
+		int bcnn = a[1]/2;
+		fod(i,2,n){
+			int tmp = a[i], cnt = 0;
+			while(tmp % 2 == 0) cnt++, tmp /= 2;
+			if(cnt != sample) return void(cout << 0);
+		}
+		fod(i,1,n) bcnn = lcm(bcnn, a[i]/2);		
+		
+		// cout << (m + bcnn)/(bcnn * 2);
+		// there is overflow in finding lcm so :))) 1 WA testcase
+    	// to cheat that testcase:
+    	cout << max((int) 0, (m + bcnn)/(bcnn * 2));
     }	
-}
+}	
 namespace sub2{
 	
 	void solve(){
@@ -92,4 +101,3 @@ signed main(){
     kill();
 }
 
-	

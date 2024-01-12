@@ -55,18 +55,16 @@ void init(){} // remember to reset value for multitestcase
 int n, a[base];
 void inp(){
 	cin >> n;
-	n++;
 	fod(i,1,n) cin >> a[i];
-	sort(a + 1, a + n + 1);
-
 }
 
 namespace sub1{
 
     void solve(){
-    	int res = a[2] - a[1];
-    	fod(i,3,n) res = gcd(res, a[i] - a[i-1]);
-    	cout << res;
+    	int res = a[1];
+		fod(i,1,n) res = gcd(res, a[i]);
+		
+		cout << res;
     }	
 }
 namespace sub2{
@@ -92,4 +90,3 @@ signed main(){
     kill();
 }
 
-	
