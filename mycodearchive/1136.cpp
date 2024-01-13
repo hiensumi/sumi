@@ -1,8 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
-#include <cassert>
 using namespace std; 
-// #define            int  long long
+#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -50,21 +49,23 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 2e5 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, q, par[base], p[base][21], h[base], dd[base];
+int n, m, par[base][21], h[base];
 vi g[base];
-void dfs(int u){
-	dd[u] = 1;
-	for(int v : g[u]) if(dd[v] == 0){
+void dfs(int u, int p){
+	for(int v : g[u]){
+		if(v == p) continue;
+		par[v][0] = u;
 		h[v] = h[u] + 1;
-		par[v] = u;
-		dfs(v);
+		
+		fod(j,1,20) par[v][j] = par[par[v][j-1]][j-1];
+		dfs(v,u);
 	}
 }
 void inp(){
-	cin >> n >> q;
+	cin >> n >> m;
 	fod(i,1,n-1){
 		int u, v; cin >> u >> v;
 		g[u].pb(v);
@@ -73,25 +74,42 @@ void inp(){
 }
 
 namespace sub1{
+	int b[base];
 	int lca(int u, int v){
 		if(h[u] < h[v]) swap(u,v);
-		while(h[u] != h[v]) u = par[u];
-		while(u != v){
-			u = par[u];
-			v = par[v];
+		int k = h[u] - h[v];
+		
+		fok(j,20,0) if(k & mask(j)) u = par[u][j];
+		
+		if(u == v) return u;
+		
+		k = lg(h[u]);
+		
+		fok(j,k,0) if(par[v][j] != par[u][j]) u = par[u][j], v = par[v][j];
+		
+		return par[u][0];
+	}
+	void calc(int u, int p){
+		for(int v : g[u]){
+			if(v == p) continue;
+			calc(v,u);
+			
+			b[u] += b[v];	
 		}
-		return u;
 	}
     void solve(){
-    	dfs(1);
-		fod(i,1,n) p[i][0] = par[i];
-		fod(j,1,log2(n)) fod(i,1,n){
-			p[i][j] = p[p[i][j-1]][j-1];
-		}
-		while(q--){
+    	dfs(1,0);
+		fod(i,1,m){
 			int u, v; cin >> u >> v;
-			cout << h[u] + h[v] - 2 * h[lca(u,v)] << el;
+			b[u]++;
+			b[v]++;
+			int x = lca(u,v);
+			b[x]--;
+			b[par[x][0]]--;
 		}
+		calc(1,0);
+		
+		fod(i,1,n) cout << b[i] << " ";
     }	
 }
 namespace sub2{

@@ -1,6 +1,6 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
+#pragma GCC optimize("O3")
 #include "bits/stdc++.h"
-#include <cassert>
 using namespace std; 
 // #define            int  long long
 #define             ll  long long 
@@ -53,51 +53,101 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 2e5 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, q, par[base], p[base][21], h[base], dd[base];
-vi g[base];
-void dfs(int u){
-	dd[u] = 1;
-	for(int v : g[u]) if(dd[v] == 0){
+int n, q, val[base], par[base], h[base], sz[base], head[base];
+int in[base], out[base], timedfs = 0;
+ve <vi> g;
+template<class T> struct Seg {
+    const T ID = -1; T comb(T a, T b) { return max(a,b); }
+    int n; vector<T> seg;
+    void init(int _n) { n = _n; seg.assign(2*n,ID); }
+    void pull(int p) { seg[p] = comb(seg[2*p],seg[2*p+1]); }
+    void upd(int p, T val) { // set val at position p
+        seg[p += n] = val; for (p /= 2; p; p /= 2) pull(p); }
+    T get(int l, int r) {	// max on interval [l, r]
+        T ra = ID, rb = ID;
+        for (l += n, r += n+1; l < r; l /= 2, r /= 2) {
+            if (l&1) ra = comb(ra,seg[l++]);
+            if (r&1) rb = comb(seg[--r],rb);
+        }
+        return comb(ra,rb);
+    }
+};
+Seg <int> ST;
+// hld 
+void dfs(int u, int p){
+	sz[u] = 1;
+	for(int v : g[u]) if(v != p){
 		h[v] = h[u] + 1;
 		par[v] = u;
-		dfs(v);
+		dfs(v,u);
+		sz[u] += sz[v];
+	}
+}
+void dfs_hld(int u, int p, int r){
+	in[u] = ++timedfs;	
+	head[u] = r;
+	int heavy = -1;
+	for(int v : g[u]){
+		if(v != p){
+			if(heavy == -1 or sz[v] > sz[heavy]) heavy = v;
+		}
+	}
+	if(heavy == -1) return;
+	dfs_hld(heavy,u,r);
+	for(int v : g[u])if(v != p){
+		if(v != heavy) dfs_hld(v,u,v);
 	}
 }
 void inp(){
 	cin >> n >> q;
+	fod(i,1,n) cin >> val[i];
+	g.resize(n + 1);
 	fod(i,1,n-1){
 		int u, v; cin >> u >> v;
 		g[u].pb(v);
 		g[v].pb(u);
 	}
+	dfs(1,0);
+	dfs_hld(1,0,1);
 }
 
 namespace sub1{
-	int lca(int u, int v){
-		if(h[u] < h[v]) swap(u,v);
-		while(h[u] != h[v]) u = par[u];
-		while(u != v){
-			u = par[u];
-			v = par[v];
+	int query(int u, int v){
+		int res = 0;
+		while(head[u] != head[v]){
+			if(h[head[u]] < h[head[v]]) swap(u,v);
+			int ret = ST.get(in[head[u]], in[u]);
+			u = par[head[u]];
+			maxi(res, ret);
 		}
-		return u;
+		
+		if(h[u] < h[v]) swap(u,v);
+		// assert(in[v] <= in[u]);
+		int ret = ST.get(in[v],in[u]);
+		maxi(res, ret);
+		
+		return res;
 	}
     void solve(){
-    	dfs(1);
-		fod(i,1,n) p[i][0] = par[i];
-		fod(j,1,log2(n)) fod(i,1,n){
-			p[i][j] = p[p[i][j-1]][j-1];
-		}
+    	ST.init(n + 1);
+		fod(i,1,n) ST.upd(in[i], val[i]);
 		while(q--){
-			int u, v; cin >> u >> v;
-			cout << h[u] + h[v] - 2 * h[lca(u,v)] << el;
+			int type; cin >> type;
+			if(type == 1){
+				int x, v; cin >> x >> v;
+				ST.upd(in[x], v);
+			}
+			else{
+				int u, v; cin >> u >> v;
+				cout << query(u,v) << " ";
+			}
 		}
     }	
 }
 namespace sub2{
 	
 	void solve(){
-	
+		
 	}
 }
 

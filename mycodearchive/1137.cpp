@@ -1,8 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
-#include <cassert>
 using namespace std; 
-// #define            int  long long
+#define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -50,48 +49,85 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 2e5 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, q, par[base], p[base][21], h[base], dd[base];
+int n, q, val[base], in[base], out[base], timedfs = 0, tour[base];
 vi g[base];
-void dfs(int u){
-	dd[u] = 1;
-	for(int v : g[u]) if(dd[v] == 0){
-		h[v] = h[u] + 1;
-		par[v] = u;
-		dfs(v);
+void dfs(int u, int p){
+	in[u] = ++timedfs;
+	tour[timedfs] = u;
+	
+	for(int v : g[u]) if(v != p){
+		dfs(v,u);
 	}
+	
+	out[u] = timedfs;
 }
+struct BIT{
+	int b1[base], b2[base], n;
+	void init(int x){
+		n = x;
+	}
+	void add(int b[], int idx, int val){
+		while(idx <= n){
+			b[idx] += val;
+			idx += idx & -idx;
+		}
+	}
+	void range_add(int l, int r, int x){
+		add(b1, l, x);
+		add(b1, r + 1, -x);
+		add(b2, l, x * (l - 1));
+		add(b2, r + 1, - x * r);
+	}
+	int sum(int b[], int idx){
+		int res = 0;
+		while(idx > 0){
+			res += b[idx];
+			idx -= idx & -idx;
+		}
+		return res;
+	}
+	int getall(int idx){
+		return sum(b1, idx) * idx - sum(b2, idx);
+	}
+	int get(int l, int r){
+		if(l > r or r == 0) return 0;
+		return getall(r) - (l - 1 > 0 ? getall(l-1) : 0);
+	}
+}bit;
 void inp(){
 	cin >> n >> q;
+	fod(i,1,n) cin >> val[i];
 	fod(i,1,n-1){
 		int u, v; cin >> u >> v;
 		g[u].pb(v);
 		g[v].pb(u);
 	}
-}
-
-namespace sub1{
-	int lca(int u, int v){
-		if(h[u] < h[v]) swap(u,v);
-		while(h[u] != h[v]) u = par[u];
-		while(u != v){
-			u = par[u];
-			v = par[v];
+	bit.init(n);
+	dfs(1,0);
+	fod(i,1,n) bit.range_add(in[i], in[i], val[i]);
+	
+	while(q--){
+		int type; cin >> type;
+		if(type == 1){
+			int s, x; cin >> s >> x;
+			int diff = x - val[s];
+			bit.range_add(in[s], in[s], diff);
+			val[s] = x;
 		}
-		return u;
+		else{
+			int s; cin >> s;
+			cout << bit.get(in[s], out[s]) << el;
+		}
 	}
+}
+ 
+namespace sub1{
+	
     void solve(){
-    	dfs(1);
-		fod(i,1,n) p[i][0] = par[i];
-		fod(j,1,log2(n)) fod(i,1,n){
-			p[i][j] = p[p[i][j-1]][j-1];
-		}
-		while(q--){
-			int u, v; cin >> u >> v;
-			cout << h[u] + h[v] - 2 * h[lca(u,v)] << el;
-		}
+		
     }	
 }
 namespace sub2{
@@ -100,7 +136,7 @@ namespace sub2{
 	
 	}
 }
-
+ 
 signed main(){
     ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); srand(time(0)); 
     if(fopen(name".inp", "r")){
@@ -116,4 +152,3 @@ signed main(){
     }
     kill();
 }
-
