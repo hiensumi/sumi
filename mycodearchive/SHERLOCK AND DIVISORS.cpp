@@ -35,7 +35,6 @@ ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
 #define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
-#define DEBUG(a) cout << #a << " = " << a << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
@@ -52,16 +51,26 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m ;
+int n;
 void inp(){
-	cin >> n >> m;
+	cin >> n;
 }
 
 namespace sub1{
-	
+   	
     void solve(){
-    	cout << lcm(n,m)/gcd(n,m) << el;
-    	// cout << gcd(n,m) << " " << lcm(n,m) << el;
+		if(n % 2 == 1) return void(cout << 0 << el);
+		int cnt = 0;
+		for(int i = 1; i * i <= n; i++){
+			if(n % i == 0){
+				int j = n / i;
+				if(i % 2 == 0) cnt++;
+				if(j % 2 == 0) cnt++;
+				if(i % 2 == 0 and j % 2 == 0 and i == j) cnt--;
+			}
+		}
+		
+		cout << cnt << el;    
     }	
 }
 namespace sub2{

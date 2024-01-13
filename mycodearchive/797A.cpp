@@ -49,19 +49,35 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m ;
+int n, k;
 void inp(){
-	cin >> n >> m;
+	cin >> n >> k;
 }
 
 namespace sub1{
-	
+   	map <int,int> dl;
     void solve(){
-    	cout << lcm(n,m)/gcd(n,m) << el;
-    	// cout << gcd(n,m) << " " << lcm(n,m) << el;
+    	int tmp = n;
+    	for(int i = 2 ;i * i <= n; i++) if(n % i == 0){
+    		while(n % i == 0) dl[i]++, n /= i;
+    	}
+    	
+    	int cnt = k - 1, pro = 1;
+    	vi ans ;
+    	for(pii x : dl){
+    		if(cnt <= 0) break;
+    		int d = min(x.se, cnt);
+    		pro *= bp(x.fi, d);
+    		cnt -= d;
+    		fod(j,1,d) ans.pb(x.fi);
+    	}
+    	if(cnt > 0 or tmp/pro <= 1) return void(cout << -1);
+    	// DEBUG(pro);
+    	for(int x : ans) cout << x << " ";
+    	cout << tmp / pro;
     }	
 }
 namespace sub2{

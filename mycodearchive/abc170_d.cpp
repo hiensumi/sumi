@@ -1,7 +1,7 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
 using namespace std; 
-#define            int  long long
+// #define            int  long long
 #define             ll  long long 
 #define             db  double 
 #define             ve  vector 
@@ -35,7 +35,6 @@ ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
 #define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
-#define DEBUG(a) cout << #a << " = " << a << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
@@ -49,21 +48,37 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m ;
+int n, a[base];
 void inp(){
-	cin >> n >> m;
+	cin >> n;
+	fod(i,1,n) cin >> a[i];
 }
 
 namespace sub1{
-	
+	int dd[base];
+   // ai chia het cho aj 
+   // dem so luong i ma khong chia het cho so nao trong a
     void solve(){
-    	cout << lcm(n,m)/gcd(n,m) << el;
-    	// cout << gcd(n,m) << " " << lcm(n,m) << el;
+    	fod(i,1,n){
+    		int x = a[i];
+    		if(dd[x] == 2){
+    			dd[x] = 1;
+    			continue;
+    		}
+    		if(dd[x] == 1){
+    			continue;
+    		}
+    		if(dd[x] == 0) dd[x] = 2;
+    		for(int j = 2 * x; j <= 1e6; j += x) dd[j] = 1; 
+    	}
+    	int cnt = 0;
+    	fod(i,1,n) if(dd[a[i]] == 2) cnt++;
+    	cout << cnt;
     }	
-}
+}	
 namespace sub2{
 	
 	void solve(){
@@ -86,3 +101,4 @@ signed main(){
     }
     kill();
 }
+

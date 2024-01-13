@@ -35,7 +35,6 @@ ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
 #define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
-#define DEBUG(a) cout << #a << " = " << a << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
@@ -49,19 +48,30 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, m ;
+int q, np[base];
 void inp(){
-	cin >> n >> m;
+	np[1] = 1;
+	fod(i,2,1e5) if(np[i] == 0){
+		for(int j = i * i ; j <= 1e5 ; j += i) np[j] = 1;
+	}
 }
 
 namespace sub1{
-	
+   	int cnt[base];
     void solve(){
-    	cout << lcm(n,m)/gcd(n,m) << el;
-    	// cout << gcd(n,m) << " " << lcm(n,m) << el;
+    	for(int i = 3; i <= 1e5 ;i += 2){
+    		int x = (i + 1)/2;
+    		if(np[i] == 0 and np[x] == 0) cnt[i]++;  
+    	}
+    	fod(i,1,1e5) cnt[i] += cnt[i-1];
+    	cin >> q;
+    	while(q--){
+    		int l, r; cin >> l >> r;
+    		cout << cnt[r] - cnt[l-1] << el;
+    	}
     }	
 }
 namespace sub2{

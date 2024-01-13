@@ -1,11 +1,11 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #pragma GCC optimize("O3")
 #include "bits/stdc++.h"
-using namespace std; 
+using namespace std;
 // #define            int  long long
-#define             ll  long long 
-#define             db  double 
-#define             ve  vector 
+#define             ll  long long
+#define             db  double
+#define             ve  vector
 #define             vi  vector<int>
 #define            vll  vector<ll>
 #define            str  string
@@ -14,28 +14,28 @@ using namespace std;
 #define             el  '\n'
 #define            pii  pair<int,int>
 #define            pll  pair<ll,ll>
-#define             mp  make_pair 
-#define             fi  first 
+#define             mp  make_pair
+#define             fi  first
 #define             se  second
-#define         uni(a)  sort(all(a)),a.resize(unique(all(a))-a.begin()) 
+#define         uni(a)  sort(all(a)),a.resize(unique(all(a))-a.begin())
 #define     fod(i,a,b)  for(int i=(int)(a);i<=(int)(b);i++)
 #define    fok(i,a,b)  for(int i=(int)(a);i>=(int)(b);i--)
-#define         all(a)  a.begin(),a.end()  
+#define         all(a)  a.begin(),a.end()
 #define             LB  lower_bound
-#define             UB  upper_bound 
+#define             UB  upper_bound
 #define            tct  template<class T>
 #define     BIT(msk,i)  (msk>>(i)&1)
 #define        mask(i)  (1ll<<(i))
 #define          SZ(_)  (int)(_.size())
 #define           btpc  __builtin_popcountll
-#define            ctz  __builtin_ctzll 
+#define            ctz  __builtin_ctzll
 ll lg(ll a){return __lg(a);}
-ll sq(ll a){return a*a;}  
-ll gcd(ll a,ll b){return __gcd(a,b);} 
+ll sq(ll a){return a*a;}
+ll gcd(ll a,ll b){return __gcd(a,b);}
 ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
-#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
+#define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el;
 #define DEBUG(a) cout << #a << " = " << a << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
@@ -50,7 +50,7 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 2e5 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 2e5 + 5, INF = 1e18, multitest = 0, endless = 0;
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
 int n, q, val[base], par[base], h[base], sz[base], head[base];
@@ -73,7 +73,7 @@ template<class T> struct Seg {
     }
 };
 Seg <int> ST;
-// hld 
+// hld
 void dfs(int u, int p){
 	sz[u] = 1;
 	for(int v : g[u]) if(v != p){
@@ -84,7 +84,7 @@ void dfs(int u, int p){
 	}
 }
 void dfs_hld(int u, int p, int r){
-	in[u] = ++timedfs;	
+	in[u] = ++timedfs;
 	head[u] = r;
 	int heavy = -1;
 	for(int v : g[u]){
@@ -120,12 +120,12 @@ namespace sub1{
 			u = par[head[u]];
 			maxi(res, ret);
 		}
-		
+
 		if(h[u] < h[v]) swap(u,v);
 		// assert(in[v] <= in[u]);
 		int ret = ST.get(in[v],in[u]);
 		maxi(res, ret);
-		
+
 		return res;
 	}
     void solve(){
@@ -142,17 +142,17 @@ namespace sub1{
 				cout << query(u,v) << " ";
 			}
 		}
-    }	
+    }
 }
 namespace sub2{
-	
+
 	void solve(){
-		
+
 	}
 }
 
 signed main(){
-    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); srand(time(0)); 
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); srand(time(0));
     if(fopen(name".inp", "r")){
       freopen(name".inp", "r", stdin);
       freopen(name".out", "w", stdout);
@@ -166,4 +166,3 @@ signed main(){
     }
     kill();
 }
-
