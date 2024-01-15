@@ -52,42 +52,33 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, val[base];
-vi g[base];
-void compress(){
-	map <int,int> dl;
-	int d = 0;
-	fod(i,1,n) dl[val[i]] = 0;
-	for(auto [x,y] : dl) dl[x] = ++d;
-	fod(i,1,n) val[i] = dl[val[i]];
-}
+int n;
 void inp(){
 	cin >> n;
-	fod(i,1,n) cin >> val[i];
-	fod(i,1,n-1){
-		int u, v; cin >> u >> v;
-		g[u].pb(v);
-		g[v].pb(u);
-	}
-	compress();
 }
 
 namespace sub1{
-   	ve <set<int>> cl;
-   	int f[base];
-   	void dfs(int u, int p){
-   		cl[u].insert(val[u]);
-   		for(int v : g[u]) if(v != p){
-   			dfs(v,u);
-   			if(SZ(cl[u]) < SZ(cl[v])) swap(cl[u],cl[v]);
-   			for(int x : cl[v]) cl[u].insert(x);
-   		}
-   		f[u] = SZ(cl[u]);
-   	}
+    void calc(int n, int &x, int &y){
+    	if(n == 0){
+    		x = 0; y = 1;
+    		return ;
+    	}
+    	
+    	if(n & 1){
+    		calc(n - 1, y, x);
+    		(y += x) %= MOD;
+    	}
+    	else{
+    		int a = 0, b = 0;
+    		calc(n / 2, a, b);
+    		y = (a * a + b * b) % MOD;
+    		x = (a * b + a * (b - a + MOD)) % MOD;
+    	}
+    }
     void solve(){
-    	cl.resize(n + 1);
-    	dfs(1,0);
-    	fod(i,1,n) cout << f[i] << " ";
+    	int x = 0, y =1 ;
+    	calc(n, x, y);
+    	cout << x;
     }	
 }
 namespace sub2{

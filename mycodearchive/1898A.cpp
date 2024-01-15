@@ -49,45 +49,48 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, val[base];
-vi g[base];
-void compress(){
-	map <int,int> dl;
-	int d = 0;
-	fod(i,1,n) dl[val[i]] = 0;
-	for(auto [x,y] : dl) dl[x] = ++d;
-	fod(i,1,n) val[i] = dl[val[i]];
-}
+int n, k;
+string s;
 void inp(){
-	cin >> n;
-	fod(i,1,n) cin >> val[i];
-	fod(i,1,n-1){
-		int u, v; cin >> u >> v;
-		g[u].pb(v);
-		g[v].pb(u);
-	}
-	compress();
+	cin >> n >> k >> s;
 }
 
 namespace sub1{
-   	ve <set<int>> cl;
-   	int f[base];
-   	void dfs(int u, int p){
-   		cl[u].insert(val[u]);
-   		for(int v : g[u]) if(v != p){
-   			dfs(v,u);
-   			if(SZ(cl[u]) < SZ(cl[v])) swap(cl[u],cl[v]);
-   			for(int x : cl[v]) cl[u].insert(x);
-   		}
-   		f[u] = SZ(cl[u]);
-   	}
+    
     void solve(){
-    	cl.resize(n + 1);
-    	dfs(1,0);
-    	fod(i,1,n) cout << f[i] << " ";
+    	int cnt = 0, last = 0;
+    	fod(i,1,n) if(s[i-1] == 'B') cnt++, last = i;
+    	
+    	if(cnt == k) return void(cout << 0 << el);
+    	
+    	int left = k - cnt;
+    	if(last <= k){
+    		cout << 1 << el << k << " " << 'B' << el;
+    		return;
+    	}
+    	else{
+    		if(left <= 0){
+    			fod(i,1,n) if(s[i-1] == 'B'){
+    				left++;
+    				if(left == 0){
+    					cout << 1 << el << i << " A" << el;
+    					return;
+    				}
+    			}
+    		}
+    		
+    		fod(i,1,n) if(s[i-1] == 'A'){
+    			left--;
+    			if(left == 0){
+    				cout << 1 << el << i << " B" << el;
+    				return;
+    			}
+    		}
+    		
+    	}
     }	
 }
 namespace sub2{

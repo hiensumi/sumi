@@ -52,42 +52,48 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, val[base];
-vi g[base];
-void compress(){
-	map <int,int> dl;
-	int d = 0;
-	fod(i,1,n) dl[val[i]] = 0;
-	for(auto [x,y] : dl) dl[x] = ++d;
-	fod(i,1,n) val[i] = dl[val[i]];
-}
+int n, k;
+ve <vi> g;
 void inp(){
-	cin >> n;
-	fod(i,1,n) cin >> val[i];
+	cin >> n >> k;
+	g.resize(n + 1);
 	fod(i,1,n-1){
 		int u, v; cin >> u >> v;
 		g[u].pb(v);
 		g[v].pb(u);
 	}
-	compress();
 }
 
 namespace sub1{
-   	ve <set<int>> cl;
-   	int f[base];
-   	void dfs(int u, int p){
-   		cl[u].insert(val[u]);
-   		for(int v : g[u]) if(v != p){
-   			dfs(v,u);
-   			if(SZ(cl[u]) < SZ(cl[v])) swap(cl[u],cl[v]);
-   			for(int x : cl[v]) cl[u].insert(x);
-   		}
-   		f[u] = SZ(cl[u]);
-   	}
+    int sz[base], cent = 0;
+    void dfs(int u, int p){
+    	bool ch = 1;
+    	sz[u] = 1;
+    	for(int v : g[u]) if(v != p){
+    		dfs(v,u);
+    		sz[u] += sz[v];
+    		if(sz[v] > n / 2) ch= 0 ;
+    	}
+    	
+    	if(sz[u] > n / 2) ch = 0;
+    
+    	if(ch) cent = u;
+    }
+    int cnt[base];
+    void calc(int u, int p, int d){
+    	cnt[d]++;
+    	for(int v : g[u]) if(v != p){
+    		calc(v,u,d + 1);
+    	}
+    }
     void solve(){
-    	cl.resize(n + 1);
     	dfs(1,0);
-    	fod(i,1,n) cout << f[i] << " ";
+    	calc(cent,0,1);
+    	DEBUG(cent);
+    	int res = 0;
+    	fod(i,1,k) res += cnt[i] * cnt[k - i];
+    
+    	cout << res;
     }	
 }
 namespace sub2{
