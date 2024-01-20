@@ -1,4 +1,5 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
+#pragma GCC optimize("O3")
 #include "bits/stdc++.h"
 using namespace std; 
 #define            int  long long
@@ -63,37 +64,62 @@ void inp(){
 		g[v].pb(u);
 	}
 }
-
+int ans = 0, maxd = 0;
+int sz[base], vst[base], cnt[base];
 namespace sub1{
-    int sz[base], cent = 0;
     void dfs(int u, int p){
-    	bool ch = 1;
     	sz[u] = 1;
-    	for(int v : g[u]) if(v != p){
+    	for(int v : g[u]) if(v != p and !vst[v]){
     		dfs(v,u);
     		sz[u] += sz[v];
-    		if(sz[v] > n / 2) ch= 0 ;
-    	}
-    	
-    	if(sz[u] > n / 2) ch = 0;
-    
-    	if(ch) cent = u;
-    }
-    int cnt[base];
-    void calc(int u, int p, int d){
-    	cnt[d]++;
-    	for(int v : g[u]) if(v != p){
-    		calc(v,u,d + 1);
     	}
     }
+	int cent(int u, int p, int subsz){
+		for(int v : g[u]) if(v != p and !vst[v]){
+			if(sz[v] > subsz) return cent(v,u,subsz);
+		}
+		return u;
+	}
+	void calc(int u, int p, int d, bool upd){
+		if(d > k) return;
+		if(upd) cnt[d]++;
+		else ans += cnt[k - d];
+	
+		maxi(maxd, d);
+		
+		for(int v : g[u]) if(v != p and !vst[v]){
+			calc(v,u,d+1,upd);
+		}
+	}
+	void dec(int u){
+		dfs(u, 0);
+		int c = cent(u,0,sz[u] / 2);
+		vst[c] = 1;
+		
+		cnt[0] = 1;
+		
+		maxd = 0;
+		
+		for(int v : g[c]) if(!vst[v]){
+			calc(v,0,1,0);	
+			calc(v,0,1,1);
+		}
+		fod(i,0,maxd) cnt[i] = 0;
+		
+		for(int v : g[c]) if(!vst[v]) dec(v);
+		
+	}
     void solve(){
-    	dfs(1,0);
-    	calc(cent,0,1);
-    	DEBUG(cent);
-    	int res = 0;
-    	fod(i,1,k) res += cnt[i] * cnt[k - i];
-    
-    	cout << res;
+    	int node = 0;
+    	fod(i,1,n) maxi(node, SZ(g[i]));
+    	fod(i,1,n) if(node == SZ(g[i])){
+    		node = i;
+    		break;
+    	}
+    	dec(node);
+    	
+    	cout << ans;
+    	
     }	
 }
 namespace sub2{
