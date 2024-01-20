@@ -105,6 +105,10 @@ namespace sub1{
     		int c1, v1, c2, v2;
     		cin >> v1 >> c1 >> v2 >> c2;
     		if(c1 > c2) swap(c1, c2);
+    		if(c1 == c2){
+    			cout << calc(c1, v1, v2) << el;
+    			continue;
+    		}
     		
     		if(c1 < c2 - 1){
     			
