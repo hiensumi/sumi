@@ -48,93 +48,50 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 300, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, q, sz[base], par[base], h[base], head[base], in[base], timedfs = 0;
-ve <vi> g;
-void dfs(int u, int p){
-	sz[u] = 1;
-	for(int v : g[u]) if(v != p){
-		h[v] = h[u] + 1;
-		par[v] = u;
-		dfs(v,u);
-		sz[u] += sz[v];
-	}
-}
-void dfs_hld(int u, int p, int r){
-	in[u] = ++timedfs;
-	head[u] = r;
-	int heavy = -1;
-	for(int v : g[u]) if(v != p){
-		if(heavy == -1 or sz[heavy] < sz[v]){
-			heavy = v;
-		}
-	}
-	if(heavy == -1) return;
-	dfs_hld(heavy, u, r);
-	for(int v : g[u]) if(v != p and v != heavy){
-		dfs_hld(v,u,v);
-	}
-}
-
+int n, m, a[501][501], np[base + 5];
+vi prime;
 void inp(){
-	cin >> n >> q;
-	g.resize(n + 1);
-	fod(i,1,n-1){
-		int u, v; cin >> u >> v;
-		g[u].pb(v);
-		g[v].pb(u);
+	cin >> n >> m;
+	fod(i,1,n) fod(j,1,m) cin >> a[i][j];
+	np[1] = 1;
+	fod(i,1,base) if(np[i] == 0){
+		prime.pb(i);
+		for(int j = i * i; j <= base; j += i) np[j] = 1; 
 	}
-	dfs(1,0);
-	dfs_hld(1,0,1);
-}
+}	
 
 namespace sub1{
-   	template<class T> struct Seg {
-	    const T ID = mp(INF,-1); T comb(T a, T b) { return min(a,b); }
-	    int n; vector<T> seg;
-	    void init(int _n) { n = _n; seg.assign(2*n,ID); }
-	    void pull(int p) { seg[p] = comb(seg[2*p],seg[2*p+1]); }
-	    void upd(int p, T val) { // set val at position p
-	        seg[p += n] = val; for (p /= 2; p; p /= 2) pull(p); }
-	    T get(int l, int r) {	// min on interval [l, r]
-	        T ra = ID, rb = ID;
-	        for (l += n, r += n+1; l < r; l /= 2, r /= 2) {
-	            if (l&1) ra = comb(ra,seg[l++]);
-	            if (r&1) rb = comb(seg[--r],rb);
-	        }
-	        return comb(ra,rb);
-	    }
-	};
-	Seg <pii> ST;
-    int color[base];
-    int query(int u, int v){
-    	pii res = mp(INF, -1);
-    	while(head[u] != head[v]){
-    		if(h[head[u]] < h[head[v]]) swap(u,v);
-    		mini(res, ST.get(in[head[u]], in[u]));
-    		u = par[head[u]];
-    	}
-    	if(h[u] < h[v]) swap(u,v);
-    	mini(res, ST.get(in[v], in[u]));
-    	
-    	return res.se;
-    }
+   
     void solve(){
-    	ST.init(n + 1);
-    	while(q--){
-    		int type ; cin >> type;
-    		if(type == 0){
-    			int id; cin >> id; color[id] ^= 1;
-    			if(color[id] == 0) ST.upd(in[id], mp(INF, id));
-    			else ST.upd(in[id], mp(h[id], id));
+    	int res = INF;
+    	fod(i,1,n){
+    		int sum = 0;
+    		fod(j,1,m){
+    			int x = a[i][j];
+    			int y = LB(all(prime), x) - prime.begin();
+    			y = prime[y];
+    			sum += y - x;
     		}
-    		else{
-    			int id; cin >> id;
-    			cout << query(1,id) << el;
-    		}
+    		
+    		mini(res, sum);
     	}
+    	
+    	fod(j,1,m){
+    		int sum = 0;
+    		fod(i,1,n){
+    			int x = a[i][j];
+    			int y = LB(all(prime), x) - prime.begin();
+    			y = prime[y];
+    			sum += y - x;
+    		}
+    		
+    		mini(res, sum);
+    	}
+    	
+    	cout << res;
     }	
 }
 namespace sub2{

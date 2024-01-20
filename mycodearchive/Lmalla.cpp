@@ -1,5 +1,6 @@
 // hiensumi: Maybe, success will come tomorrow. Thus, just keep trying! =) "Z/x
 #include "bits/stdc++.h"
+#include <unordered_set>
 using namespace std; 
 #define            int  long long
 #define             ll  long long 
@@ -51,90 +52,114 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 void init(){} // remember to reset value for multitestcase
-int n, q, sz[base], par[base], h[base], head[base], in[base], timedfs = 0;
+
+int n, pw[base];
+const ll num = 33113;
+
+string a;
 ve <vi> g;
-void dfs(int u, int p){
-	sz[u] = 1;
-	for(int v : g[u]) if(v != p){
-		h[v] = h[u] + 1;
-		par[v] = u;
-		dfs(v,u);
-		sz[u] += sz[v];
-	}
-}
-void dfs_hld(int u, int p, int r){
-	in[u] = ++timedfs;
-	head[u] = r;
-	int heavy = -1;
-	for(int v : g[u]) if(v != p){
-		if(heavy == -1 or sz[heavy] < sz[v]){
-			heavy = v;
-		}
-	}
-	if(heavy == -1) return;
-	dfs_hld(heavy, u, r);
-	for(int v : g[u]) if(v != p and v != heavy){
-		dfs_hld(v,u,v);
-	}
-}
+unordered_set <int> f[base];
 
 void inp(){
-	cin >> n >> q;
+	cin >> n >> a;
+	
+	a = "#" + a;
+	
 	g.resize(n + 1);
+	
 	fod(i,1,n-1){
 		int u, v; cin >> u >> v;
 		g[u].pb(v);
 		g[v].pb(u);
 	}
-	dfs(1,0);
-	dfs_hld(1,0,1);
+	
 }
-
 namespace sub1{
-   	template<class T> struct Seg {
-	    const T ID = mp(INF,-1); T comb(T a, T b) { return min(a,b); }
-	    int n; vector<T> seg;
-	    void init(int _n) { n = _n; seg.assign(2*n,ID); }
-	    void pull(int p) { seg[p] = comb(seg[2*p],seg[2*p+1]); }
-	    void upd(int p, T val) { // set val at position p
-	        seg[p += n] = val; for (p /= 2; p; p /= 2) pull(p); }
-	    T get(int l, int r) {	// min on interval [l, r]
-	        T ra = ID, rb = ID;
-	        for (l += n, r += n+1; l < r; l /= 2, r /= 2) {
-	            if (l&1) ra = comb(ra,seg[l++]);
-	            if (r&1) rb = comb(seg[--r],rb);
-	        }
-	        return comb(ra,rb);
-	    }
-	};
-	Seg <pii> ST;
-    int color[base];
-    int query(int u, int v){
-    	pii res = mp(INF, -1);
-    	while(head[u] != head[v]){
-    		if(h[head[u]] < h[head[v]]) swap(u,v);
-    		mini(res, ST.get(in[head[u]], in[u]));
-    		u = par[head[u]];
-    	}
-    	if(h[u] < h[v]) swap(u,v);
-    	mini(res, ST.get(in[v], in[u]));
-    	
-    	return res.se;
-    }
+	int sz[base], vst[base], len = 0;
+	
+	void sub(int u, int p){
+		sz[u] = 1;
+		for(int v : g[u]) if(vst[v] == 0 and v != p){
+			sub(v,u);
+			sz[u] += sz[v];
+		}
+	}
+	
+	int cent(int u, int p, int SZ){
+		for(int v : g[u]) if(vst[v] == 0 and v != p){
+			if(sz[v] > SZ) return cent(v,u,SZ); 
+		}
+		return u;
+	}
+	
+	int md = 0;
+	ve <pii> store;
+	
+	bool dfs(int u, int p, int h, int up, int down){
+		if(h > len) return 0;
+		
+		if(p) down = (down * num + (a[u] - 'a' + 1)) % MOD;
+		up = (up + pw[h - 1] * (a[u] - 'a' + 1)) % MOD;
+		
+		int x = (up * pw[len - h] - down + MOD) % MOD;
+		
+		if(p == 0) f[h].insert(x);
+		if(f[len-h+1].find(x) != f[len-h+1].end()) return 1;
+		
+		maxi(md, h);
+		
+		for(int v : g[u]) if(vst[v] == 0 and v != p){
+			if(p == 0) store.clear();
+			if(dfs(v,u,h+1,up,down)) return 1;
+			if(p == 0) for(auto [x,y] : store) f[x].insert(y); 
+		}
+		
+		store.pb(mp(h,x));
+		return 0;
+	}
+	
+	int dec(int u){
+		sub(u,0);
+		int c = cent(u,0,sz[u]/2);
+		
+		if(dfs(c,0,1,0,0)) return 1;
+		
+		fod(i,1,md) f[i].clear();
+		vst[c] = 1;
+		md = 0;
+		
+		for(int v : g[c]) if(vst[v] == 0){
+			if(dec(v)) return 1;
+		}
+		return 0;	
+	}
+	
+   	bool check(int x){
+   		len = x;
+   		fod(i,1,n) vst[i] = 0, f[i].clear();
+ 		return dec(1);  		
+   	}
+   	
     void solve(){
-    	ST.init(n + 1);
-    	while(q--){
-    		int type ; cin >> type;
-    		if(type == 0){
-    			int id; cin >> id; color[id] ^= 1;
-    			if(color[id] == 0) ST.upd(in[id], mp(INF, id));
-    			else ST.upd(in[id], mp(h[id], id));
-    		}
-    		else{
-    			int id; cin >> id;
-    			cout << query(1,id) << el;
-    		}
+    	pw[0] = 1;
+    	
+    	fod(i,1,n) pw[i] = pw[i-1] * num % MOD;
+    	
+    	int l = 0, r = n/2, ans = 0;
+    	while(l <= r){
+    		int mid = l + r >> 1;
+    		if(check(2 * mid + 1)) ans = 2 * mid + 1, l = mid + 1;
+    		else r = mid - 1;
     	}
+    	
+    	l = 0, r = n/2;
+    	while(l <= r){
+    		int mid = l + r >> 1;
+    		if(check(2 * mid)) l = mid + 1, maxi(ans, 2 * mid);
+    		else r = mid - 1;
+    	}
+    	
+    	cout << ans;
     }	
 }
 namespace sub2{
