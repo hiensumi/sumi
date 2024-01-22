@@ -44,7 +44,7 @@ inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
 template<class T> bool mini(T& a,T b){return (a>b)?a=b,1:0;}
 template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
-#define name ""
+#define name "CHEFCCYL"
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
@@ -104,27 +104,31 @@ namespace sub1{
     	while(q--){
     		int c1, v1, c2, v2;
     		cin >> v1 >> c1 >> v2 >> c2;
-    		if(c1 > c2) swap(c1, c2);
+    		if(c1 > c2) swap(c1, c2), swap(v1,v2);
     		if(c1 == c2){
     			cout << calc(c1, v1, v2) << el;
     			continue;
     		}
     		
+    		auto [l1,r1] = cycle[c1];
+			auto [l2,r2] = cycle[c2];
+    		
     		if(c1 < c2 - 1){
     			
-    			int ans = pre[c1] + match[n].c + pre[n] - pre[c2 - 1] - match[c2 - 1].c;
+    			int ans = calc(c1,v1,l1) + match[c1 - 1].c + pre[c1 - 1] + match[n].c 
+    						+ pre[n] - pre[c2] + calc(c2,r2,v2);
     			
-    			int res = pre[c2] - pre[c1 - 1] - match[c1-1].c;
+    			int res = pre[c2 - 1] - pre[c1] + match[c2 - 1].c + calc(c2, l2, v2)
+    				+ calc(c1, r1, v1);
     			
     			cout << min(res, ans) << el;
     		}
     		else{
-    			auto [l1,r1] = cycle[c1];
-    			auto [l2,r2] = cycle[c2];
     			
     			int res = calc(c1, v1, r1) + match[c1].c + calc(c2, l2, v2);
     			
-    			int ans = pre[c1] + match[n].c + pre[n] - pre[c2 - 1] - match[c2 - 1].c;
+    			int ans = calc(c1,v1,l1) + match[c1 - 1].c + pre[c1 - 1] + match[n].c 
+    						+ pre[n] - pre[c2] + calc(c2,r2,v2);
     			
     			cout << min(res, ans) << el;
     		}
