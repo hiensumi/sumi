@@ -69,5 +69,6 @@ signed main(){
 		cerr << "Test " << i << ": AC!\n";
 	}
 	
+	
 	return 0;
 }

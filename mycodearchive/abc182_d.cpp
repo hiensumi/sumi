@@ -35,11 +35,11 @@ ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
 #define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
-#define DEBUG(a) cout << #a << " = " << a << el;
+#define DEBUG(x) cout << #x << " = " << x << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
-inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << "Etnallirb Anul\n"; exit(0);}
+inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << " [ .... EtnallirB AnuL ...].\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
 inline int Inv(int x, int mod = MOD) { return bpow(x, mod - 2, mod);}
@@ -51,18 +51,32 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
-void init(){} // remember to reset value for multitestcase
-
+// remember to reset value for multitestcase
+int n, a[base];
 void inp(){
-	
-	int x = 4;
-	DEBUG(x);
+	cin >> n;
+	fod(i,1,n) cin >> a[i];
 }
 
+void init(){} 
 namespace sub1{
-
+    int pre[base], ma[base];
     void solve(){
-
+    	init();
+    	
+    	memset(ma, -0x3f, sizeof ma);
+    	int cur = 0, res = 0;
+    	fod(i,1,n){
+    		pre[i] = pre[i-1] + a[i];	
+    		
+    		maxi(res, cur + ma[i - 1]);
+    		maxi(res, cur + pre[i]);
+    		
+    		cur += pre[i];
+    		maxi(ma[i], max(ma[i-1], pre[i]));
+    	}	
+    	
+    	cout << res;
     }	
 }
 namespace sub2{
