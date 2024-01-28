@@ -35,7 +35,7 @@ ll lcm(ll a,ll b){return a/gcd(a,b)*b;}
 ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define pra(a,n) fod(_i,1,n)cout<<a[_i]<<el;cout<<el;
 #define prv(a) for(auto _v:a)cout<<_v<<el; cout<<el; 
-#define DEBUG(x) cout << #x << " = " << x << el;
+#define DEBUG(x) cerr << #x << " = " << x << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
 const int MOD = 1e9 + 7;
@@ -49,12 +49,12 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 2e7 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int a, b;
+int n, m, f[base];
 void inp(){
-	cin >> a >> b;
+	cin >> n >> m;
 }
 
 void init(){} 
@@ -62,23 +62,16 @@ namespace sub1{
     
     void solve(){
     	init();
+    	int N = min(n,m);
+    	fod(i,1,N) f[i] = (n / i) * (m / i) % (MOD - 1);
     	
-    	if(a < b) return void(cout << 0 << el);
-    	if(a == b) return void(cout << "infinity" << el);
-    	
-    	// a = px + b -> x =(a - b) / p 
-    	// x > b
-    	
-    	int res = 0;
-    	for(int p = 1; p * p <= (a - b) ; p ++) if( (a - b) % p == 0){
-    		
-    		if( (a - b) > b * p)  res++;
-    		if(p * p != (a - b)){
-    			int nxt = (a-b)/p;
-    			
-    			if( (a - b) > b * nxt) res++;
-    		}
+    	fok(i,N,1) for(int j = 2 * i; j <= N; j += i){
+    		f[i] -= f[j];
+    		while(f[i] < 0) f[i] += MOD - 1;
     	}
+    	
+    	int res = 1; 
+    	fod(i,1,N) res = (res * bpow(i,f[i]) + MOD) % MOD;
     	
     	cout << res;
     }	
@@ -97,7 +90,6 @@ signed main(){
       freopen(name".out", "w", stdout);
     }
     int Test = 1; if(multitest) cin >> Test;
-    init();
     while(Test-- or endless){
         inp();
         sub1 :: solve();

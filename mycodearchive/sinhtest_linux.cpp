@@ -9,7 +9,7 @@ int rd(int l, int r){
 	return  l + 1ll * rand() * rand() % (r - l + 1);
 }
 const int NTest = 100;
-const string name = "CHEFCCYL";
+const string name = "lice";
 vector<int> gen(int N) { // sinh hoan vi
     vector<int> numbers(N);
     for(int i = 0; i < N; i++) {
@@ -29,34 +29,12 @@ signed main(){
 	fod(i,1,NTest){
 		ofstream cout((name + ".inp").c_str());
 		// gen
-		int t = rd(1,1);
-		cout << t << endl;
-		
-		while(t--){
-			int n = rd(2,5), q = rd(1,3);
-			cout << n << " " << q << endl;
-			for(int i = 1; i <= n; i++){
-				a[i] = rd(2,10);
-				cout << a[i] << " ";
-				for(int j = 1; j <= a[i]; j++) cout << rd(1,10) << " ";
-				
-				cout << endl;
-			}
-			
-			for(int i = 1; i <= n; i++){
-				int x = a[i], y = a[i % n + 1];
-				cout << rd(1,x) << " " << rd(1,y) << " " << rd(1,10) << endl;
-			}
-			
-			for(int i = 1; i <= q; i++){
-				int v1 = 0 , c1 = 0 , v2 = 0, c2 = 0;
-				c1 = rd(1,n-1);
-				c2 = rd(c1+1,n);
-				
-				cout << rd(1,a[c1]) << " " << c1 << " " << rd(1,a[c2]) << " " << c2 << endl;
-			}
-		}
-		
+		int L = rd(1,1000);
+		int n = min(L, rd(1,1000));
+		cout << L << " " << n << el;
+		fod(i,1,n) a[i] = rd(0,L);
+		sort(a + 1, a + n + 1);
+		fod(i,1,n) cout << a[i] << " ";
 		
 		cout.close();
 		system(("./" + name).c_str());
