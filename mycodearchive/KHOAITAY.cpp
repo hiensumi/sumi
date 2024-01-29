@@ -49,35 +49,41 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = INF; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int n, k, a[base];
+int n, dp[base];
 void inp(){
-	// cin >> n >> k;
-	// fod(i,1,n) cin >> a[i];
+	string s; cin >> s;
+	if(s == "[END]") exit(0);
+	cin >> n;
 }
 
 void init(){} 
 namespace sub1{
-	int dd[base];
+    
     void solve(){
     	init();
-    	ve <char> p = {'a', 'b', 'c', 'd' , 'e'};
-    	int cnt =0 ;
-    	fod(l1,0,4) fod(l2,l1+1,4) fod(l3,l2+1,4){
-    		dd[p[l1]-'a']--;
-    		dd[p[l3]-'a']++;
-    		// cerr << p[l1] << " " << p[l2] << " " << p[l3] << " " << p[l4] << el;
-    	}
-    	
-    	fod(i,0,4) cout << p[i] << " " << dd[p[i] - 'a'] << el;
+ 		dp[0] = 1;   	
+ 		fod(i,1,n){
+ 			dp[i] = 1;
+ 			fod(j,0,20){
+ 				int p = bp(4, j);
+ 				if(p > i) break;
+ 				if(dp[i-p] == 1) dp[i] = 0;
+ 			}
+ 		}
+ 		fod(i,1,n) cout << dp[i] << " ";
+ 		cout << el;
+    	// if(dp[n] == 1) cout << "Hanako" << el;
+    	// else cout << "Taro" << el;
     }	
 }
 namespace sub2{
 	
 	void solve(){
-	
+		if(n % 5 == 0 or n % 5 == 2) cout << "Hanako" << el;
+		else cout << "Taro" << el;
 	}
 }
 
@@ -90,7 +96,7 @@ signed main(){
     int Test = 1; if(multitest) cin >> Test;
     while(Test-- or endless){
         inp();
-        sub1 :: solve();
+        // sub1 :: solve();
         sub2 :: solve();
     }
     kill();

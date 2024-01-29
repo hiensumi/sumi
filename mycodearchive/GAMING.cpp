@@ -49,29 +49,25 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 1, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int n, k, a[base];
+int n;
 void inp(){
-	// cin >> n >> k;
-	// fod(i,1,n) cin >> a[i];
+	cin >> n;
 }
 
 void init(){} 
 namespace sub1{
-	int dd[base];
+    
     void solve(){
     	init();
-    	ve <char> p = {'a', 'b', 'c', 'd' , 'e'};
-    	int cnt =0 ;
-    	fod(l1,0,4) fod(l2,l1+1,4) fod(l3,l2+1,4){
-    		dd[p[l1]-'a']--;
-    		dd[p[l3]-'a']++;
-    		// cerr << p[l1] << " " << p[l2] << " " << p[l3] << " " << p[l4] << el;
+    	int cnt = 0;
+    	while(n > 1){
+    		n = (n + 1) / 2;
+    		cnt++;
     	}
-    	
-    	fod(i,0,4) cout << p[i] << " " << dd[p[i] - 'a'] << el;
+    	cout << cnt << el;
     }	
 }
 namespace sub2{

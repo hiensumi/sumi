@@ -54,24 +54,42 @@ const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
 int n, k, a[base];
 void inp(){
-	// cin >> n >> k;
-	// fod(i,1,n) cin >> a[i];
+	cin >> n >> k;
+	fod(i,1,n) cin >> a[i];
 }
-
-void init(){} 
+int f[base], g[base];
+void init(){
+	f[0] = 1;
+	fod(i,1,n) f[i] = f[i-1] * i % MOD;
+	g[n] = Inv(f[n]);
+	fok(i,n-1,0) g[i] = g[i+1] * (i + 1) % MOD;
+} 
 namespace sub1{
-	int dd[base];
+	int comb(int n, int k){
+		if(n < k) return 0;
+		int res = f[n];
+		res = (res * g[k]) % MOD;
+		res = (res * g[n-k]) % MOD;
+		return res;
+	}
+	int pattern[base];
     void solve(){
     	init();
-    	ve <char> p = {'a', 'b', 'c', 'd' , 'e'};
-    	int cnt =0 ;
-    	fod(l1,0,4) fod(l2,l1+1,4) fod(l3,l2+1,4){
-    		dd[p[l1]-'a']--;
-    		dd[p[l3]-'a']++;
-    		// cerr << p[l1] << " " << p[l2] << " " << p[l3] << " " << p[l4] << el;
-    	}
-    	
-    	fod(i,0,4) cout << p[i] << " " << dd[p[i] - 'a'] << el;
+    	sort(a + 1, a + n + 1);
+		fod(i,1,n/2){
+			int left = n - i;
+			pattern[n - i + 1] = (comb(left, k - 1) - comb(i - 1, k - 1) + MOD) % MOD;
+		}
+		int res = 0;
+		fok(i,n,1){
+			if(i * 2 > n) res = (res + pattern[i] * a[i] % MOD) %MOD; 
+			else{
+				int inv = n - i + 1;
+				res = (res - (pattern[inv] * a[i] % MOD) + MOD) % MOD;
+			}
+		}
+		
+		cout << res;
     }	
 }
 namespace sub2{

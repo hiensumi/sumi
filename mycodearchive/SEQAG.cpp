@@ -52,26 +52,24 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int n, k, a[base];
+int n , a[base], rmq[base][20], LG[base];
 void inp(){
-	// cin >> n >> k;
-	// fod(i,1,n) cin >> a[i];
+	cin >> n;
+	fod(i,1,n) cin >> a[i];
+	
 }
 
-void init(){} 
+void init(){
+	fod(i,2,n) LG[i] = LG[i/2] + 1;
+	
+} 
 namespace sub1{
-	int dd[base];
+    
     void solve(){
     	init();
-    	ve <char> p = {'a', 'b', 'c', 'd' , 'e'};
-    	int cnt =0 ;
-    	fod(l1,0,4) fod(l2,l1+1,4) fod(l3,l2+1,4){
-    		dd[p[l1]-'a']--;
-    		dd[p[l3]-'a']++;
-    		// cerr << p[l1] << " " << p[l2] << " " << p[l3] << " " << p[l4] << el;
+    	fod(r,1,n){
+    		
     	}
-    	
-    	fod(i,0,4) cout << p[i] << " " << dd[p[i] - 'a'] << el;
     }	
 }
 namespace sub2{
