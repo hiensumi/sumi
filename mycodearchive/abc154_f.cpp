@@ -49,28 +49,41 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 1; 
+const ll base = 5e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int x, y;
+int r1, r2, c1, c2;
 void inp(){
-	cin >> x >> y;
-	if(x == 0 and y == 0) exit(0);
+	cin >> r1 >> c1 >> r2 >> c2;
 }
-
-void init(){} 
+int f[base], g[base];
+void init(){
+	int N= 5e6 + 1;
+	f[0] = 1;
+	fod(i,1,N) f[i] = f[i-1] * i % MOD;
+	g[N] = Inv(f[N]);
+	fok(i,N-1,0) g[i] = g[i+1] * (i + 1) % MOD;
+} 
 namespace sub1{
- 	int calc(int x, int y){
- 		if(x == y) return 0;
- 		if(y % x == 0) return 1;
- 		if(y > 2 * x) return 1;
- 		return !calc(y - x, x);
+ 	int comb(int n, int k){
+ 		if(n < k) return 0;
+ 		int res = f[n];
+ 		res = (res * g[k]) % MOD;
+ 		res = (res * g[n-k]) % MOD;
+ 		return res;
  	}   
     void solve(){
     	init();
-    	if(x > y) swap(x,y);
-    	if(!calc(x,y)) cout << 'S' << el;
-    	else cout << 'T' << el;
+    	int res = 0;
+    	
+    	fod(x,r1,r2){
+    		int pre1 = comb(x + (c1 - 1) + 1, x + 1) - 1;
+    		int pre2 = comb(x + c2 + 1, x + 1) - 1;
+    		
+    		res = (res + pre2 - pre1 + MOD) % MOD;
+    	}
+    	
+    	cout << res;
     }	
 }
 namespace sub2{

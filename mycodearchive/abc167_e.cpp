@@ -38,7 +38,7 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define DEBUG(x) cerr << #x << " = " << x << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << " [ .... EtnallirB AnuL ...].\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
@@ -49,28 +49,39 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 1; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int x, y;
+int n, m, k;
 void inp(){
-	cin >> x >> y;
-	if(x == 0 and y == 0) exit(0);
+	cin >> n >> m >> k;
 }
-
-void init(){} 
+int f[base], g[base];
+void init(){
+	int N = max({n + 5,m + 5,k + 5});
+	f[0] =1 ;
+	fod(i,1,N) f[i] = f[i-1] * i % MOD;
+	g[N] = Inv(f[N]);
+	fok(i,N-1,0) g[i] = g[i+1] * (i + 1) % MOD;
+} 
 namespace sub1{
- 	int calc(int x, int y){
- 		if(x == y) return 0;
- 		if(y % x == 0) return 1;
- 		if(y > 2 * x) return 1;
- 		return !calc(y - x, x);
- 	}   
+    int comb(int n, int k){
+    	int res = f[n];
+    	res = (res * g[k]) % MOD;
+    	res = (res * g[n-k]) % MOD;
+    	return res;
+    }
     void solve(){
     	init();
-    	if(x > y) swap(x,y);
-    	if(!calc(x,y)) cout << 'S' << el;
-    	else cout << 'T' << el;
+    	int res = 0;
+    	fod(i,0,k){
+    		int ans = m;
+    		ans = ans * comb(n - 1, i) % MOD;
+    		ans = ans * bpow(m - 1, n - i - 1) % MOD;
+    		res = (res + ans) % MOD;
+    	}
+    	cout << res;
+    	
     }	
 }
 namespace sub2{

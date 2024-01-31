@@ -38,7 +38,7 @@ ll rd(ll l , ll r ){return l+1LL*rand()*rand()%(r-l+1);}
 #define DEBUG(x) cerr << #x << " = " << x << el;
 struct point{int x, y;};
 struct edge{int u, v, c;};
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 inline void kill(){cerr << "\nTime: " << clock() << "ms\n"; cerr << " [ .... EtnallirB AnuL ...].\n"; exit(0);}
 inline int bpow(int x, int y, int mod = MOD) { int ans = 1; while (y) { if (y & 1) ans = (ans % mod * x % mod + mod) % mod; x = (x % mod * x % mod + mod) % mod; y >>= 1;} return ans;}
 inline int bp(int a, int b){int res = 1; while (b > 0) {if (b & 1) res = res * a; a = a * a; b >>= 1; } return res;}
@@ -49,31 +49,39 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 2e7 + 5, INF = 1e18, multitest = 0, endless = 0; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int n, m, f[base];
+int a, b, c;
 void inp(){
-	cin >> n >> m;
+	cin >> a >> b >> c;
 }
-
-void init(){} 
+int f[5001][5001], g[base];
+void init(){
+	int N = max({a,b,c});
+	g[0] = 1;
+	fod(i,0,N) f[i][0] = 1;
+	fod(i,1,N) fod(j,1,i) f[i][j] = (f[i-1][j] + f[i-1][j-1]) % MOD;
+	fod(i,1,N) g[i] = g[i-1] * i % MOD;
+} 
 namespace sub1{
-    
+    int calc(int a, int b){
+    	int ans = 0;
+    	fod(k,0,min(a,b)){
+    		int add = 1;
+    		add = add * f[a][k] % MOD;
+    		add = add * f[b][k] % MOD; 
+    		add = add * g[k] % MOD;
+    		ans = (ans + add) % MOD;
+    	}
+    	return ans;	
+    }
     void solve(){
     	init();
-    	int N = min(n,m);
-    	fod(i,1,N) f[i] = (n / i) * (m / i) % (MOD - 1);
-    	
-    	fok(i,N,1) for(int j = 2 * i; j <= N; j += i){
-    		f[i] -= f[j];
-    		while(f[i] < 0) f[i] += MOD - 1;
-    	}
-    	
-    	int res = 1; 
-    	fod(i,1,N) res = (res * bpow(i,f[i]) + MOD) % MOD;
-    	
-    	cout << res;
+    	int ans = calc(a,b);
+    	ans = (ans * calc(b,c)) % MOD;
+    	ans = (ans * calc(a,c)) % MOD;
+    	cout << ans;
     }	
 }
 namespace sub2{

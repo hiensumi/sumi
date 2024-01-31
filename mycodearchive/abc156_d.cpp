@@ -49,28 +49,34 @@ template<class T> bool maxi(T& a,T b){return (a<b)?a=b,1:0;}
 #define ld long double
 //"Life is a daring adventure or it is nothing at all." -Helen Keller...
 //"Success isn't determined by how many times you win, but by how you play the week after you lose." -Pele...
-const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 1; 
+const ll base = 1e6 + 5, INF = 1e18, multitest = 0, endless = 0; 
 const ld PI = acos(-1) , EPS = 1e-9;
 // remember to reset value for multitestcase
-int x, y;
+int n, a, b;
 void inp(){
-	cin >> x >> y;
-	if(x == 0 and y == 0) exit(0);
+	cin >> n >> a >> b;
 }
-
-void init(){} 
+int f[base], g[base];
+void init(){
+	f[0] = 1;
+	fod(i,1,b+5) f[i] = f[i-1] * i % MOD;
+	g[b+5] = Inv(f[b+5]);
+	fok(i,b+4,0) g[i] = g[i+1] * (i + 1) % MOD;
+} 
 namespace sub1{
- 	int calc(int x, int y){
- 		if(x == y) return 0;
- 		if(y % x == 0) return 1;
- 		if(y > 2 * x) return 1;
- 		return !calc(y - x, x);
- 	}   
+    int comb(int n, int k){
+    	int res = 1;
+    	fod(i,n-k+1,n) res = res * i % MOD;
+    	res = res * g[k] % MOD;
+    	
+    	return res;
+    }
     void solve(){
     	init();
-    	if(x > y) swap(x,y);
-    	if(!calc(x,y)) cout << 'S' << el;
-    	else cout << 'T' << el;
+    	int ans = (bpow(2, n) - 1 + MOD) % MOD;
+    	ans = (ans - comb(n,a) + MOD) % MOD;
+    	ans = (ans - comb(n,b) + MOD) % MOD;
+    	cout << ans;
     }	
 }
 namespace sub2{
